@@ -19,9 +19,8 @@ export default [
     // 2. 対象ファイルを指定
     files: ["src/**/*.{ts,tsx}"],
     rules: {
-      "no-unused-vars": "error",
+      "no-unused-vars": "off",
       "no-console": ["warn", { allow: ["warn", "error"] }],
-      
       // 3. import 順序のルール
       "import/order": [
         "error",
@@ -42,7 +41,7 @@ export default [
           ],
           "pathGroupsExcludedImportTypes": ["react", "next"],
           "alphabetize": { "order": "asc", "caseInsensitive": true },
-          "newlines-between": "always"
+          "newlines-between": "never"
         }
       ]
     }

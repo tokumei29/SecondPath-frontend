@@ -16,7 +16,6 @@ const UserLayout = ({ children }: UserLayoutProps) => {
   const params = useParams();
   const supabase = createClient();
 
-  // URLから [userId] を取得
   const userId = params?.userId as string;
 
   const handleLogout = async () => {
@@ -36,16 +35,15 @@ const UserLayout = ({ children }: UserLayoutProps) => {
     }
   };
 
-  // ユーザーIDに基づいたパスを生成するヘルパー
   const getDynamicPath = (path: string) => `/${userId}${path}`;
 
   return (
     <div className={styles.container}>
-      {/* 左カラム：固定メニュー */}
       <aside className={styles.sidebar}>
         <div className={styles.sidebarTitle}>SecondPath</div>
 
         <nav className={styles.nav}>
+          {/* メインメニュー */}
           <div className={styles.navGroup}>
             <Link
               href={getDynamicPath('/home')}
@@ -54,29 +52,49 @@ const UserLayout = ({ children }: UserLayoutProps) => {
               🏠 ダッシュボード
             </Link>
             <Link
+              href={getDynamicPath('/settings')}
+              className={`${styles.navItem} ${pathname.includes('/settings') ? styles.active : ''}`}
+            >
+              ⚙️ 自己分析設定
+            </Link>
+            <Link
               href={getDynamicPath('/diaries')}
               className={`${styles.navItem} ${pathname.endsWith('/diaries') ? styles.active : ''}`}
             >
               📝 日報を書く
             </Link>
-            {/* 追加：過去の記録 */}
             <Link
               href={getDynamicPath('/diaries/history')}
-              className={`${styles.navItem} ${pathname.includes('/history') ? styles.active : ''}`}
+              className={`${styles.navItem} ${pathname.includes('/diaries/history') ? styles.active : ''}`}
             >
-              📚 過去の記録
+              📚 過去の日報記録
             </Link>
+          </div>
+
+          {/* 追加：アセスメント（心理鑑定）グループ */}
+          <div className={styles.navGroup}>
+            <div className={styles.navLabel}>アセスメント</div>
+            <Link
+              href={getDynamicPath('/assessments')}
+              className={`${styles.navItem} ${pathname.endsWith('/assessments') ? styles.active : ''}`}
+            >
+              📊 PHQ-9セルフチェック
+            </Link>
+            <Link
+              href={getDynamicPath('/assessments/history')}
+              className={`${styles.navItem} ${pathname.includes('/assessments/history') ? styles.active : ''}`}
+            >
+              📈 PHQ-9回復の軌跡
+            </Link>
+          </div>
+
+          {/* その他 */}
+          <div className={styles.navGroup}>
             <Link
               href={getDynamicPath('/community')}
               className={`${styles.navItem} ${pathname.includes('/community') ? styles.active : ''}`}
             >
               🌍 匿名の広場
-            </Link>
-            <Link
-              href={getDynamicPath('/settings')}
-              className={`${styles.navItem} ${pathname.includes('/settings') ? styles.active : ''}`}
-            >
-              ⚙️ 自己分析設定
             </Link>
           </div>
 
@@ -86,7 +104,6 @@ const UserLayout = ({ children }: UserLayoutProps) => {
         </nav>
       </aside>
 
-      {/* 右側：コンテンツエリア（サイドバーに被らないよう margin-left が効くクラスを適用） */}
       <main className={styles.mainContent}>{children}</main>
     </div>
   );

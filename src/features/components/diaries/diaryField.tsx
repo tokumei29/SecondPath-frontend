@@ -1,5 +1,4 @@
 import React from 'react';
-
 import styles from './diaryField.module.css';
 
 type DiaryFieldProps = {
@@ -9,7 +8,7 @@ type DiaryFieldProps = {
   placeholder: string;
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   isMain?: boolean;
-}
+};
 
 export const DiaryField = ({
   label,

@@ -6,7 +6,7 @@ import styles from './inputGroup.module.css';
 type InputGroupProps = {
   title: string;
   values: string[];
-  onFieldChange: (index: number, value: string) => void;
+  onFieldChange: (_index: number, _value: string) => void;
 };
 
 export const InputGroup = ({ title, values, onFieldChange }: InputGroupProps) => {
@@ -14,18 +14,20 @@ export const InputGroup = ({ title, values, onFieldChange }: InputGroupProps) =>
     <section className={styles.section}>
       <h3 className={styles.sectionTitle}>{title}</h3>
       <div className={styles.inputList}>
-        {values.map((val, idx) => (
-          <input
-            key={idx}
-            max={50}
-            className={styles.input}
-            value={val}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              onFieldChange(idx, e.target.value)
-            }
-            placeholder={`${idx + 1}.`}
-          />
-        ))}
+        {values.map(
+          (
+            v,
+            i // 変数名を一文字にする
+          ) => (
+            <input
+              key={i}
+              className={styles.input}
+              value={v}
+              onChange={(e) => onFieldChange(i, e.target.value)}
+              placeholder={`${i + 1}.`}
+            />
+          )
+        )}
       </div>
     </section>
   );

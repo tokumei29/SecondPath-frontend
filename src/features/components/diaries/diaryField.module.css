@@ -11,6 +11,7 @@
 }
 
 .textarea {
+  box-sizing: border-box; /* パディングを含めた幅計算 */
   width: 100%; /* 親要素に合わせる */
   padding: 12px;
   font-size: 16px;
@@ -21,8 +22,9 @@
   border: 1px solid #eee;
   border-radius: 8px;
   outline: none;
-  transition: border-color 0.2s, background-color 0.2s;
-  box-sizing: border-box; /* パディングを含めた幅計算 */
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
 }
 
 .textarea:focus {

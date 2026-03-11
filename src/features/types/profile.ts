@@ -8,9 +8,7 @@ export type ProfileArrayKeys =
 
 export type Profile = {
   name: string;
-} & {
-  [K in ProfileArrayKeys]: string[];
-};
+} & Record<ProfileArrayKeys, string[]>;
 
 export type ProfileResponse = Profile & {
   id: number;

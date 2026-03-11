@@ -1,15 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-
 import { useParams, useRouter } from 'next/navigation';
-
 import axios from 'axios';
-
 import { getDiary, updateDiary } from '@/api/diaries';
-import { DiaryField } from '@/features/components/diaries/diaryField';
-
 import styles from '@/app/(dashboard)/[userId]/diaries/page.module.css';
+import { DiaryField } from '@/features/components/diaries/diaryField';
 
 const DiaryEditPage = () => {
   const params = useParams();
@@ -124,11 +120,7 @@ const DiaryEditPage = () => {
           >
             {isSaving ? '更新中...' : '変更を保存する'}
           </button>
-          <button
-            type="button"
-            className={styles.cancelButton}
-            onClick={() => router.back()}
-          >
+          <button type="button" className={styles.cancelButton} onClick={() => router.back()}>
             キャンセル
           </button>
         </div>

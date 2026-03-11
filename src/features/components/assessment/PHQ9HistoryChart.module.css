@@ -1,0 +1,25 @@
+.chartWrapper {
+  padding: 24px;
+  background: #fff;
+  border: 1px solid #eaeaea;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgb(0 0 0 / 5%);
+}
+
+.chartTitle {
+  margin-bottom: 20px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #333;
+}
+
+.container {
+  width: 100%;
+}
+
+.caption {
+  margin-top: 16px;
+  font-size: 12px;
+  color: #666;
+  text-align: right;
+}

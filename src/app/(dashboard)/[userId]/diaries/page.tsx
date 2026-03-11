@@ -1,14 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-
 import { useParams } from 'next/navigation';
-
 import axios from 'axios';
-
 import { createDiary } from '@/api/diaries';
 import { DiaryField } from '@/features/components/diaries/diaryField';
-
 import styles from './page.module.css';
 
 const DiaryPage = () => {
