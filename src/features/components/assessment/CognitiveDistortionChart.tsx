@@ -1,8 +1,12 @@
 'use client';
 
 import {
-  Radar, RadarChart, PolarGrid, PolarAngleAxis,
-  ResponsiveContainer, PolarRadiusAxis
+  Radar,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  ResponsiveContainer,
+  PolarRadiusAxis,
 } from 'recharts';
 import styles from './CognitiveDistortionChart.module.css';
 
@@ -16,11 +20,11 @@ const FACTOR_LABELS: Record<string, string> = {
   emotional_reasoning: '感情的判断',
   should_statements: 'すべき思考',
   labeling: 'レッテル貼り',
-  personalization: '個人化'
+  personalization: '個人化',
 };
 
 export const CognitiveDistortionChart = ({ scores }: { scores: Record<string, number> }) => {
-  const data = Object.keys(FACTOR_LABELS).map(key => ({
+  const data = Object.keys(FACTOR_LABELS).map((key) => ({
     subject: FACTOR_LABELS[key],
     value: scores[key] || 0,
   }));
@@ -31,21 +35,9 @@ export const CognitiveDistortionChart = ({ scores }: { scores: Record<string, nu
       <ResponsiveContainer>
         <RadarChart data={data} className={styles.radarChart}>
           <PolarGrid className={styles.polarGrid} />
-          <PolarAngleAxis 
-            dataKey="subject" 
-            className={styles.axisLabel} 
-          />
-          <PolarRadiusAxis 
-            domain={[0, 8]} 
-            tick={false} 
-            axisLine={false} 
-          />
-          <Radar
-            name="思考の癖"
-            dataKey="value"
-            className={styles.radarArea}
-            fillOpacity={0.5}
-          />
+          <PolarAngleAxis dataKey="subject" className={styles.axisLabel} />
+          <PolarRadiusAxis domain={[0, 8]} tick={false} axisLine={false} />
+          <Radar name="思考の癖" dataKey="value" className={styles.radarArea} fillOpacity={0.5} />
         </RadarChart>
       </ResponsiveContainer>
     </div>

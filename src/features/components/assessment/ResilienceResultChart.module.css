@@ -15,11 +15,11 @@
 }
 
 .wrapper {
+  width: 100%;
+  height: 300px;
   margin-bottom: 24px;
   background: #f8fafc;
   border-radius: 20px;
-  width: 100%;
-  height: 300px;
 }
 
 .radarArea {
@@ -34,9 +34,9 @@
 }
 
 .axisLabel text {
-  fill: #475569;
   font-size: 14px;
   font-weight: 700;
+  fill: #475569;
 }
 
 .scoreGrid {

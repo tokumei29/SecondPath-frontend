@@ -39,6 +39,7 @@ export const Sidebar = () => {
             icon="🏠"
             label="ダッシュボード"
           />
+          <div className={styles.navLabel}>日々の積み重ね</div>
           <SidebarItem
             href={getPath('/settings')}
             active={pathname.includes('/settings')}
@@ -61,7 +62,7 @@ export const Sidebar = () => {
 
         {/* アセスメント（心理鑑定）グループ */}
         <div className={styles.navGroup}>
-          <div className={styles.navLabel}>アセスメント</div>
+          <div className={styles.navLabel}>アセスメント(自分でできる自己分析)</div>
           <SidebarItem
             href={getPath('/phq9')}
             active={pathname.includes('/phq9') && !pathname.includes('history')}
@@ -89,8 +90,8 @@ export const Sidebar = () => {
             label="職業的レジリエンスの診断結果"
           />
 
-        {/* 認知の歪み診断（CDD） ★ */}
-        <SidebarItem
+          {/* 認知の歪み診断（CDD） ★ */}
+          <SidebarItem
             href={getPath('/cognitiveDistortions')}
             active={pathname.includes('/cognitiveDistortions') && !pathname.includes('history')}
             icon="🔍"
@@ -102,7 +103,7 @@ export const Sidebar = () => {
             icon="🕸️"
             label="思考の癖の診断結果"
           />
-          </div>
+        </div>
 
         {/* その他 */}
         <div className={styles.navGroup}>

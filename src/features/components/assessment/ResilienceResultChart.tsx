@@ -31,10 +31,7 @@ export const ResilienceResultChart = ({ data }: { data: ResilienceData }) => {
         <ResponsiveContainer>
           <RadarChart data={chartData} className={styles.radarChart}>
             <PolarGrid className={styles.polarGrid} />
-            <PolarAngleAxis
-              dataKey="subject"
-              className={styles.axisLabel}
-            />
+            <PolarAngleAxis dataKey="subject" className={styles.axisLabel} />
             <PolarRadiusAxis domain={[0, 9]} tick={false} axisLine={false} />
 
             <Radar

@@ -25,12 +25,7 @@ export const PHQ9HistoryChart = ({ data }: { data: HistoryData[] }) => {
         <ResponsiveContainer>
           <LineChart data={data} className={styles.lineChart}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} className={styles.grid} />
-            <XAxis 
-              dataKey="date" 
-              axisLine={false} 
-              tickLine={false} 
-              className={styles.xAxis}
-            />
+            <XAxis dataKey="date" axisLine={false} tickLine={false} className={styles.xAxis} />
             <YAxis
               domain={[0, 27]}
               axisLine={false}
@@ -38,10 +33,7 @@ export const PHQ9HistoryChart = ({ data }: { data: HistoryData[] }) => {
               ticks={[0, 5, 10, 15, 20, 27]}
               className={styles.yAxis}
             />
-            <Tooltip
-              contentStyle={{}}
-              wrapperClassName={styles.tooltipWrapper}
-            />
+            <Tooltip contentStyle={{}} wrapperClassName={styles.tooltipWrapper} />
 
             {/* 境界線 */}
             <ReferenceLine y={5} className={styles.refMild} />

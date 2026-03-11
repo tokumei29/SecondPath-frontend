@@ -19,7 +19,8 @@
 }
 
 /* 軸ラベルのスタイル */
-.xAxis text, .yAxis text {
+.xAxis text,
+.yAxis text {
   font-size: 12px;
   fill: #888;
 }
@@ -42,17 +43,28 @@
 }
 
 /* 境界線（ReferenceLine） */
-.refMild line { stroke: #ccc; stroke-dasharray: 3 3; }
-.refModerate line { stroke: #ffab00; stroke-dasharray: 3 3; }
-.refSevere line { stroke: #d32f2f; stroke-dasharray: 3 3; }
+.refMild line {
+  stroke: #ccc;
+  stroke-dasharray: 3 3;
+}
+
+.refModerate line {
+  stroke: #ffab00;
+  stroke-dasharray: 3 3;
+}
+
+.refSevere line {
+  stroke: #d32f2f;
+  stroke-dasharray: 3 3;
+}
 
 /* ツールチップのカスタマイズ */
 .tooltipWrapper {
-  background: #ffffff !important;
+  padding: 8px;
+  background: #fff !important;
   border: none !important;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  padding: 8px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
 }
 
 .caption {
