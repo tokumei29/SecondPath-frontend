@@ -1,0 +1,38 @@
+.container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.sidebar {
+  width: 260px;
+  background-color: #ffffff;
+  border-right: 1px solid #e0e0e0;
+  padding: 24px;
+  position: fixed; /* 左に固定 */
+  height: 100vh;
+}
+
+.mainContent {
+  flex: 1;
+  margin-left: 260px; /* サイドバーの分だけ右に寄せる */
+  padding: 40px;
+}
+
+.navItem {
+  display: block;
+  padding: 12px 16px;
+  color: #444;
+  text-decoration: none;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.navItem:hover {
+  background-color: #f0f0f0;
+}
+
+.active {
+  background-color: #fff;
+  color: #444 !important;
+}

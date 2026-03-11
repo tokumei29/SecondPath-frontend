@@ -2,13 +2,18 @@
   "name": "secondpath-frontend",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
+"scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "next lint",
+    "lint:style": "stylelint 'src/**/*.css'",
+    "format": "prettier --write 'src/**/*.{ts,tsx,css,md}'",
+    "fix": "npm run format && next lint --fix && stylelint 'src/**/*.css' --fix",
+    "check": "npm run lint && npm run lint:style && npm run format -- --check"
   },
   "dependencies": {
+    "axios": "^1.13.6",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3"
@@ -20,6 +25,13 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.8.1",
+    "prettier-plugin-tailwindcss": "^0.6.14",
+    "stylelint": "^16.26.1",
+    "stylelint-config-recess-order": "^7.6.1",
+    "stylelint-config-standard": "^39.0.1",
+    "stylelint-order": "^6.0.4",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
