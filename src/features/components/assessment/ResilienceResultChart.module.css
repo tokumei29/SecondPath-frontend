@@ -1,0 +1,47 @@
+.chartCard {
+  padding: 32px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 10%);
+}
+
+.chartTitle {
+  margin-bottom: 24px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #1a202c;
+  text-align: center;
+}
+
+.wrapper {
+  margin-bottom: 24px;
+  background: #f8fafc;
+  border-radius: 20px;
+}
+
+.scoreGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.scoreItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+}
+
+.scoreItem span {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.scoreItem strong {
+  font-size: 16px;
+  color: #0070f3;
+}

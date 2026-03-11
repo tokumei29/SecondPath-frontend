@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { getAssessments } from '@/api/assessments';
+import { getPhq9Assessments } from '@/api/assessments';
 import { PHQ9HistoryChart } from '@/features/components/assessment/PHQ9HistoryChart';
 import styles from './page.module.css';
 
@@ -23,7 +23,7 @@ export default function AssessmentHistoryPage() {
     const fetchHistory = async () => {
       if (!userId) return;
       try {
-        const data = await getAssessments(userId);
+        const data = await getPhq9Assessments(userId);
         setHistory(data);
       } catch (error) {
         console.error('Failed to fetch assessment history:', error);

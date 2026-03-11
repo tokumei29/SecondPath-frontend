@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { createAssessment, getAssessments } from '@/api/assessments';
+import { createPhq9Assessment, getPhq9Assessments } from '@/api/assessments';
 import { calculatePHQ9, type PHQ9Result } from '@/features/types/assessment';
 import styles from './PHQ9Assessment.module.css';
 
@@ -39,7 +39,7 @@ export const PHQ9Assessment = () => {
     const checkTodayStatus = async () => {
       if (!userId) return;
       try {
-        const history = await getAssessments(userId);
+        const history = await getPhq9Assessments(userId);
         if (!history || history.length === 0) {
           setHasAnsweredToday(false);
           return;
@@ -96,7 +96,7 @@ export const PHQ9Assessment = () => {
         suicidal_ideation: res.suicidalIdeation,
       };
 
-      await createAssessment(userId, payload);
+      await createPhq9Assessment(userId, payload);
       alert('診断結果を保存しました。');
 
       // グラフがある履歴ページへ遷移
@@ -115,7 +115,7 @@ export const PHQ9Assessment = () => {
           <p>心の状態は少しずつ変化します。また明日、あなたの声を聞かせてください。</p>
           <button
             className={styles.historyBtn}
-            onClick={() => router.push(`/${userId}/assessments/history`)}
+            onClick={() => router.push(`/${userId}/phq9/history`)}
           >
             これまでの推移を確認する
           </button>
