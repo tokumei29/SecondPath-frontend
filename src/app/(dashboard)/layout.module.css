@@ -1,38 +1,64 @@
 .container {
   display: flex;
   min-height: 100vh;
-  background-color: #f8f9fa;
 }
 
 .sidebar {
-  width: 260px;
-  background-color: #ffffff;
-  border-right: 1px solid #e0e0e0;
-  padding: 24px;
-  position: fixed; /* 左に固定 */
+  width: 240px;
   height: 100vh;
+  background-color: #ffffff;
+  color: #444;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 0;
+  border-right: 1px solid #eaeaea; /* 境界をわかりやすく */
 }
 
-.mainContent {
-  flex: 1;
-  margin-left: 260px; /* サイドバーの分だけ右に寄せる */
-  padding: 40px;
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* 項目間の隙間を一括管理 */
+  margin-top: 32px;
 }
 
-.navItem {
-  display: block;
+/* リンクもボタンも共通の見た目にする */
+.navItem, .logoutButton {
   padding: 12px 16px;
   color: #444;
   text-decoration: none;
   border-radius: 8px;
-  margin-bottom: 8px;
+  transition: all 0.2s;
+  display: block;
+  width: 100%; /* ボタンの幅を合わせる */
+  text-align: left;
+  border: none;
+  background: none;
+  font-size: 16px;
+  cursor: pointer;
 }
 
 .navItem:hover {
-  background-color: #f0f0f0;
+  background-color: #f5f5f5; /* 黒だと強すぎる場合は薄いグレーに */
+  color: #000;
+}
+
+.logoutButton:hover {
+  background-color: #fff1f0; /* ログアウトだけ薄い赤にするのもアリ */
+  color: #ff4d4f;
 }
 
 .active {
-  background-color: #fff;
-  color: #444 !important;
+  background-color: #0070f3;
+  color: #ffffff;
+}
+
+.mainContent {
+  flex: 1;
+  margin-left: 240px; /* サイドバーの width と同じ値を設定 */
+  padding: 40px;      /* コンテンツ周りの余白 */
+  background-color: #f9f9f9; /* 背景色をつけて境目をわかりやすく */
+  min-height: 100vh;
 }

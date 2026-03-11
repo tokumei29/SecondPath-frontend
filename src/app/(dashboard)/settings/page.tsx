@@ -3,8 +3,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import styles from './page.module.css';
 import { getProfile, updateProfile } from '@/api/profile';
-import { InputGroup } from '@/features/profile/components/inputGroup/inputGroup';
-import { Profile, ProfileArrayKeys } from '@/types/profile';
+import { InputGroup } from '@/features/components/inputGroup/inputGroup';
+import { Profile, ProfileArrayKeys } from '@/features/types/profile';
 import axios from 'axios';
 
 /**
@@ -23,7 +23,7 @@ const SettingsPage = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // 初回データ取得：重複していたuseEffectを一本化
+  // 初回データ取得
   useEffect(() => {
     const init = async () => {
       try {

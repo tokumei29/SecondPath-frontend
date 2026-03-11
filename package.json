@@ -2,10 +2,10 @@
   "name": "secondpath-frontend",
   "version": "0.1.0",
   "private": true,
-"scripts": {
-    "dev": "next dev",
+  "scripts": {
+    "dev": "next dev -p 3001",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3001",
     "lint": "next lint",
     "lint:style": "stylelint 'src/**/*.css'",
     "format": "prettier --write 'src/**/*.{ts,tsx,css,md}'",
@@ -13,8 +13,11 @@
     "check": "npm run lint && npm run lint:style && npm run format -- --check"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.9.0",
+    "@supabase/supabase-js": "^2.99.0",
     "axios": "^1.13.6",
     "next": "16.1.6",
+    "or": "^0.2.0",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },

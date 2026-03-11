@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import styles from './ProfileForm.module.css';
 import { getProfile, updateProfile } from '@/api/profile';
-import { Profile, ProfileArrayKeys } from '@/types/profile';
+import { Profile, ProfileArrayKeys } from '@/features/types/profile';
 import { InputGroup } from '../inputGroup/inputGroup';
 import axios from 'axios';
 

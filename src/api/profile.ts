@@ -1,5 +1,5 @@
 import apiClient from './client';
-import { Profile } from '../types/profile';
+import { Profile } from '../features/types/profile';
 
 /**
  * プロフィール情報を取得する
