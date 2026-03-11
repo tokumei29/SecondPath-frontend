@@ -1,0 +1,116 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #1a202c;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+/* 説明セクション */
+.infoSection {
+  margin-bottom: 32px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.infoToggleButton {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #475569;
+  text-align: left;
+  background: #f1f5f9;
+  border: none;
+  cursor: pointer;
+}
+
+.infoContent {
+  padding: 16px;
+  font-size: 14px;
+  color: #4a5568;
+  line-height: 1.6;
+  background: #fff;
+}
+
+/* 質問カード */
+.questionList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.questionCard {
+  background: #fff;
+  border: 1px solid #eaeaea;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.questionText {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 16px;
+}
+
+/* 回答ボタン */
+.options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 10px;
+}
+
+.optionButton {
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #718096;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.optionButton:hover {
+  background: #f7fafc;
+  border-color: #cbd5e0;
+}
+
+.active {
+  color: #fff !important;
+  background: #0070f3 !important;
+  border-color: #0070f3 !important;
+  font-weight: 700;
+}
+
+/* 送信ボタン */
+.submitButton {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  margin: 40px auto;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  background: #0070f3;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.submitButton:hover {
+  opacity: 0.9;
+}

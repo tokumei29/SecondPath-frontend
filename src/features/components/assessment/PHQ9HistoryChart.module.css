@@ -15,6 +15,44 @@
 
 .container {
   width: 100%;
+  height: 300px;
+}
+
+/* 軸ラベルのスタイル */
+.xAxis text, .yAxis text {
+  font-size: 12px;
+  fill: #888;
+}
+
+/* グリッド線の色 */
+.grid line {
+  stroke: #f1f5f9;
+}
+
+/* メインの折れ線 */
+.mainLine path {
+  stroke: #0070f3;
+  stroke-width: 3;
+}
+
+/* データポイント（点） */
+.lineDot {
+  fill: #0070f3;
+  stroke: none;
+}
+
+/* 境界線（ReferenceLine） */
+.refMild line { stroke: #ccc; stroke-dasharray: 3 3; }
+.refModerate line { stroke: #ffab00; stroke-dasharray: 3 3; }
+.refSevere line { stroke: #d32f2f; stroke-dasharray: 3 3; }
+
+/* ツールチップのカスタマイズ */
+.tooltipWrapper {
+  background: #ffffff !important;
+  border: none !important;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  padding: 8px;
 }
 
 .caption {

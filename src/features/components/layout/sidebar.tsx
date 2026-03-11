@@ -88,7 +88,21 @@ export const Sidebar = () => {
             icon="📐"
             label="職業的レジリエンスの診断結果"
           />
-        </div>
+
+        {/* 認知の歪み診断（CDD） ★ */}
+        <SidebarItem
+            href={getPath('/cognitiveDistortions')}
+            active={pathname.includes('/cognitiveDistortions') && !pathname.includes('history')}
+            icon="🔍"
+            label="思考の癖（思考の歪み）診断"
+          />
+          <SidebarItem
+            href={getPath('/cognitiveDistortions/history')}
+            active={pathname.includes('/cognitiveDistortions/history')}
+            icon="🕸️"
+            label="思考の癖の診断結果"
+          />
+          </div>
 
         {/* その他 */}
         <div className={styles.navGroup}>

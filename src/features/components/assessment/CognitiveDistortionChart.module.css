@@ -1,0 +1,44 @@
+/* チャートを包むコンテナ：ここでサイズを絶対管理する */
+.chartWrapper {
+  width: 100%;
+  height: 400px; /* ここが ResponsiveContainer の高さになる */
+  margin: 0 auto;
+  position: relative; /* 子要素の配置を安定させる */
+}
+
+/* 塗りつぶしと線の色 */
+.radarArea {
+  fill: #ff6b6b;
+  stroke: #ff6b6b;
+  stroke-width: 2;
+}
+
+/* 網目の線の色 */
+.polarGrid line, 
+.polarGrid path {
+  stroke: #e2e8f0;
+}
+
+/* 因子名のラベル */
+/* RechartsはSVGなので、text要素に対してスタイルを当てる */
+.axisLabel text {
+  font-size: 12px;
+  font-weight: 600;
+  fill: #4a5568 !important;
+}
+
+/* レーダーチャート本体 */
+.radarChart {
+  /* margin: 0 auto だけではSVGのセンタリングが不十分な場合があるため */
+  display: block;
+}
+
+/* 補足：レスポンシブ対応（画面が小さい時に高さを調整する場合） */
+@media (max-width: 640px) {
+  .chartWrapper {
+    height: 300px;
+  }
+  .axisLabel text {
+    font-size: 10px;
+  }
+}

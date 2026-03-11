@@ -11,18 +11,16 @@ import {
 import styles from './ResilienceResultChart.module.css';
 
 interface ResilienceData {
-  novelty_seeking: number; // 0-9点
-  emotional_regulation: number; // 0-9点
-  adaptive_coping: number; // 0-9点
-  date?: string;
+  novelty_seeking: number;
+  emotional_regulation: number;
+  adaptive_coping: number;
 }
 
 export const ResilienceResultChart = ({ data }: { data: ResilienceData }) => {
-  // Recharts用のデータ形式に変換
   const chartData = [
-    { subject: '新奇性追求', score: data.novelty_seeking, fullMark: 9 },
-    { subject: '感情調整', score: data.emotional_regulation, fullMark: 9 },
-    { subject: '適応的対処', score: data.adaptive_coping, fullMark: 9 },
+    { subject: '新奇性追求', score: data.novelty_seeking },
+    { subject: '感情調整', score: data.emotional_regulation },
+    { subject: '適応的対処', score: data.adaptive_coping },
   ];
 
   return (
@@ -30,21 +28,19 @@ export const ResilienceResultChart = ({ data }: { data: ResilienceData }) => {
       <h3 className={styles.chartTitle}>レジリエンス・バランス</h3>
 
       <div className={styles.wrapper}>
-        <ResponsiveContainer width="100%" height={300}>
-          <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
-            <PolarGrid stroke="#e2e8f0" />
+        <ResponsiveContainer>
+          <RadarChart data={chartData} className={styles.radarChart}>
+            <PolarGrid className={styles.polarGrid} />
             <PolarAngleAxis
               dataKey="subject"
-              tick={{ fill: '#475569', fontSize: 14, fontWeight: 700 }}
+              className={styles.axisLabel}
             />
-            {/* 0点から9点までのメモリ。目盛り線は見せず、範囲だけ指定 */}
-            <PolarRadiusAxis angle={30} domain={[0, 9]} tick={false} axisLine={false} />
+            <PolarRadiusAxis domain={[0, 9]} tick={false} axisLine={false} />
 
             <Radar
               name="Resilience"
               dataKey="score"
-              stroke="#0070f3"
-              fill="#0070f3"
+              className={styles.radarArea}
               fillOpacity={0.6}
             />
           </RadarChart>

@@ -1,0 +1,86 @@
+/* コンテナ全体の余白調整 */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* 履歴リストのレイアウト */
+.historyList {
+  display: flex;
+  flex-direction: column;
+  gap: 40px; /* カード間の距離を広めに設定 */
+  margin-top: 30px;
+}
+
+/* 履歴カード単体 */
+.historyCard {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  transition: transform 0.2s ease;
+}
+
+/* ヘッダー部分（日付とスコア） */
+.historyHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+.historyDate {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.totalScoreLabel {
+  background: #f0f9ff;
+  color: #0369a1;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 700;
+  border: 1px solid #e0f2fe;
+}
+
+/* チャート表示エリアの背景 */
+.chartSection {
+  background: #f8fafc;
+  border-radius: 16px;
+  padding: 20px;
+  margin: 0 auto;
+}
+
+/* フッター（注釈など） */
+.historyFooter {
+  margin-top: 20px;
+  padding-top: 12px;
+  text-align: center;
+}
+
+.historyFooter p {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+
+/* ローディング・空状態 */
+.loading, .empty {
+  padding: 60px 20px;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 16px;
+}
+
+.empty {
+  background: #f8fafc;
+  border: 2px dashed #e2e8f0;
+  border-radius: 20px;
+  margin-top: 20px;
+}

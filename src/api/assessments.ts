@@ -25,3 +25,16 @@ export const createResilienceAssessment = async (userId: string, data: any) => {
   });
   return response.data;
 };
+
+// 認知の歪み用
+export const createCognitiveDistortionAssessment = async (userId: string, data: any) => {
+  const response = await apiClient.post(`/users/${userId}/cognitive_distortion_assessments`, {
+    cognitive_distortion_assessment: data
+  });
+  return response.data;
+};
+
+export const getCognitiveDistortionHistory = async (userId: string) => {
+  const response = await apiClient.get(`/users/${userId}/cognitive_distortion_assessments`);
+  return response.data;
+};
