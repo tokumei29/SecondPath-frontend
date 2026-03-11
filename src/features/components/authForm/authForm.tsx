@@ -1,12 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import { signIn, signUp } from '@/api/auth';
 import { useRouter } from 'next/navigation';
-import styles from './authForm.module.css'; // 既存のスタイルを利用
-
+import { signIn, signUp } from '@/api/auth';
 import { Modal } from '@/features/components/common/modal';
 import { SignupSuccessMessage } from '@/features/components/signup/signupSuccessMessage';
+import styles from './authForm.module.css';
 
 type AuthMode = 'signin' | 'signup';
 
@@ -26,13 +25,17 @@ export const AuthForm = () => {
       if (mode === 'signup') {
         const { error } = await signUp(email, password);
         if (error) throw error;
-        // 成功したらモーダルを表示
         setIsModalOpen(true);
       } else {
         const { data, error } = await signIn(email, password);
         if (error) throw error;
-        if (data.session) {
-          router.push('/home');
+
+        // ログイン成功時：セッションからユーザーIDを取り出す
+        if (data.user) {
+          const userId = data.user.id;
+          // 動的パス / [userId] / home に遷移させる
+          router.push(`/${userId}/home`);
+          router.refresh();
         }
       }
     } catch (error: unknown) {
@@ -46,8 +49,8 @@ export const AuthForm = () => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setMode('signin'); // ログイン画面へ切り替え
-    setPassword(''); // パスワードをクリア
+    setMode('signin');
+    setPassword('');
   };
 
   return (
@@ -85,7 +88,6 @@ export const AuthForm = () => {
           : '既にアカウントをお持ちの方はこちら'}
       </button>
 
-      {/* 共通モーダルの中に成功メッセージを流し込む */}
       <Modal isOpen={isModalOpen} title="アカウント作成完了">
         <SignupSuccessMessage email={email} onConfirm={handleCloseModal} />
       </Modal>

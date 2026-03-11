@@ -1,0 +1,141 @@
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.guideText {
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #0070f3;
+  background: #eef6ff;
+  border-radius: 20px;
+}
+
+.diaryList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.diaryEntryCard {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 16px;
+  text-align: left;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid #f0f0f0;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.diaryEntryCard:hover {
+  border-color: #0070f3;
+  box-shadow: 0 8px 20px rgb(0 112 243 / 8%);
+  transform: translateY(-2px);
+}
+
+.diaryTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.diaryDateTag {
+  font-size: 13px;
+  font-weight: 700;
+  color: #333;
+}
+
+.viewBadge {
+  font-size: 11px;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.diaryPreview {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #555;
+}
+
+.diaryFooter {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.indicators {
+  display: flex;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.emptyContainer {
+  padding: 40px 0;
+  text-align: center;
+  border: 2px dashed #eee;
+  border-radius: 12px;
+}
+
+.goalSection {
+  margin-bottom: 32px;
+}
+
+.goalCard {
+  display: flex;
+  align-items: stretch;
+  padding: 24px;
+  color: white;
+  background: linear-gradient(135deg, #0070f3 0%, #00a3ff 100%);
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgb(0 112 243 / 20%);
+}
+
+.goalContent {
+  flex: 1;
+}
+
+.goalLabel {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.9;
+}
+
+.goalText {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.goalDivider {
+  width: 1px;
+  margin: 0 32px;
+  background: rgb(255 255 255 / 30%);
+}
+
+/* スマホ対応：縦並びにする */
+@media (width <= 768px) {
+  .goalCard {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .goalDivider {
+    width: 100%;
+    height: 1px;
+    margin: 0;
+  }
+}

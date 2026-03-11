@@ -1,11 +1,11 @@
 .container {
   max-width: 400px;
-  margin: 100px auto;
   padding: 40px;
+  margin: 100px auto;
+  text-align: center;
   background: #fff;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  text-align: center;
+  box-shadow: 0 4px 20px rgb(0 0 0 / 10%);
 }
 
 .title {
@@ -22,19 +22,19 @@
 
 .input {
   padding: 12px;
+  font-size: 16px;
   border: 1px solid #ddd;
   border-radius: 6px;
-  font-size: 16px;
 }
 
 .button {
-  background: #0070f3;
-  color: white;
   padding: 12px;
-  border-radius: 6px;
-  border: none;
   font-weight: bold;
+  color: white;
   cursor: pointer;
+  background: #0070f3;
+  border: none;
+  border-radius: 6px;
 }
 
 .button:disabled {
@@ -43,10 +43,10 @@
 
 .switchButton {
   margin-top: 20px;
+  font-size: 14px;
+  color: #0070f3;
+  text-decoration: underline;
+  cursor: pointer;
   background: none;
   border: none;
-  color: #0070f3;
-  font-size: 14px;
-  cursor: pointer;
-  text-decoration: underline;
 }

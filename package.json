@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3001",
+    "dev": "NODE_OPTIONS='--max-old-space-size=8192' next dev -p 3001",
     "build": "next build",
     "start": "next start -p 3001",
-    "lint": "next lint",
-    "lint:style": "stylelint 'src/**/*.css'",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:eslint": "eslint 'src/**/*.{ts,tsx}' --fix",
+    "lint:style": "stylelint 'src/**/*.css' --fix",
     "format": "prettier --write 'src/**/*.{ts,tsx,css,md}'",
-    "fix": "npm run format && next lint --fix && stylelint 'src/**/*.css' --fix",
+    "fix": "npm run lint:eslint && npm run lint:style && npm run format",
     "check": "npm run lint && npm run lint:style && npm run format -- --check"
   },
   "dependencies": {
@@ -22,20 +23,22 @@
     "react-dom": "19.2.3"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.1.6",
-    "eslint-config-prettier": "^10.1.8",
-    "prettier": "^3.8.1",
-    "prettier-plugin-tailwindcss": "^0.6.14",
-    "stylelint": "^16.26.1",
-    "stylelint-config-recess-order": "^7.6.1",
-    "stylelint-config-standard": "^39.0.1",
-    "stylelint-order": "^6.0.4",
-    "tailwindcss": "^4",
-    "typescript": "^5"
-  }
+  "@tailwindcss/postcss": "^4",
+  "@types/node": "^20",
+  "@types/react": "^19",
+  "@types/react-dom": "^19",
+  "eslint": "^8.57.1",
+  "eslint-config-next": "14.2.15",
+  "eslint-config-prettier": "^9.1.0",
+  "eslint-import-resolver-typescript": "^3.6.3",
+  "eslint-plugin-import": "^2.31.0",
+  "prettier": "^3.3.3",
+  "prettier-plugin-tailwindcss": "^0.6.8",
+  "stylelint": "^16.10.0",
+  "stylelint-config-recess-order": "^5.1.1",
+  "stylelint-config-standard": "^36.0.1",
+  "stylelint-order": "^6.0.4",
+  "tailwindcss": "^4",
+  "typescript": "^5"
+}
 }

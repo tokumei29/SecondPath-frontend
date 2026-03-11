@@ -17,6 +17,7 @@ export const InputGroup = ({ title, values, onFieldChange }: InputGroupProps) =>
         {values.map((val, idx) => (
           <input
             key={idx}
+            max={50}
             className={styles.input}
             value={val}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

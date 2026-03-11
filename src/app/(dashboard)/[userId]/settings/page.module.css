@@ -4,11 +4,11 @@
 }
 
 .section {
-  background: white;
   padding: 20px;
-  border-radius: 12px;
   margin-bottom: 24px;
+  background: white;
   border: 1px solid #eee;
+  border-radius: 12px;
 }
 
 .section h3 {
@@ -18,20 +18,20 @@
 }
 
 .input {
+  display: block;
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
   border: 1px solid #ddd;
   border-radius: 6px;
-  display: block;
 }
 
 .saveButton {
-  background: #0070f3;
-  color: white;
   padding: 12px 40px;
-  border-radius: 8px;
   font-weight: bold;
+  color: white;
   cursor: pointer;
+  background: #0070f3;
   border: none;
+  border-radius: 8px;
 }

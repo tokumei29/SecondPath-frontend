@@ -1,13 +1,17 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import styles from './ProfileForm.module.css';
+import { useParams } from 'next/navigation';
+import axios from 'axios';
 import { getProfile, updateProfile } from '@/api/profile';
 import { Profile, ProfileArrayKeys } from '@/features/types/profile';
+import styles from './ProfileForm.module.css';
 import { InputGroup } from '../inputGroup/inputGroup';
-import axios from 'axios';
 
 export const ProfileForm = () => {
+  const params = useParams();
+  const userId = params?.userId as string;
+
   const [profile, setProfile] = useState<Profile>({
     name: '',
     strengths: ['', '', ''],
@@ -23,7 +27,7 @@ export const ProfileForm = () => {
   useEffect(() => {
     const init = async () => {
       try {
-        const data = await getProfile();
+        const data = await getProfile(userId);
         setProfile((prev) => ({ ...prev, ...data }));
       } catch (error) {
         console.error('Failed to load profile:', error);
@@ -32,7 +36,7 @@ export const ProfileForm = () => {
       }
     };
     init();
-  }, []);
+  }, [userId]);
 
   const handleArrayChange = useCallback(
     <K extends ProfileArrayKeys>(key: K, index: number, value: string) => {
@@ -46,7 +50,7 @@ export const ProfileForm = () => {
 
   const handleSave = async () => {
     try {
-      await updateProfile(profile);
+      await updateProfile(userId, profile);
       alert('設定を保存しました。');
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {

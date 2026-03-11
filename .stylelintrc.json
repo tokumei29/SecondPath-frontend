@@ -10,6 +10,12 @@
         "ignoreAtRules": ["theme", "tailwind", "apply", "variants", "responsive", "screen"]
       }
     ],
-    "no-descending-specificity": null
+    "no-descending-specificity": null,
+    "selector-class-pattern": [
+      "^[a-z][a-zA-Z0-9]+$",
+      {
+        "message": "Expected class selector to be camelCase"
+      }
+    ]
   }
 }
