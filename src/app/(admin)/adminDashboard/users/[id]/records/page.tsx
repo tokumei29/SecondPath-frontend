@@ -1,29 +1,29 @@
 'use client';
 
-import { useEffect, useState, use } from 'react';
+import { useEffect, useState, use, useCallback } from 'react';
 import apiClient from '@/api/client';
 import { CreateRecordModal } from '@/features/components/medicalRecord/CreateRecordModal';
 import { RecordDetailModal } from '@/features/components/medicalRecord/RecordDetailModal';
 import styles from './page.module.css';
 
-export default function UserRecordsPage({ params }: { params: Promise<{ id: string }> }) {
+const UserRecordsPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = use(params);
   const [data, setData] = useState<any>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState<any>(null);
 
-  const fetchRecords = async () => {
+  const fetchRecords = useCallback(async () => {
     try {
       const res = await apiClient.get(`/admin/users/${id}/user_records`);
       setData(res.data);
     } catch (err) {
       console.error('取得失敗:', err);
     }
-  };
+  }, [id]);
 
   useEffect(() => {
     fetchRecords();
-  }, [id]);
+  }, [fetchRecords]);
 
   const handleSaveRecord = async (date: string, content: string) => {
     // APIを叩く
@@ -75,3 +75,5 @@ export default function UserRecordsPage({ params }: { params: Promise<{ id: stri
     </div>
   );
 }
+
+export default UserRecordsPage;
