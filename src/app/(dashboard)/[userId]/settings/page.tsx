@@ -7,12 +7,14 @@ import { getProfile, updateProfile } from '@/api/profile';
 import { InputGroup } from '@/features/components/inputGroup/inputGroup';
 import { Profile, ProfileArrayKeys } from '@/features/types/profile';
 import styles from './page.module.css';
+import { SuccessModal } from '@/features/components/home/SuccessModal';
 
 /**
  * 設定メインページ (全項目対応版)
  */
 const SettingsPage = () => {
   const [isSaving, setIsSaving] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const params = useParams();
   const userId = params?.userId as string;
 
@@ -62,7 +64,7 @@ const SettingsPage = () => {
     try {
       setIsSaving(true);
       await updateProfile(userId, profile);
-      alert('設定を保存しました。');
+      setShowSuccessModal(true);
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         console.error('Save Error:', error.response?.data);
@@ -85,6 +87,7 @@ const SettingsPage = () => {
         <label className={styles.label}>あなたの名前</label>
         <input
           type="text"
+          required
           className={styles.input}
           value={profile.name || ''}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -145,6 +148,12 @@ const SettingsPage = () => {
           設定を保存する
         </button>
       </div>
+      <SuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        title="自己分析、お疲れ様でした！"
+        message={`${profile.name}さん、自分自身を言葉にするという大きな一歩を踏み出しましたね。この言語化が、あなたの未来を切り拓く武器になります！\n日々見直し明日への行動指針にしましょう！`}
+      />
     </div>
   );
 };

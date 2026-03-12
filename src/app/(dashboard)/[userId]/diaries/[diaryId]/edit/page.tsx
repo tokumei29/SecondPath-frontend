@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import axios from 'axios';
-import { getDiary, updateDiary } from '@/api/diaries';
+import { getDiary, updateDiary, type DiaryPayload } from '@/api/diaries';
 import styles from '@/app/(dashboard)/[userId]/diaries/page.module.css';
 import { DiaryField } from '@/features/components/diaries/diaryField';
 
@@ -57,8 +57,17 @@ const DiaryEditPage = () => {
 
     setIsSaving(true);
     try {
-      // 編集なので updateDiary を呼び、{ diary: formData } で送る
-      await updateDiary(userId, diaryId, { diary: formData });
+      const payload: DiaryPayload = {
+        diary: {
+          content: formData.content,
+          good_thing: formData.good_thing,
+          improvement: formData.improvement,
+          tomorrow_goal: formData.tomorrow_goal,
+        }
+      };
+
+      // payload をそのまま渡す
+      await updateDiary(userId, diaryId, payload);
       alert('更新しました！');
       router.push(`/${userId}/diaries/history`); // 保存後は履歴などへ遷移
     } catch (error: unknown) {

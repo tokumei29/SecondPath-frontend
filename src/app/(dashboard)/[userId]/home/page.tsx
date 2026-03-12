@@ -45,7 +45,7 @@ const HomePage = () => {
         const diaryList = diaryRes.data || diaryRes;
 
         if (Array.isArray(diaryList)) {
-          setDiaries(diaryList.slice(0, 3));
+          setDiaries(diaryList.slice(0, 5)); // 最新5件を表示
         }
       } catch (error) {
         console.error('Fetch error:', error);
@@ -70,6 +70,8 @@ const HomePage = () => {
         <p className={styles.subtitle}>おかえりなさい。最新の積み上げを確認しましょう。</p>
       </header>
 
+      <p>自己分析設定の内容、日報内容が表示されます。自己分析・明日への行動指針にお役立てください。</p>
+
       <GoalSection profile={profile} />
       <StrengthSection profile={profile} />
 
@@ -83,8 +85,8 @@ const HomePage = () => {
 
         <section className={styles.card}>
           <div className={styles.cardHeader}>
-            <h3 className={styles.cardTitle}>最新の記録</h3>
-            <span className={styles.guideText}>タップして詳細を確認</span>
+            <h3 className={styles.cardTitle}>最新の記録（5件）</h3>
+            <span className={styles.guideText}>カードをタップして詳細を確認（全件はサイドバーから）</span>
           </div>
 
           <div className={styles.diaryList}>

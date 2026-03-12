@@ -59,6 +59,15 @@ export const Sidebar = () => {
             label="過去の日報記録"
           />
         </div>
+        <div className={styles.navGroup}>
+          <div className={styles.navLabel}>カウンセラーに相談する</div>
+          <SidebarItem
+            href={getPath('/textSupport')}
+            active={pathname.includes('/textSupport')}
+            icon="💬"
+            label="カウンセラーにテキストで相談する（サービス期間中無制限無料）"
+          />
+        </div>
 
         {/* アセスメント（心理鑑定）グループ */}
         <div className={styles.navGroup}>

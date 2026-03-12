@@ -3,9 +3,10 @@
 import { useState } from 'react';
 import { useParams } from 'next/navigation';
 import axios from 'axios';
-import { createDiary } from '@/api/diaries';
+import { createDiary, type DiaryPayload } from '@/api/diaries';
 import { DiaryField } from '@/features/components/diaries/diaryField';
 import styles from './page.module.css';
+import { SuccessModal } from '@/features/components/home/SuccessModal';
 
 const DiaryPage = () => {
   const params = useParams();
@@ -19,6 +20,7 @@ const DiaryPage = () => {
   });
 
   const [isSaving, setIsSaving] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -31,8 +33,16 @@ const DiaryPage = () => {
     setIsSaving(true);
     try {
       // APIにオブジェクトごと渡す
-      await createDiary(userId, JSON.stringify(formData));
-      alert('保存成功！');
+      const payload: DiaryPayload = {
+        diary: {
+          content: formData.content,
+          good_thing: formData.good_thing,
+          improvement: formData.improvement,
+          tomorrow_goal: formData.tomorrow_goal,
+        }
+      };
+      await createDiary(userId, payload);
+      setShowSuccessModal(true);
       setFormData({ content: '', good_thing: '', improvement: '', tomorrow_goal: '' });
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
@@ -93,6 +103,13 @@ const DiaryPage = () => {
           </button>
         </div>
       </section>
+      {/* 褒め称えるモーダル */}
+      <SuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        title="ナイス積み上げです！"
+        message={`今日という日を振り返り、言語化した自分を誇ってください！\n\n一歩一歩の記録が、未来のあなたを強く支える財産になります。\n明日の自分にバトンを繋げましたね！`}
+      />
     </div>
   );
 };

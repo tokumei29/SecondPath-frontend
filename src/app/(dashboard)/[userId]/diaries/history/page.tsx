@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { getDiaries } from '@/api/diaries';
+import { deleteDiary, getDiaries } from '@/api/diaries';
 import { DiaryDetailModal } from '@/features/components/diaries/modal';
 import styles from './page.module.css';
 import type { Diary } from '../../home/page';
@@ -15,19 +15,37 @@ const HistoryPage = () => {
   const [selectedDiary, setSelectedDiary] = useState<Diary | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const fetchAllDiaries = async () => {
+    try {
+      const res = await getDiaries(userId);
+      setDiaries(res.data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchAllDiaries = async () => {
-      try {
-        const res = await getDiaries(userId);
-        setDiaries(res.data); // sliceせず全部入れる
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
     fetchAllDiaries();
   }, [userId]);
+
+  // 削除処理
+  const handleDelete = async (diaryId: number) => {
+    if (!window.confirm('この記録を削除してもよろしいですか？\n削除したデータは元に戻せません。')) {
+      return;
+    }
+
+    try {
+      await deleteDiary(userId, String(diaryId));
+      alert('削除しました。');
+      // 削除に成功したら一覧を更新
+      fetchAllDiaries();
+    } catch (error) {
+      console.error('削除失敗:', error);
+      alert('削除に失敗しました。');
+    }
+  };
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -54,15 +72,21 @@ const HistoryPage = () => {
               <tr key={diary.id}>
                 <td>{new Date(diary.created_at).toLocaleDateString()}</td>
                 <td>{diary.content.substring(0, 50)}...</td>
-                <td>
+                <td className={styles.actions}>
                   <button onClick={() => setSelectedDiary(diary)} className={styles.viewBtn}>
-                    詳細
+                    詳細を見る
                   </button>
                   <button
                     className={styles.editBtn}
                     onClick={() => router.push(`/${userId}/diaries/${diary.id}/edit`)}
                   >
                     編集
+                  </button>
+                  <button
+                    className={styles.deleteBtn}
+                    onClick={() => handleDelete(diary.id)}
+                  >
+                    削除
                   </button>
                 </td>
               </tr>
