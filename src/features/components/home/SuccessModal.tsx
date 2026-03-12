@@ -19,7 +19,7 @@ export const SuccessModal = ({ isOpen, onClose, title, message }: Props) => {
         <h2 className={styles.title}>{title}</h2>
         <p className={styles.message}>{message}</p>
         <button className={styles.closeButton} onClick={onClose}>
-          さらに突き進む！
+          閉じる
         </button>
       </div>
     </div>

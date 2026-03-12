@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, use } from 'react';
+import { useEffect, useState, use, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { getInquiryDetail, postReply } from '@/api/textSupport';
 import styles from './page.module.css';
@@ -14,18 +14,18 @@ export default function SupportDetailPage({ params }: { params: Promise<{ id: st
   const [isSending, setIsSending] = useState(false);
 
   // トーク履歴の読み込み
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       const res = await getInquiryDetail(id);
       setData(res);
     } catch (err) {
       console.error('取得失敗:', err);
     }
-  };
+  }, [id]);
 
   useEffect(() => {
     loadData();
-  }, [id]);
+  }, [loadData]);
 
   // 回答（トーク）の送信
   const handleSend = async (e: React.FormEvent) => {
@@ -80,6 +80,9 @@ export default function SupportDetailPage({ params }: { params: Promise<{ id: st
             </div>
             <span className={styles.time}>
               {new Date(m.created_at).toLocaleTimeString([], {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
                 hour: '2-digit',
                 minute: '2-digit',
               })}

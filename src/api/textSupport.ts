@@ -20,6 +20,28 @@ export const createTextSupport = async (payload: TextSupportPayload) => {
   return response.data;
 };
 
+// 相談一覧の取得
+export const getTextSupports = async () => {
+  const response = await apiClient.get('/text_supports');
+  return response.data;
+};
+
+// 特定の相談詳細（メッセージ履歴含む）の取得
+export const getTextSupportDetail = async (id: string | number) => {
+  const response = await apiClient.get(`/text_supports/${id}`);
+  return response.data;
+};
+
+// ユーザーからの追加メッセージ投稿
+export const postSupportMessage = async (textSupportId: string | number, content: string) => {
+  const response = await apiClient.post(`/text_supports/${textSupportId}/add_message`, {
+    support_message: {
+      message: content,
+    },
+  });
+  return response.data;
+};
+
 /**
  * 1. 【管理者用】すべてのお問い合わせ一覧を取得
  */

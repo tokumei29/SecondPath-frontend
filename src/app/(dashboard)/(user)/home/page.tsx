@@ -61,7 +61,7 @@ const HomePage = () => {
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <h1 className={styles.title}>{userName} のダッシュボード</h1>
+        <h1 className={styles.title}>{userName} さんのダッシュボード</h1>
         <p className={styles.subtitle}>おかえりなさい。最新の積み上げを確認しましょう。</p>
       </header>
 

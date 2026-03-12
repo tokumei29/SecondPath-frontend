@@ -35,10 +35,12 @@ export default function AdminDashboardPage() {
       <div className={styles.grid}>
         {supports.map((s) => (
           <Link href={`/adminDashboard/${s.id}`} key={s.id} className={styles.cardLink}>
-            <div className={`${styles.card} ${s.status === 0 ? styles.unread : styles.read}`}>
+            <div
+              className={`${styles.card} ${s.status === 'waiting' ? styles.unread : styles.read}`}
+            >
               <div className={styles.cardHeader}>
                 <span className={styles.statusTag}>
-                  {s.status === 0 ? '● 未対応' : '✓ 対応済み'}
+                  {s.status === 'waiting' ? '● 未対応' : '✓ 対応済み'}
                 </span>
                 <span className={styles.date}>{new Date(s.created_at).toLocaleString()}</span>
               </div>

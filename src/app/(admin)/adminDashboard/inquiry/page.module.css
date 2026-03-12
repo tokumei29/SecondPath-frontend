@@ -32,9 +32,11 @@
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 10%);
   transform: translateY(-4px);
 }
+
 .unread {
   border-left: 6px solid #ef4444;
 }
+
 .read {
   border-left: 6px solid #cbd5e1;
 }

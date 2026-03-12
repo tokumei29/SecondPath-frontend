@@ -54,7 +54,7 @@ const SupportPage = () => {
       <form className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.row}>
           <div className={styles.field}>
-            <label>お名前（仮名・ニックネーム可）</label>
+            <label>お名前（カウンセリング時のお名前）</label>
             <input
               type="text"
               value={name}
@@ -64,7 +64,7 @@ const SupportPage = () => {
             />
           </div>
           <div className={styles.field}>
-            <label>メールアドレス（自動返信用※記載は任意です）</label>
+            <label>メールアドレス（記載は任意です）</label>
             <input
               type="email"
               value={email}
@@ -107,7 +107,7 @@ const SupportPage = () => {
         isOpen={showModal}
         onClose={() => setShowModal(false)}
         title="送信が完了しました"
-        message={`カウンセラーにメッセージを届けました。\n\n入力いただいたメールアドレス宛に確認内容が届きます。\n一人で抱え込まず、言葉にできたこと自体が素晴らしい一歩です。`}
+        message={`カウンセラーにメッセージを届けました。\n\nなるべき早く回答いたします。\n回答はサイドバーの「テキスト相談の解答確認」からご確認いただけます。`}
       />
     </div>
   );

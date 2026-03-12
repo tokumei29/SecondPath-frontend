@@ -89,7 +89,7 @@ const SettingsPage = () => {
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setProfile({ ...profile, name: e.target.value })
           }
-          placeholder="名前を入力"
+          placeholder="カウンセリング時の名前を入力"
         />
       </div>
 

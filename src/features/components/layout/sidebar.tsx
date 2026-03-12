@@ -68,7 +68,7 @@ export const Sidebar = () => {
             href={getPath('/textSupport')}
             active={pathname === getPath('/textSupport')}
             icon="📂"
-            label="相談の回答確認"
+            label="テキスト相談の回答確認"
           />
         </div>
 
