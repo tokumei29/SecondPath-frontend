@@ -1,9 +1,11 @@
 import { AuthForm } from '@/features/components/authForm/authForm';
 
-export default function LoginPage() {
+const LoginPage = () => {
   return (
     <main>
       <AuthForm />
     </main>
   );
-}
+};
+
+export default LoginPage;

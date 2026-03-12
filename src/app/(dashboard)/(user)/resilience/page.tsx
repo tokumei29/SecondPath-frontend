@@ -1,9 +1,11 @@
 import { ResilienceAssessmentForm } from '@/features/components/assessment/ResilienceAssessment';
 
-export default function ResiliencePage() {
+const ResiliencePage = () => {
   return (
     <main style={{ backgroundColor: '#f7fafc', minHeight: '100vh' }}>
       <ResilienceAssessmentForm />
     </main>
   );
-}
+};
+
+export default ResiliencePage;

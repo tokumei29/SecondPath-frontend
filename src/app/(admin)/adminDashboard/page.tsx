@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { getInquiryStats } from '@/api/textSupport';
 import styles from './page.module.css';
 
-export default function AdminDashboardMain() {
+const AdminDashboardMain = () => {
   const [stats, setStats] = useState({ unresolved: 0, today: 0 });
   const [loading, setLoading] = useState(true);
 
@@ -53,4 +53,6 @@ export default function AdminDashboardMain() {
       </section>
     </div>
   );
-}
+};
+
+export default AdminDashboardMain;

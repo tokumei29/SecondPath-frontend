@@ -21,7 +21,7 @@ type SupportDetail = {
   support_messages: Message[];
 };
 
-export default function TextSupportDetailPage({ params }: { params: Promise<{ id: string }> }) {
+const TextSupportDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = use(params);
   const router = useRouter();
   const [detail, setDetail] = useState<SupportDetail | null>(null);
@@ -144,4 +144,6 @@ export default function TextSupportDetailPage({ params }: { params: Promise<{ id
       </footer>
     </div>
   );
-}
+};
+
+export default TextSupportDetailPage;

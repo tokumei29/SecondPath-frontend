@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { getAllTextSupports } from '@/api/textSupport';
 import styles from './page.module.css';
 
-export default function AdminDashboardPage() {
+const AdminDashboardPage = () => {
   const [supports, setSupports] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -79,4 +79,6 @@ export default function AdminDashboardPage() {
       </div>
     </div>
   );
-}
+};
+
+export default AdminDashboardPage;

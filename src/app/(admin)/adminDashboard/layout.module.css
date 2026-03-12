@@ -28,19 +28,48 @@
   color: #38bdf8;
 }
 
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* 項目間の隙間 */
+}
+
+/* 通常のナビ項目 */
+.navItem {
+  padding: 12px 16px;
+  color: #94a3b8;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.navItem:hover {
+  color: white;
+  background: #334155;
+}
+
+/* アクティブ（選択中）のナビ項目 */
 .navItemActive {
-  padding: 12px;
+  padding: 12px 16px;
   font-weight: bold;
-  background: #fff;
+  color: #1e293b;
+  text-decoration: none;
+  background: #38bdf8; /* 青系のアクセントカラーにすると管理画面っぽくなります */
   border-radius: 8px;
 }
 
 .logoutBtn {
   padding: 10px;
-  margin-top: auto;
-  color: #94a3b8;
+  margin-top: auto; /* これで一番下に押し下げられる */
+  color: #f87171;
   cursor: pointer;
   background: none;
   border: 1px solid #475569;
   border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.logoutBtn:hover {
+  background: rgb(248 113 113 / 10%);
+  border-color: #f87171;
 }

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './page.module.css';
 
-export default function AdminLoginPage() {
+const AdminLoginPage = () => {
   const [password, setPassword] = useState('');
   const router = useRouter();
 
@@ -44,4 +44,6 @@ export default function AdminLoginPage() {
       </form>
     </div>
   );
-}
+};
+
+export default AdminLoginPage;

@@ -6,7 +6,7 @@ import { getResilienceHistory } from '@/api/assessments';
 import { ResilienceResultChart } from '@/features/components/assessment/ResilienceResultChart';
 import styles from './page.module.css';
 
-export default function ResilienceResultPage() {
+const ResilienceResultPage = () => {
   const router = useRouter();
   const [latestData, setLatestData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -47,4 +47,6 @@ export default function ResilienceResultPage() {
       </div>
     </main>
   );
-}
+};
+
+export default ResilienceResultPage;

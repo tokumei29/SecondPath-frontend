@@ -118,14 +118,14 @@ export const Sidebar = () => {
         </div>
 
         {/* その他 */}
-        <div className={styles.navGroup}>
+        {/* <div className={styles.navGroup}>
           <SidebarItem
             href={getPath('/community')}
             active={pathname.includes('/community')}
             icon="🌍"
             label="匿名の広場"
           />
-        </div>
+        </div> */}
 
         <div className={styles.footer}>
           <button type="button" onClick={handleLogout} className={styles.logoutButton}>

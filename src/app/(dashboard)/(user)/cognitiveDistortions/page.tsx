@@ -1,9 +1,11 @@
 import { CognitiveDistortionForm } from '@/features/components/assessment/CognitiveDistortion';
 
-export default function CognitiveDistortionPage() {
+const CognitiveDistortionPage = () => {
   return (
     <main>
       <CognitiveDistortionForm />
     </main>
   );
-}
+};
+
+export default CognitiveDistortionPage;

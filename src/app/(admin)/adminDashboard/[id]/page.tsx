@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { getInquiryDetail, postReply } from '@/api/textSupport';
 import styles from './page.module.css';
 
-export default function SupportDetailPage({ params }: { params: Promise<{ id: string }> }) {
+const SupportDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = use(params);
   const router = useRouter();
 
@@ -108,4 +108,6 @@ export default function SupportDetailPage({ params }: { params: Promise<{ id: st
       </footer>
     </div>
   );
-}
+};
+
+export default SupportDetailPage;

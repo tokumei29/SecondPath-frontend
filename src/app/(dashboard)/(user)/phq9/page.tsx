@@ -3,7 +3,7 @@
 import { PHQ9Assessment } from '@/features/components/assessment/PHQ9Assessment';
 import styles from './page.module.css';
 
-export default function AssessmentPage() {
+const AssessmentPage = () => {
   return (
     <main className={styles.main}>
       <header className={styles.header}>
@@ -25,4 +25,6 @@ export default function AssessmentPage() {
       </footer>
     </main>
   );
-}
+};
+
+export default AssessmentPage;

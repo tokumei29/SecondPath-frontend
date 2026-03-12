@@ -1,6 +1,8 @@
 import { redirect } from 'next/navigation';
 
-export default function Home() {
+const Home = () => {
   // アクセスがあった瞬間に /login へリダイレクト
   redirect('/login');
-}
+};
+
+export default Home;

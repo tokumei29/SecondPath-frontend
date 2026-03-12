@@ -11,7 +11,7 @@ type HistoryData = {
   score: number;
 };
 
-export default function AssessmentHistoryPage() {
+const AssessmentHistoryPage = () => {
   const router = useRouter();
 
   const [history, setHistory] = useState<HistoryData[]>([]);
@@ -95,4 +95,6 @@ export default function AssessmentHistoryPage() {
       </div>
     </main>
   );
-}
+};
+
+export default AssessmentHistoryPage;
