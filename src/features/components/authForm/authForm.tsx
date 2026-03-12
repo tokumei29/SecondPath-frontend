@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signIn, signUp } from '@/api/auth';
 import { Modal } from '@/features/components/common/modal';
@@ -16,6 +16,14 @@ export const AuthForm = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const userId = localStorage.getItem('user_uuid');
+    if (userId) {
+      // すでにIDがあるなら、ログイン画面を見せずに /home へ飛ばす
+      router.replace('/home');
+    }
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -33,8 +41,9 @@ export const AuthForm = () => {
         // ログイン成功時：セッションからユーザーIDを取り出す
         if (data.user) {
           const userId = data.user.id;
+          localStorage.setItem('user_uuid', userId);
           // 動的パス / [userId] / home に遷移させる
-          router.push(`/${userId}/home`);
+          router.push('/home');
           router.refresh();
         }
       }

@@ -1,0 +1,76 @@
+.dashboardContainer {
+  width: 100%;
+}
+
+.header {
+  margin-bottom: 40px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.subtitle {
+  margin-top: 8px;
+  color: #64748b;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.statCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 5%);
+}
+
+.statInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.statLabel {
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.statValue {
+  font-size: 32px;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+/* 未対応がある場合は少し強調する */
+.alert {
+  border-left: 6px solid #ef4444;
+}
+
+.icon {
+  font-size: 40px;
+  opacity: 0.8;
+}
+
+.welcomeSection {
+  padding: 32px;
+  color: #475569;
+  background: #f1f5f9;
+  border-radius: 12px;
+}
+
+.welcomeSection h3 {
+  margin-bottom: 12px;
+  color: #1e293b;
+}

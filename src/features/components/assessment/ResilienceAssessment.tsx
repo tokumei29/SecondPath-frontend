@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { createResilienceAssessment } from '@/api/assessments';
 import styles from './ResilienceAssessment.module.css';
 
@@ -29,7 +29,6 @@ export const ResilienceAssessmentForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showInfo, setShowInfo] = useState<boolean>(false);
   const router = useRouter();
-  const { userId } = useParams();
 
   const handleSelect = (idx: number, val: number) => {
     const newAns = [...answers];
@@ -44,7 +43,7 @@ export const ResilienceAssessmentForm = () => {
 
     setIsSubmitting(true);
     try {
-      await createResilienceAssessment(userId as string, {
+      await createResilienceAssessment({
         q1: answers[0],
         q2: answers[1],
         q3: answers[2],
@@ -56,7 +55,7 @@ export const ResilienceAssessmentForm = () => {
         q9: answers[8],
       });
       // 保存完了後、結果（チャート）ページへ遷移させる
-      router.push(`/${userId}/resilience/history`);
+      router.push('/resilience/history');
     } catch (err) {
       alert('保存に失敗しました。');
     } finally {

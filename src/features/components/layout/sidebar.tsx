@@ -1,7 +1,6 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname, useRouter, useParams } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import styles from './sidebar.module.css';
 import { SidebarItem } from './sidebarItem';
@@ -9,9 +8,7 @@ import { SidebarItem } from './sidebarItem';
 export const Sidebar = () => {
   const pathname = usePathname();
   const router = useRouter();
-  const params = useParams();
   const supabase = createClient();
-  const userId = params?.userId as string;
 
   const handleLogout = async () => {
     if (!window.confirm('ログアウトしますか？')) return;
@@ -24,7 +21,7 @@ export const Sidebar = () => {
     }
   };
 
-  const getPath = (path: string) => `/${userId}${path}`;
+  const getPath = (path: string) => path;
 
   return (
     <aside className={styles.sidebar}>
@@ -62,10 +59,16 @@ export const Sidebar = () => {
         <div className={styles.navGroup}>
           <div className={styles.navLabel}>カウンセラーに相談する</div>
           <SidebarItem
-            href={getPath('/textSupport')}
-            active={pathname.includes('/textSupport')}
+            href={getPath('/textSupport/new')}
+            active={pathname.includes('/textSupport/new')}
             icon="💬"
             label="カウンセラーにテキストで相談する（サービス期間中無制限無料）"
+          />
+          <SidebarItem
+            href={getPath('/textSupport')}
+            active={pathname === getPath('/textSupport')}
+            icon="📂"
+            label="相談の回答確認"
           />
         </div>
 

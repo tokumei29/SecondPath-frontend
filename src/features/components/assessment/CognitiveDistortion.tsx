@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { createCognitiveDistortionAssessment } from '@/api/assessments';
 import styles from './CognitiveDistortion.module.css';
 
@@ -136,7 +136,6 @@ const OPTIONS = [
 ];
 
 export const CognitiveDistortionForm = () => {
-  const { userId } = useParams();
   const router = useRouter();
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [showInfo, setShowInfo] = useState(false);
@@ -168,8 +167,8 @@ export const CognitiveDistortionForm = () => {
         scoresByFactor[q.factor] = (scoresByFactor[q.factor] || 0) + score;
       });
 
-      await createCognitiveDistortionAssessment(userId as string, scoresByFactor);
-      router.push(`/${userId}/cognitiveDistortions/history`);
+      await createCognitiveDistortionAssessment(scoresByFactor);
+      router.push('/cognitiveDistortions/history');
     } catch (error) {
       alert('保存に失敗しました');
     } finally {

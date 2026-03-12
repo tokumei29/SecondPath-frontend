@@ -1,34 +1,44 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Supabaseの管理画面から取得するURLとAnon Keyを使います
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-// Supabaseクライアントの初期化
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 /**
- * 新規ユーザー登録 (Sign Up)
+ * 現在ログインしているユーザー情報を取得する
+ */
+export const getCurrentUser = async () => {
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+  if (error) return null;
+  return user;
+};
+
+/**
+ * 新規ユーザー登録
  */
 export const signUp = async (email: string, pass: string) => {
   return await supabase.auth.signUp({
-    email: email,
+    email,
     password: pass,
   });
 };
 
 /**
- * ログイン (Sign In)
+ * ログイン
  */
 export const signIn = async (email: string, pass: string) => {
   return await supabase.auth.signInWithPassword({
-    email: email,
+    email,
     password: pass,
   });
 };
 
 /**
- * ログアウト (Sign Out)
+ * ログアウト
  */
 export const signOut = async () => {
   return await supabase.auth.signOut();

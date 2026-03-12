@@ -1,0 +1,155 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #7494c0; /* LINE風の背景色 */
+}
+
+.header {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 12px 20px;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+}
+
+.backBtn {
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.userName {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.statusUnread {
+  font-size: 12px;
+  font-weight: bold;
+  color: #ef4444;
+}
+
+.statusRead {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.talkArea {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+/* ユーザー（左側） */
+.userRow {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: flex-start;
+  max-width: 80%;
+}
+
+.userBubble {
+  padding: 12px 16px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: black;
+  background: white;
+  border-radius: 18px 18px 18px 4px;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 10%);
+}
+
+.bubbleHeader {
+  padding-bottom: 4px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: bold;
+  border-bottom: 1px solid #eee;
+}
+
+/* 管理者（右側） */
+.adminRow {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  align-self: flex-end;
+  max-width: 80%;
+}
+
+.adminBubble {
+  padding: 12px 16px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: black;
+  background: #8de055; /* LINE風の緑 */
+  border-radius: 18px 18px 4px;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 10%);
+}
+
+.time {
+  margin-top: 4px;
+  font-size: 10px;
+  color: #fff;
+}
+
+.adminRow .time {
+  color: #eee;
+}
+
+/* 入力エリア */
+.footer {
+  padding: 16px;
+  background: #fff;
+}
+
+.inputForm {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.textarea {
+  flex: 1;
+  padding: 12px;
+  font-size: 15px;
+  resize: none;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  outline: none;
+}
+
+.sendBtn {
+  padding: 12px 24px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  background: #007aff;
+  border: none;
+  border-radius: 12px;
+}
+
+.sendBtn:disabled {
+  background: #ccc;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: white;
+}

@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
-import { createPhq9Assessment, getPhq9Assessments } from '@/api/assessments';
-import { calculatePHQ9, type PHQ9Result } from '@/features/types/assessment';
+import { useRouter } from 'next/navigation';
+import { createPhq9Assessment } from '@/api/assessments';
+import { calculatePHQ9 } from '@/features/types/assessment';
 import styles from './PHQ9Assessment.module.css';
 
 const QUESTIONS = [
@@ -31,15 +31,11 @@ export const PHQ9Assessment = () => {
   const [showInfo, setShowInfo] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
-  const params = useParams();
-  const userId = params?.userId as string;
 
   useEffect(() => {
-    // 画面ブロックが不要になったため、初期ロードの完了のみ管理
-    if (userId) {
-      setIsLoading(false);
-    }
-  }, [userId]);
+    // マウント時に読み込み完了とする
+    setIsLoading(false);
+  }, []);
 
   if (isLoading) return <div>読み込み中...</div>;
 
@@ -73,11 +69,11 @@ export const PHQ9Assessment = () => {
         suicidal_ideation: res.suicidalIdeation,
       };
 
-      await createPhq9Assessment(userId, payload);
+      await createPhq9Assessment(payload);
       alert('診断結果を保存しました。');
 
       // グラフがある履歴ページへ遷移
-      router.push(`/${userId}/phq9/history`);
+      router.push('/phq9/history');
     } catch (error) {
       console.error('保存失敗:', error);
       alert('データの保存に失敗しました。');

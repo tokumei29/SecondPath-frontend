@@ -2,20 +2,20 @@ import apiClient from './client';
 import { Profile } from '../features/types/profile';
 
 /**
- * プロフィール情報を取得する
+ * ログイン中ユーザーのプロフィール情報を取得する
  */
-export const getProfile = async (userId: string) => {
-  // GET /api/v1/users/[UUID]/profile
-  const response = await apiClient.get(`/users/${userId}/profile`);
+export const getProfile = async () => {
+  // GET /api/v1/profile
+  const response = await apiClient.get('/profile');
   return response.data;
 };
 
 /**
- * プロフィール情報を更新する
+ * ログイン中ユーザーのプロフィール情報を更新する
  */
-export const updateProfile = async (userId: string, profile: Profile) => {
-  // PATCH /api/v1/users/[UUID]/profile
-  const response = await apiClient.patch(`/users/${userId}/profile`, {
+export const updateProfile = async (profile: Profile) => {
+  // PATCH /api/v1/profile
+  const response = await apiClient.patch('/profile', {
     profile,
   });
   return response.data;
