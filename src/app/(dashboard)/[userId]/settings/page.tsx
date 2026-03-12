@@ -79,7 +79,6 @@ const SettingsPage = () => {
     <div className={styles.container}>
       <header className={styles.header}>
         <h1 className={styles.title}>自己分析設定</h1>
-        <p className={styles.subtitle}>「今の自分」を3つずつ言語化してください。</p>
       </header>
 
       <div className={styles.section}>
@@ -95,6 +94,10 @@ const SettingsPage = () => {
         />
       </div>
 
+      <p className={styles.subtitle}>「今の自分」を3つずつ言語化してください。</p>
+      <p>
+        当サービスのアセスメントを利用するなどしてで自己分析を行い自分の長所、克服したいところ、目標を言語化します。その上で日報を日々書いて自分を振り返りながら一歩ずつ問題を克服していきましょう。
+      </p>
       {/* 1. 強み */}
       <InputGroup
         title="自分の強み"

@@ -57,13 +57,10 @@
   border: 1px solid #e2e8f0;
   border-radius: 20px;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 5%);
-  transition:
-    transform 0.2s ease,
-    border-color 0.2s ease;
 }
 
 .questionCard:hover {
-  border-color: #0070f3;
+  border-color: #e2e8f0;
 }
 
 .questionText {
@@ -98,7 +95,7 @@
   background: #f8fafc;
   border: 2px solid #f1f5f9;
   border-radius: 12px;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: background-color 0.2s ease;
 }
 
 .btn:hover {

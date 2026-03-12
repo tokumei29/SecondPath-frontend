@@ -27,42 +27,18 @@ const OPTIONS = [
 
 export const PHQ9Assessment = () => {
   const [answers, setAnswers] = useState<number[]>(new Array(9).fill(-1));
-  const [result, setResult] = useState<PHQ9Result | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
-  const [hasAnsweredToday, setHasAnsweredToday] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const params = useParams();
   const userId = params?.userId as string;
 
   useEffect(() => {
-    const checkTodayStatus = async () => {
-      if (!userId) return;
-      try {
-        const history = await getPhq9Assessments(userId);
-        if (!history || history.length === 0) {
-          setHasAnsweredToday(false);
-          return;
-        }
-
-        // 今日の日付を YYYY-MM-DD 形式で作成
-        const now = new Date();
-        const y = now.getFullYear();
-        const m = String(now.getMonth() + 1).padStart(2, '0');
-        const d = String(now.getDate()).padStart(2, '0');
-        const todayStr = `${y}-${m}-${d}`;
-
-        // Railsから届く "2026-03-12" と直接比較
-        const alreadyDone = history.some((item: any) => item.date === todayStr);
-
-        setHasAnsweredToday(alreadyDone);
-      } catch (e) {
-        console.error('ステータス確認失敗', e);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    checkTodayStatus();
+    // 画面ブロックが不要になったため、初期ロードの完了のみ管理
+    if (userId) {
+      setIsLoading(false);
+    }
   }, [userId]);
 
   if (isLoading) return <div>読み込み中...</div>;
@@ -77,6 +53,7 @@ export const PHQ9Assessment = () => {
 
   const handleSubmit = async () => {
     if (!isComplete) return alert('全ての項目に回答してください。');
+    setIsSubmitting(true);
 
     const res = calculatePHQ9(answers);
 
@@ -100,117 +77,82 @@ export const PHQ9Assessment = () => {
       alert('診断結果を保存しました。');
 
       // グラフがある履歴ページへ遷移
-      router.push(`/${userId}/assessments/history`);
+      router.push(`/${userId}/phq9/history`);
     } catch (error) {
       console.error('保存失敗:', error);
       alert('データの保存に失敗しました。');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  if (hasAnsweredToday) {
-    return (
-      <div className={styles.container}>
-        <div className={styles.doneCard}>
-          <h3>本日のセルフチェックは完了しています</h3>
-          <p>心の状態は少しずつ変化します。また明日、あなたの声を聞かせてください。</p>
-          <button
-            className={styles.historyBtn}
-            onClick={() => router.push(`/${userId}/phq9/history`)}
-          >
-            これまでの推移を確認する
-          </button>
-        </div>
-      </div>
-    );
-  } else {
-    return (
-      <div className={styles.container}>
-        <h2 className={styles.title}>健康状態のセルフチェック (PHQ-9)</h2>
+  return (
+    <div className={styles.container}>
+      <h2 className={styles.title}>健康状態のセルフチェック (PHQ-9)</h2>
 
-        {/* PHQ-9の説明セクション */}
-        <div className={styles.infoSection}>
-          <button className={styles.infoToggleButton} onClick={() => setShowInfo(!showInfo)}>
-            {showInfo ? '▲ 説明を閉じる' : '▼ PHQ-9診断とは？（必ずお読みください）'}
-          </button>
+      {/* PHQ-9の説明セクション */}
+      <div className={styles.infoSection}>
+        <button className={styles.infoToggleButton} onClick={() => setShowInfo(!showInfo)}>
+          {showInfo ? '▲ 説明を閉じる' : '▼ PHQ-9診断とは？（必ずお読みください）'}
+        </button>
 
-          {showInfo && (
-            <div className={styles.infoContent}>
-              <p>
-                PHQ-9は、世界的に使用されているうつ病の重症度を測る指標です。過去2週間の状態を振り返って回答してください。
-              </p>
-              <div className={styles.severityTable}>
-                <div className={styles.tableRow}>
-                  <span>0-4点:</span> <span>極めて軽微（正常範囲）</span>
-                </div>
-                <div className={styles.tableRow}>
-                  <span>5-9点:</span> <span>軽度（セルフケア推奨）</span>
-                </div>
-                <div className={styles.tableRow}>
-                  <span>10-14点:</span> <span>中等度（専門家への相談を検討）</span>
-                </div>
-                <div className={styles.tableRow}>
-                  <span>15-19点:</span> <span>中等度～重度（積極的な加療が必要）</span>
-                </div>
-                <div className={styles.tableRow}>
-                  <span>20点以上:</span> <span>重度（早急な医療機関受診が必要）</span>
-                </div>
-              </div>
-              <p className={styles.importantNote}>
-                ※特に第9項目（自傷・希死念慮）に反応がある場合は、点数に関わらず速やかに主治医やカウンセラーへ共有してください。
-              </p>
-            </div>
-          )}
-        </div>
-
-        {/* 質問リスト */}
-        {!result ? (
-          <div className={styles.questionList}>
-            {QUESTIONS.map((q, i) => (
-              <div key={i} className={styles.questionCard}>
-                <p className={styles.questionText}>
-                  {i + 1}. {q}
-                </p>
-                <div className={styles.options}>
-                  {OPTIONS.map((opt) => (
-                    <button
-                      key={opt.value}
-                      className={answers[i] === opt.value ? styles.activeBtn : styles.btn}
-                      onClick={() => handleSelect(i, opt.value)}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ))}
-            <button className={styles.submitBtn} disabled={!isComplete} onClick={handleSubmit}>
-              結果を算出する
-            </button>
-          </div>
-        ) : (
-          /* 結果表示 */
-          <div className={styles.resultCard}>
-            <div className={styles.scoreBadge}>合計点: {result.totalScore}</div>
-            <p className={styles.severity}>
-              判定: <strong>{result.severity}</strong>
+        {showInfo && (
+          <div className={styles.infoContent}>
+            <p>
+              PHQ-9は、世界的に使用されているうつ病の重症度を測る指標です。過去2週間の状態を振り返って回答してください。
             </p>
-
-            {result.suicidalIdeation && (
-              <div className={styles.alert}>
-                ⚠️ 第9項目に反応があります。主治医やカウンセラーにこの結果を共有してください。
+            <div className={styles.severityTable}>
+              <div className={styles.tableRow}>
+                <span>0-4点:</span> <span>極めて軽微（正常範囲）</span>
               </div>
-            )}
-
-            <div className={styles.recommendation}>
-              <h4>今後の指針</h4>
-              <p>{result.recommendation}</p>
+              <div className={styles.tableRow}>
+                <span>5-9点:</span> <span>軽度（セルフケア推奨）</span>
+              </div>
+              <div className={styles.tableRow}>
+                <span>10-14点:</span> <span>中等度（専門家への相談を検討）</span>
+              </div>
+              <div className={styles.tableRow}>
+                <span>15-19点:</span> <span>中等度～重度（積極的な加療が必要）</span>
+              </div>
+              <div className={styles.tableRow}>
+                <span>20点以上:</span> <span>重度（早急な医療機関受診が必要）</span>
+              </div>
             </div>
-            <button className={styles.resetBtn} onClick={() => setResult(null)}>
-              再試行
-            </button>
+            <p className={styles.importantNote}>
+              ※特に第9項目（自傷・希死念慮）に反応がある場合は、点数に関わらず速やかに主治医やカウンセラーへ共有してください。
+            </p>
           </div>
         )}
       </div>
-    );
-  }
+
+      {/* 質問リスト */}
+      <div className={styles.questionList}>
+        {QUESTIONS.map((q, i) => (
+          <div key={i} className={styles.questionCard}>
+            <p className={styles.questionText}>
+              {i + 1}. {q}
+            </p>
+            <div className={styles.options}>
+              {OPTIONS.map((opt) => (
+                <button
+                  key={opt.value}
+                  className={answers[i] === opt.value ? styles.activeBtn : styles.btn}
+                  onClick={() => handleSelect(i, opt.value)}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+        <button
+          className={styles.submitBtn}
+          disabled={!isComplete || isSubmitting}
+          onClick={handleSubmit}
+        >
+          {isSubmitting ? '保存中...' : '診断結果を保存する'}
+        </button>
+      </div>
+    </div>
+  );
 };

@@ -5,16 +5,20 @@
   margin: 0 auto;
 }
 
-/* 履歴リストのレイアウト */
-.historyList {
-  display: flex;
-  flex-direction: column;
-  gap: 40px; /* カード間の距離を広めに設定 */
-  margin-top: 30px;
+.header {
+  margin-bottom: 32px;
+  text-align: center;
 }
 
-/* 履歴カード単体 */
-.historyCard {
+.title {
+  margin-bottom: 8px;
+  font-size: 24px;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+/* 最新結果を表示するメインカード */
+.latestView {
   padding: 24px;
   background: #fff;
   border: 1px solid #e2e8f0;
@@ -26,7 +30,7 @@
 }
 
 /* ヘッダー部分（日付とスコア） */
-.historyHeader {
+.metaInfo {
   display: flex;
   align-items: center;
   justify-content: space-between;

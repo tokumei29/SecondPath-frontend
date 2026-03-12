@@ -24,9 +24,29 @@ export default function AssessmentHistoryPage() {
       if (!userId) return;
       try {
         const data = await getPhq9Assessments(userId);
-        setHistory(data);
+
+        /**
+         * 1. 日付(item.date)をキーにしたオブジェクトを作成。
+         * Railsが昇順(ASC)で送ってくるなら、ループの後半で出てくる「新しいデータ」が
+         * 同じ日付の「古いデータ」を自動的に上書きします。
+         */
+        const dailyLatestMap: Record<string, HistoryData> = {};
+
+        data.forEach((item: any) => {
+          dailyLatestMap[item.date] = {
+            date: item.date,
+            score: item.score,
+          };
+        });
+
+        // 2. オブジェクトを配列に戻し、念のため日付順にソートしてStateへ
+        const uniqueData = Object.values(dailyLatestMap).sort((a, b) =>
+          a.date.localeCompare(b.date)
+        );
+
+        setHistory(uniqueData);
       } catch (error) {
-        console.error('Failed to fetch assessment history:', error);
+        console.error('履歴の取得に失敗:', error);
       } finally {
         setIsLoading(false);
       }
@@ -65,16 +85,17 @@ export default function AssessmentHistoryPage() {
         <h3>グラフの読み方</h3>
         <ul>
           <li>
-            <strong>0-4点:</strong> 正常範囲。現在の状態を維持しましょう。
+            <strong>0-4点:</strong> 安定した状態。今の習慣を続けていきましょう。
           </li>
           <li>
-            <strong>5-9点:</strong> 軽度の抑うつ。無理をせず、セルフケアを優先してください。
+            <strong>5-9点:</strong> 軽微な負荷。セルフケアを少し厚めにする時期です。
           </li>
           <li>
-            <strong>10-14点:</strong> 中等度。カウンセリングや医師への相談を検討する時期です。
+            <strong>10-14点:</strong> 調整が必要。一人で抱え込まず、外部の視点を取り入れる検討を。
           </li>
           <li>
-            <strong>15点以上:</strong> 重度。早急に専門家（主治医）への共有が必要です。
+            <strong>15点以上:</strong>{' '}
+            強い負荷。今は無理をせず、状態を優先して共有・相談してください。
           </li>
         </ul>
       </div>

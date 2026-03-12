@@ -84,33 +84,39 @@
 
 .optionButton:hover {
   background: #f7fafc;
-  border-color: #cbd5e0;
+  border-color: #0070f3;
 }
 
 .active {
   font-weight: 700;
-  color: #fff !important;
-  background: #0070f3 !important;
-  border-color: #0070f3 !important;
+  color: #0070f3;
+  background: #eef6ff;
+  border-color: #0070f3;
 }
 
 /* 送信ボタン */
-.submitButton {
-  display: block;
+.submitBtn {
   width: 100%;
-  max-width: 300px;
-  padding: 16px;
-  margin: 40px auto;
-  font-size: 16px;
+  padding: 20px;
+  margin-top: 48px;
+  font-size: 18px;
   font-weight: 700;
   color: #fff;
   cursor: pointer;
   background: #0070f3;
   border: none;
-  border-radius: 12px;
-  transition: opacity 0.2s;
+  border-radius: 16px;
+  box-shadow: 0 10px 15px -3px rgb(0 112 243 / 30%);
+  transition: all 0.2s ease;
 }
 
-.submitButton:hover {
-  opacity: 0.9;
+.submitBtn:hover:not(:disabled) {
+  box-shadow: 0 20px 25px -5px rgb(0 112 243 / 40%);
+  transform: translateY(-2px);
+}
+
+.submitBtn:disabled {
+  cursor: not-allowed;
+  background: #cbd5e0;
+  box-shadow: none;
 }

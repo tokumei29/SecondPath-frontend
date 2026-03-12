@@ -12,10 +12,10 @@ import {
 } from 'recharts';
 import styles from './PHQ9HistoryChart.module.css';
 
-interface HistoryData {
+type HistoryData = {
   date: string;
   score: number;
-}
+};
 
 export const PHQ9HistoryChart = ({ data }: { data: HistoryData[] }) => {
   return (
@@ -51,7 +51,7 @@ export const PHQ9HistoryChart = ({ data }: { data: HistoryData[] }) => {
           </LineChart>
         </ResponsiveContainer>
       </div>
-      <p className={styles.caption}>※ 10点以上が続く場合は、専門家への相談を強く推奨します。</p>
+      <p className={styles.caption}>※ 15点以上が続く場合は、医師への相談も検討してみましょう。</p>
     </div>
   );
 };

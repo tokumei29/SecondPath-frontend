@@ -138,24 +138,38 @@ const OPTIONS = [
 export const CognitiveDistortionForm = () => {
   const { userId } = useParams();
   const router = useRouter();
-  const [answers, setAnswers] = useState<Record<string, number>>({});
+  const [answers, setAnswers] = useState<Record<number, number>>({});
   const [showInfo, setShowInfo] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSelect = (factor: string, value: number) => {
-    setAnswers((prev) => ({ ...prev, [factor]: value }));
+  const handleSelect = (id: number, value: number) => {
+    setAnswers((prev) => ({ ...prev, [id]: value }));
   };
 
+  const isComplete = Object.keys(answers).length === DISTORTION_QUESTIONS.length;
+
   const handleSubmit = async () => {
-    if (Object.keys(answers).length < DISTORTION_QUESTIONS.length) {
+    if (!isComplete) {
       alert('すべての質問に回答してください');
       return;
     }
 
     setIsSubmitting(true);
     try {
-      await createCognitiveDistortionAssessment(userId as string, answers);
-      router.push(`/${userId}/cognitive-distortions/result`);
+      /** * データ整形ロジック:
+       * 1因子につき2つの設問があるため、factorごとの合計値を算出する。
+       * 例: all_or_nothing (ID 1: 2点, ID 2: 3点) => { all_or_nothing: 5 }
+       */
+      const scoresByFactor: Record<string, number> = {};
+
+      DISTORTION_QUESTIONS.forEach((q) => {
+        const score = answers[q.id] || 0;
+        // 同一factorの値を加算していく
+        scoresByFactor[q.factor] = (scoresByFactor[q.factor] || 0) + score;
+      });
+
+      await createCognitiveDistortionAssessment(userId as string, scoresByFactor);
+      router.push(`/${userId}/cognitiveDistortions/history`);
     } catch (error) {
       alert('保存に失敗しました');
     } finally {
@@ -189,8 +203,10 @@ export const CognitiveDistortionForm = () => {
                 <button
                   key={opt.value}
                   type="button"
-                  className={`${styles.optionButton} ${answers[q.factor] === opt.value ? styles.active : ''}`}
-                  onClick={() => handleSelect(q.factor, opt.value)}
+                  className={`${styles.optionButton} ${
+                    answers[q.id] === opt.value ? styles.active : ''
+                  }`}
+                  onClick={() => handleSelect(q.id, opt.value)}
                 >
                   {opt.label}
                 </button>
@@ -200,8 +216,12 @@ export const CognitiveDistortionForm = () => {
         ))}
       </div>
 
-      <button className={styles.submitButton} onClick={handleSubmit} disabled={isSubmitting}>
-        {isSubmitting ? '送信中...' : '診断結果を確認する'}
+      <button
+        className={styles.submitBtn}
+        disabled={!isComplete || isSubmitting}
+        onClick={handleSubmit}
+      >
+        {isSubmitting ? '保存中...' : '診断結果を保存する'}
       </button>
     </div>
   );
