@@ -10,6 +10,6 @@ export const getUserRecords = async (userId: string) => {
 export const createUserRecord = async (userId: string, date: string, content: string) => {
   return await apiClient.post(`/admin/users/${userId}/user_records`, {
     date: date,
-    content: content
+    content: content,
   });
 };

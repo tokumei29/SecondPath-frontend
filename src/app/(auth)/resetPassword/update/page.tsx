@@ -13,7 +13,7 @@ export default function PasswordUpdatePage() {
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
       const { error } = await updatePassword(password);
       if (error) {
@@ -31,24 +31,18 @@ export default function PasswordUpdatePage() {
     <div className={styles.container}>
       <div className={styles.card}>
         <h2 className={styles.title}>新しいパスワードの設定</h2>
-        <p className={styles.description}>
-          安全なパスワードを入力して更新を完了させてください。
-        </p>
-        
+        <p className={styles.description}>安全なパスワードを入力して更新を完了させてください。</p>
+
         <form onSubmit={handleUpdate} className={styles.form}>
-          <input 
-            type="password" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             placeholder="新しいパスワード"
-            required 
+            required
             className={styles.input}
           />
-          <button 
-            type="submit" 
-            className={styles.button}
-            disabled={loading}
-          >
+          <button type="submit" className={styles.button} disabled={loading}>
             {loading ? '更新中...' : 'パスワードを更新する'}
           </button>
         </form>

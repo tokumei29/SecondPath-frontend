@@ -55,7 +55,7 @@ export const resetPasswordRequest = async (email: string) => {
 // 新しいパスワードを保存する（ログインした状態で呼ばれる）
 export const updatePassword = async (newPassword: string) => {
   const { error } = await supabase.auth.updateUser({
-    password: newPassword
+    password: newPassword,
   });
   return { error };
 };

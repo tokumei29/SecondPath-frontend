@@ -96,8 +96,8 @@ export const AuthForm = () => {
           ? 'アカウントをお持ちでない方はこちら（サインアップへ）'
           : '既にアカウントをお持ちの方はこちら'}
       </button>
-      <button 
-        type="button" 
+      <button
+        type="button"
         onClick={() => router.push('/resetPassword')}
         className={styles.switchButton}
       >
