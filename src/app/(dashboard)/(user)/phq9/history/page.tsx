@@ -56,7 +56,7 @@ const AssessmentHistoryPage = () => {
   return (
     <main className={styles.container}>
       <header className={styles.header}>
-        <h1 className={styles.title}>PHQ-9 診断履歴</h1>
+        <h1 className={styles.title}>PHQ-9：診断履歴</h1>
         <p className={styles.subtitle}>
           これまでのアセスメント結果の推移です。点数の変化はあなたの状態を示す客観的な指標になります。
         </p>
