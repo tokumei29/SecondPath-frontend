@@ -83,72 +83,82 @@ export const PHQ9Assessment = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <h2 className={styles.title}>健康状態のセルフチェック (PHQ-9)</h2>
+    <>
+      <header className={styles.header}>
+        <h1 className={styles.mainTitle}>健康状態のセルフチェック (PHQ-9)</h1>
+        <p className={styles.description}>
+          現在のあなたの心の状態を、医学的な指標（PHQ-9）に基づいて客観的に把握します。
+          <br />
+        </p>
+      </header>
 
-      {/* PHQ-9の説明セクション */}
-      <div className={styles.infoSection}>
-        <button className={styles.infoToggleButton} onClick={() => setShowInfo(!showInfo)}>
-          {showInfo ? '▲ 説明を閉じる' : '▼ PHQ-9診断とは？（必ずお読みください）'}
-        </button>
+      <div className={styles.container}>
+        {/* PHQ-9の説明セクション */}
+        <div className={styles.infoSection}>
+          <button className={styles.infoToggleButton} onClick={() => setShowInfo(!showInfo)}>
+            {showInfo ? '▲ 説明を閉じる' : '▼ PHQ-9診断とは？（必ずお読みください）'}
+          </button>
 
-        {showInfo && (
-          <div className={styles.infoContent}>
-            <p>
-              PHQ-9は、世界的に使用されているうつ病の重症度を測る指標です。過去2週間の状態を振り返って回答してください。
-            </p>
-            <div className={styles.severityTable}>
-              <div className={styles.tableRow}>
-                <span>0-4点:</span> <span>極めて軽微（正常範囲）</span>
+          {showInfo && (
+            <div className={styles.infoContent}>
+              <p>
+                PHQ-9は、世界的に使用されているうつ病の重症度を測る指標です。過去2週間の状態を振り返って回答してください。
+              </p>
+              <br />
+              <div className={styles.severityTable}>
+                <div className={styles.tableRow}>
+                  <span>0-4点:</span> <span>極めて軽微（正常範囲）</span>
+                </div>
+                <div className={styles.tableRow}>
+                  <span>5-9点:</span> <span>軽度（セルフケア推奨）</span>
+                </div>
+                <div className={styles.tableRow}>
+                  <span>10-14点:</span> <span>中等度（専門家への相談を検討）</span>
+                </div>
+                <div className={styles.tableRow}>
+                  <span>15-19点:</span> <span>中等度～重度（積極的な加療が必要）</span>
+                </div>
+                <div className={styles.tableRow}>
+                  <span>20点以上:</span> <span>重度（早急な医療機関受診が必要）</span>
+                </div>
               </div>
-              <div className={styles.tableRow}>
-                <span>5-9点:</span> <span>軽度（セルフケア推奨）</span>
-              </div>
-              <div className={styles.tableRow}>
-                <span>10-14点:</span> <span>中等度（専門家への相談を検討）</span>
-              </div>
-              <div className={styles.tableRow}>
-                <span>15-19点:</span> <span>中等度～重度（積極的な加療が必要）</span>
-              </div>
-              <div className={styles.tableRow}>
-                <span>20点以上:</span> <span>重度（早急な医療機関受診が必要）</span>
+              <br />
+              <p className={styles.importantNote}>
+                ※特に第9項目（自傷・希死念慮）に反応がある場合は、点数に関わらず速やかに主治医やカウンセラーへ共有してください。
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* 質問リスト */}
+        <div className={styles.questionList}>
+          {QUESTIONS.map((q, i) => (
+            <div key={i} className={styles.questionCard}>
+              <p className={styles.questionText}>
+                {i + 1}. {q}
+              </p>
+              <div className={styles.options}>
+                {OPTIONS.map((opt) => (
+                  <button
+                    key={opt.value}
+                    className={answers[i] === opt.value ? styles.activeBtn : styles.btn}
+                    onClick={() => handleSelect(i, opt.value)}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
               </div>
             </div>
-            <p className={styles.importantNote}>
-              ※特に第9項目（自傷・希死念慮）に反応がある場合は、点数に関わらず速やかに主治医やカウンセラーへ共有してください。
-            </p>
-          </div>
-        )}
+          ))}
+          <button
+            className={styles.submitBtn}
+            disabled={!isComplete || isSubmitting}
+            onClick={handleSubmit}
+          >
+            {isSubmitting ? '保存中...' : '診断結果を保存する'}
+          </button>
+        </div>
       </div>
-
-      {/* 質問リスト */}
-      <div className={styles.questionList}>
-        {QUESTIONS.map((q, i) => (
-          <div key={i} className={styles.questionCard}>
-            <p className={styles.questionText}>
-              {i + 1}. {q}
-            </p>
-            <div className={styles.options}>
-              {OPTIONS.map((opt) => (
-                <button
-                  key={opt.value}
-                  className={answers[i] === opt.value ? styles.activeBtn : styles.btn}
-                  onClick={() => handleSelect(i, opt.value)}
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        ))}
-        <button
-          className={styles.submitBtn}
-          disabled={!isComplete || isSubmitting}
-          onClick={handleSubmit}
-        >
-          {isSubmitting ? '保存中...' : '診断結果を保存する'}
-        </button>
-      </div>
-    </div>
+    </>
   );
 };

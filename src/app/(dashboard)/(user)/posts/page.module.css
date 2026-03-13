@@ -1,0 +1,78 @@
+.container {
+  max-width: 1000px;
+  padding: 2rem;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.title {
+  margin-bottom: 0.5rem;
+  font-size: 1.8rem;
+  color: var(--fg-color);
+}
+
+.subtitle {
+  font-size: 0.95rem;
+  color: var(--muted-color);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.5rem;
+  color: inherit;
+  text-decoration: none;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.card:hover {
+  border-color: var(--primary-color);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 10%);
+  transform: translateY(-4px);
+}
+
+.postTitle {
+  margin-bottom: 1.5rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+.postFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.85rem;
+}
+
+.date {
+  color: var(--muted-color);
+}
+
+.more {
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.loading,
+.empty {
+  padding: 5rem;
+  color: var(--muted-color);
+  text-align: center;
+}

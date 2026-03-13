@@ -1,0 +1,86 @@
+.container {
+  max-width: 900px;
+  padding: 2rem;
+}
+
+.pageTitle {
+  margin-bottom: 2rem;
+  color: var(--fg-color);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field input[type='text'] {
+  padding: 0.8rem;
+  color: var(--fg-color);
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+}
+
+.fileLabel {
+  display: inline-block;
+  padding: 1rem 2rem;
+  text-align: center;
+  cursor: pointer;
+  background-color: var(--border-color);
+  border: 2px dashed var(--muted-color);
+  border-radius: 6px;
+}
+
+.hiddenFileInput {
+  display: none;
+}
+
+.fileName {
+  font-size: 0.9rem;
+  color: var(--primary-color);
+}
+
+.previewSection {
+  margin-top: 1rem;
+}
+
+.rawPreview {
+  max-height: 300px;
+  padding: 1rem;
+  overflow-y: auto;
+  font-size: 0.85rem;
+  background-color: #f1f5f9; /* 少し薄いグレー */
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+}
+
+/* ダークモード時のプレビュー背景調整 */
+@media (prefers-color-scheme: dark) {
+  .rawPreview {
+    color: #cbd5e1;
+    background-color: #1e293b;
+  }
+}
+
+.submitBtn {
+  padding: 1rem;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: 6px;
+  transition: opacity 0.2s;
+}
+
+.submitBtn:disabled {
+  cursor: not-allowed;
+  background-color: var(--muted-color);
+}

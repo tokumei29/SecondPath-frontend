@@ -74,6 +74,6 @@ const UserRecordsPage = ({ params }: { params: Promise<{ id: string }> }) => {
       )}
     </div>
   );
-}
+};
 
 export default UserRecordsPage;

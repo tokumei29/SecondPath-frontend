@@ -48,3 +48,45 @@
 .backBtn:hover {
   background: #e2e8f0;
 }
+
+.explanationSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding-top: 1.5rem;
+  margin-top: 2rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.explainItem {
+  text-align: left;
+}
+
+.explainTitle {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.4rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #2d3748;
+}
+
+.explainText {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--fg-color);
+}
+
+.explainText strong {
+  font-weight: 600;
+  color: #1a202c;
+}
+
+/* モバイル対応：スコア表示部分が窮屈な場合の調整 */
+@media (width <= 640px) {
+  .scoreGrid {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+}

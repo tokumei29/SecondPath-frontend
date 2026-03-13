@@ -81,6 +81,7 @@ export const ResilienceAssessmentForm = () => {
             <p>
               職業的レジリエンス尺度は、仕事上の困難やストレスを乗り越え、環境に適応する力を測る指標です。以下の3つの側面からあなたの強みを可視化します。
             </p>
+            <br />
             <div className={styles.severityTable}>
               <div className={styles.tableRow}>
                 <strong className={styles.factorName}>新奇性追求:</strong>
@@ -95,6 +96,7 @@ export const ResilienceAssessmentForm = () => {
                 <span>周囲の助けを借りたり、状況に合わせて柔軟に行動を変える力。</span>
               </div>
             </div>
+            <br />
             <p className={styles.scoreGuide}>
               各因子 0〜9点（合計
               0〜27点）で算出されます。点数が高いほど、その領域の「回復力・適応力」が備わっていることを示します。

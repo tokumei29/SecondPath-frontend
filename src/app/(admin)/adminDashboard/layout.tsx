@@ -55,6 +55,12 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
           >
             👥 ユーザー一覧確認
           </Link>
+          <Link
+            href="/adminDashboard/posts"
+            className={pathname.includes('/posts') ? styles.navItemActive : styles.navItem}
+          >
+            📝 支援記事の投稿・管理
+          </Link>
         </nav>
       </aside>
 

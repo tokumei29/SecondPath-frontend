@@ -73,6 +73,16 @@ export const Sidebar = () => {
           />
         </div>
 
+        <div className={styles.navGroup}>
+          <div className={styles.navLabel}>記事一覧</div>
+          <SidebarItem
+            href={getPath('/posts')}
+            active={pathname.includes('/posts')}
+            icon="📖"
+            label="支援記事を読む（適時更新）"
+          />
+        </div>
+
         {/* アセスメント（心理鑑定）グループ */}
         <div className={styles.navGroup}>
           <div className={styles.navLabel}>アセスメント(自分でできる自己分析)</div>
