@@ -14,6 +14,7 @@ export const Sidebar = () => {
     if (!window.confirm('ログアウトしますか？')) return;
     try {
       await supabase.auth.signOut();
+      window.localStorage.clear();
       router.push('/login');
       router.refresh();
     } catch (error) {
