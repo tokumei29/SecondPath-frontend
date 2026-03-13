@@ -72,7 +72,7 @@ const HistoryPage = () => {
                 <td>{diary.content.substring(0, 50)}...</td>
                 <td className={styles.actions}>
                   <button onClick={() => setSelectedDiary(diary)} className={styles.viewBtn}>
-                    詳細を見る
+                    日報を見る
                   </button>
                   <button
                     className={styles.editBtn}

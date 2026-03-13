@@ -62,7 +62,7 @@
 /* 操作ボタンのコンテナ */
 .table td:last-child {
   display: flex;
-  gap: 8px;
+  gap: 12px;
 }
 
 /* ボタン共通スタイル */
@@ -79,6 +79,8 @@
 
 /* 詳細ボタン（青） */
 .viewBtn {
+  padding: 16px 20px;
+  font-size: 0.9rem;
   color: #0070f3;
   background-color: #eef6ff;
 }
@@ -90,6 +92,8 @@
 
 /* 編集ボタン（緑系） */
 .editBtn {
+  padding: 16px 20px;
+  font-size: 0.9rem;
   color: #22c55e;
   background-color: #f0fff4;
 }
@@ -101,8 +105,8 @@
 
 /* 削除ボタン（赤） */
 .deleteBtn {
-  padding: 8px 16px;
-  font-size: 12px;
+  padding: 16px 20px;
+  font-size: 0.9rem;
   font-weight: 600;
   color: #ef4444;
   cursor: pointer;

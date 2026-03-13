@@ -29,15 +29,17 @@
 
 .footer {
   display: flex;
+  gap: 16px;
   align-items: center;
-  justify-content: flex-end; /* charCountを消したので右寄せ */
+  justify-content: center;
   padding-top: 20px;
   margin-top: 20px;
   border-top: 1px solid #f0f0f0;
 }
 
 .saveButton {
-  padding: 10px 24px;
+  padding: 10px 20px;
+  font-size: 1.1rem;
   font-weight: 600;
   color: white;
   cursor: pointer;
@@ -48,7 +50,8 @@
 }
 
 .cancelButton {
-  padding: 10px 24px;
+  padding: 10px 20px;
+  font-size: 1.1rem;
   font-weight: 600;
   color: white;
   cursor: pointer;
