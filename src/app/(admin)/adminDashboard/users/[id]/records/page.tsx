@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, use, useCallback } from 'react';
-import apiClient from '@/api/client';
+import { createUserRecord, getUserRecords } from '@/api/userRecords';
 import { CreateRecordModal } from '@/features/components/medicalRecord/CreateRecordModal';
 import { RecordDetailModal } from '@/features/components/medicalRecord/RecordDetailModal';
 import styles from './page.module.css';
@@ -14,7 +14,7 @@ const UserRecordsPage = ({ params }: { params: Promise<{ id: string }> }) => {
 
   const fetchRecords = useCallback(async () => {
     try {
-      const res = await apiClient.get(`/admin/users/${id}/user_records`);
+      const res = await getUserRecords(id);
       setData(res.data);
     } catch (err) {
       console.error('取得失敗:', err);
@@ -27,10 +27,7 @@ const UserRecordsPage = ({ params }: { params: Promise<{ id: string }> }) => {
 
   const handleSaveRecord = async (date: string, content: string) => {
     // APIを叩く
-    await apiClient.post(`/admin/users/${id}/user_records`, {
-      date: date,
-      content: content,
-    });
+    await createUserRecord(id, date, content);
     // 保存成功後に一覧を更新
     await fetchRecords();
   };
