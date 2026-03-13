@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { getCurrentUser } from '@/api/auth';
 import { getDiaries } from '@/api/diaries';
 import { getProfile } from '@/api/profile';
