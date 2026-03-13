@@ -93,13 +93,13 @@ export const AuthForm = () => {
         className={styles.switchButton}
       >
         {mode === 'signin'
-          ? 'アカウントをお持ちでない方はこちら'
+          ? 'アカウントをお持ちでない方はこちら（サインアップへ）'
           : '既にアカウントをお持ちの方はこちら'}
       </button>
       <button 
         type="button" 
         onClick={() => router.push('/resetPassword')}
-        className={styles.forgetButton}
+        className={styles.switchButton}
       >
         パスワードをお忘れの場合
       </button>
