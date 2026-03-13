@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import apiClient from '@/api/client';
 import { getTextSupports } from '@/api/textSupport';
 import styles from './page.module.css';
 
