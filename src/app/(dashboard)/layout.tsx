@@ -68,7 +68,7 @@ const UserLayout = ({ children }: { children: React.ReactNode }) => {
   }, [pathname, router]);
 
   if (isChecking) {
-    return <div className={styles.loading}>認証確認中...</div>;
+    return <div className={styles.loading}>loading...</div>;
   }
 
   return (
