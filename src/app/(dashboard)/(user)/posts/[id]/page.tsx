@@ -13,7 +13,7 @@ type Post = {
   created_at: string;
 };
 
-export default function PostDetailPage() {
+const PostDetailPage = () => {
   const params = useParams();
   const [post, setPost] = useState<Post | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -57,4 +57,6 @@ export default function PostDetailPage() {
       </article>
     </div>
   );
-}
+};
+
+export default PostDetailPage;

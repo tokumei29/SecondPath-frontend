@@ -2,6 +2,29 @@
   max-width: 850px;
   padding: 3rem 1rem;
   margin: 0 auto;
+  background-color: #f8fafc;
+}
+
+.article {
+  padding: 3rem 4rem; /* 内部の余白をたっぷりとる */
+  background-color: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow:
+    0 4px 6px -1px rgb(0 0 0 / 10%),
+    0 2px 4px -1px rgb(0 0 0 / 6%);
+}
+
+/* 3. モバイル対応（スマホの時は余白を狭くする） */
+@media (width <= 640px) {
+  .article {
+    padding: 2rem 1.5rem;
+    border-radius: 0; /* スマホなら角丸なしで画面いっぱいに */
+  }
+
+  .container {
+    padding: 0;
+  }
 }
 
 .header {
