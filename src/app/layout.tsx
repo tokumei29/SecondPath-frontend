@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'SecondPath',
+  title: 'SecondPath| 再起動のための自己分析',
   description: 'カウンセリングアプリ',
 };
 
