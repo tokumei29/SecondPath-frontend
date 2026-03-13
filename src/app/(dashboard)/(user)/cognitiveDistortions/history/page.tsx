@@ -32,19 +32,24 @@ const CognitiveDistortionHistory = () => {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>思考の癖：診断履歴</h1>
+      <header className={styles.header}>
+        <h1 className={styles.title}>思考の癖：診断履歴</h1>
+        <p className={styles.subtitle}>
+          あなたの思考の癖の診断結果です。スコアが高いほど、その傾向が強いことを示しています。
+        </p>
+      </header>
 
-      {history.length === 0 ? (
+      {!latestResult ? (
         <div className={styles.empty}>履歴がありません。まずは診断を受けてみましょう。</div>
       ) : (
         <div className={styles.latestView}>
           <div className={styles.metaInfo}>
-            <span className={styles.historyDate}>{latestResult.date} の結果</span>
-            <span className={styles.totalScoreLabel}>総合スコア: {latestResult.total_score}</span>
+            <span className={styles.historyDate}>{latestResult?.date} の結果</span>
+            <span className={styles.totalScoreLabel}>総合スコア: {latestResult?.total_score}</span>
           </div>
 
           <div className={styles.chartSection}>
-            <CognitiveDistortionChart scores={latestResult.scores} />
+            <CognitiveDistortionChart scores={latestResult?.scores} />
           </div>
 
           <div className={styles.historyFooter}>

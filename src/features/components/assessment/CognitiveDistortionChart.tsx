@@ -79,7 +79,7 @@ const DISTORTION_DESCRIPTIONS: Record<string, { title: string; desc: string; exa
 export const CognitiveDistortionChart = ({ scores }: { scores: Record<string, number> }) => {
   const data = Object.keys(FACTOR_LABELS).map((key) => ({
     subject: FACTOR_LABELS[key],
-    value: scores[key] || 0,
+    value: (scores || {})[key] || 0,
   }));
 
   return (
@@ -97,7 +97,7 @@ export const CognitiveDistortionChart = ({ scores }: { scores: Record<string, nu
 
       <div className={styles.explanationGrid}>
         {Object.entries(DISTORTION_DESCRIPTIONS).map(([key, info]) => {
-          const score = scores[key] || 0;
+          const score = scores?.[key] ?? 0;
           const isSevere = score >= 6;
           const isModerate = score >= 4 && score < 6;
 

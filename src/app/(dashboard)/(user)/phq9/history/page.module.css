@@ -1,11 +1,12 @@
 .container {
   max-width: 900px;
-  padding: 40px 20px;
+  padding: 20px;
   margin: 0 auto;
 }
 
 .header {
   margin-bottom: 32px;
+  text-align: center;
 }
 
 .title {
@@ -27,11 +28,17 @@
 
 .loading,
 .empty {
-  padding: 60px;
-  color: #666;
+  padding: 60px 20px;
+  font-size: 16px;
+  color: #94a3b8;
   text-align: center;
-  background: #f9f9f9;
-  border-radius: 12px;
+}
+
+.empty {
+  margin-top: 20px;
+  background: #f8fafc;
+  border: 2px dashed #e2e8f0;
+  border-radius: 20px;
 }
 
 .backBtn {

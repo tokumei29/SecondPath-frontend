@@ -32,8 +32,25 @@ const SettingsPage = () => {
     const init = async () => {
       try {
         const data = await getProfile();
-        // サーバーからのデータで状態を更新
-        setProfile((prev) => ({ ...prev, ...data }));
+
+        // ヘルパー関数: 配列が空、または要素が足りない場合に3つ分を保証する
+        const ensureThreeFields = (arr: string[] | null) => {
+          if (!arr || arr.length === 0) return ['', '', ''];
+          // 要素が1つや2つの場合も考慮するなら
+          const newArr = [...arr];
+          while (newArr.length < 3) newArr.push('');
+          return newArr;
+        };
+
+        setProfile({
+          name: data.name || '',
+          strengths: ensureThreeFields(data.strengths),
+          weaknesses: ensureThreeFields(data.weaknesses),
+          likes: ensureThreeFields(data.likes),
+          hobbies: ensureThreeFields(data.hobbies),
+          short_term_goals: ensureThreeFields(data.short_term_goals),
+          long_term_goals: ensureThreeFields(data.long_term_goals),
+        });
       } catch (error) {
         console.error('Failed to load profile:', error);
       } finally {
@@ -89,13 +106,13 @@ const SettingsPage = () => {
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setProfile({ ...profile, name: e.target.value })
           }
-          placeholder="カウンセリング時の名前を入力"
+          placeholder="カウンセリング時の名前を入力（初期設定では名前のみを入力必須としています。）"
         />
       </div>
 
       <p className={styles.subtitle}>「今の自分」を3つずつ言語化してください。</p>
       <p>
-        当サービスのアセスメントを利用するなどしてで自己分析を行い自分の長所、克服したいところ、目標を言語化します。その上で日報を日々書いて自分を振り返りながら一歩ずつ問題を克服していきましょう。
+        自分の長所、克服したいところ、目標を言語化します。その上で日報を日々書いて自分を振り返りながら一歩ずつ問題を克服していきましょう。
       </p>
       {/* 1. 強み */}
       <InputGroup

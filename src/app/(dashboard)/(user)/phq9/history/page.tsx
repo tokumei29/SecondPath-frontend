@@ -56,43 +56,45 @@ const AssessmentHistoryPage = () => {
   return (
     <main className={styles.container}>
       <header className={styles.header}>
-        <h1 className={styles.title}>回復の軌跡</h1>
+        <h1 className={styles.title}>PHQ-9 診断履歴</h1>
         <p className={styles.subtitle}>
           これまでのアセスメント結果の推移です。点数の変化はあなたの状態を示す客観的な指標になります。
         </p>
       </header>
 
-      <section className={styles.chartSection}>
-        {history.length > 0 ? (
-          <PHQ9HistoryChart data={history} />
-        ) : (
-          <div className={styles.empty}>
-            <p>まだデータがありません。</p>
-            <button className={styles.backBtn} onClick={() => router.push('/assessments')}>
-              最初の診断を受ける
-            </button>
-          </div>
-        )}
-      </section>
+      {history.length > 0 ? (
+        /* --- データがある場合の表示 --- */
+        <>
+          <section className={styles.chartSection}>
+            <PHQ9HistoryChart data={history} />
+          </section>
 
-      <div className={styles.infoBox}>
-        <h3>グラフの読み方</h3>
-        <ul>
-          <li>
-            <strong>0-4点:</strong> 安定した状態。今の習慣を続けていきましょう。
-          </li>
-          <li>
-            <strong>5-9点:</strong> 軽微な負荷。セルフケアを少し厚めにする時期です。
-          </li>
-          <li>
-            <strong>10-14点:</strong> 調整が必要。一人で抱え込まず、外部の視点を取り入れる検討を。
-          </li>
-          <li>
-            <strong>15点以上:</strong>{' '}
-            強い負荷。今は無理をせず、状態を優先して共有・相談してください。
-          </li>
-        </ul>
-      </div>
+          <div className={styles.infoBox}>
+            <h3>グラフの読み方</h3>
+            <ul>
+              <li>
+                <strong>0-4点:</strong> 安定した状態。今の習慣を続けていきましょう。
+              </li>
+              <li>
+                <strong>5-9点:</strong> 軽微な負荷。セルフケアを少し厚めにする時期です。
+              </li>
+              <li>
+                <strong>10-14点:</strong>{' '}
+                調整が必要。一人で抱え込まず、外部の視点を取り入れる検討を。
+              </li>
+              <li>
+                <strong>15点以上:</strong>{' '}
+                強い負荷。今は無理をせず、状態を優先して共有・相談してください。
+              </li>
+            </ul>
+          </div>
+        </>
+      ) : (
+        /* --- データがない場合の表示 --- */
+        <div className={styles.empty}>
+          <p>履歴がありません。まずは診断を受けてみましょう。</p>
+        </div>
+      )}
     </main>
   );
 };
