@@ -62,7 +62,8 @@
   flex-direction: column;
   align-items: flex-end; /* 右寄せ */
   align-self: flex-end;
-  max-width: 80%;
+  min-width: 100px;
+  max-width: 60%;
 }
 
 .userBubble {
@@ -81,7 +82,8 @@
   flex-direction: column;
   align-items: flex-start; /* 左寄せ */
   align-self: flex-start;
-  max-width: 80%;
+  min-width: 100px;
+  max-width: 60%;
 }
 
 .adminBubble {

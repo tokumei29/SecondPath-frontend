@@ -60,7 +60,8 @@
   flex-direction: column;
   align-items: flex-start;
   align-self: flex-start;
-  max-width: 80%;
+  min-width: 100px;
+  max-width: 60%;
 }
 
 .userBubble {
@@ -87,7 +88,8 @@
   flex-direction: column;
   align-items: flex-end;
   align-self: flex-end;
-  max-width: 80%;
+  min-width: 100px;
+  max-width: 60%;
 }
 
 .adminBubble {

@@ -40,7 +40,8 @@ const TextSupportDetailPage = ({ params }: { params: Promise<{ id: string }> }) 
 
   useEffect(() => {
     fetchDetail();
-  }, [fetchDetail]);
+    localStorage.setItem(`read_support_${id}`, new Date().toISOString());
+  }, [fetchDetail, id]);
 
   useEffect(() => {
     scrollEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -134,7 +135,7 @@ const TextSupportDetailPage = ({ params }: { params: Promise<{ id: string }> }) 
             value={replyText}
             onChange={(e) => setReplyText(e.target.value)}
             placeholder="メッセージを入力..."
-            rows={1}
+            rows={3}
             required
           />
           <button type="submit" className={styles.sendBtn} disabled={isSending}>

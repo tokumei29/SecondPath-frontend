@@ -99,7 +99,7 @@ const SupportDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
             value={replyText}
             onChange={(e) => setReplyText(e.target.value)}
             placeholder="ここに回答を入力（送信後の削除・編集はできません）"
-            rows={2}
+            rows={3}
           />
           <button type="submit" className={styles.sendBtn} disabled={isSending}>
             {isSending ? '送信中...' : '送信'}

@@ -115,3 +115,18 @@
   background-color: #3b82f6;
   border-radius: 8px;
 }
+
+/* 既読バッジ：グレー系で落ち着かせる */
+.badge.read {
+  color: #64748b;
+  background-color: #f1f5f9;
+  border: 1px solid #cbd5e1;
+}
+
+/* 新着回答バッジ：今の .replied のままでもOKですが、少し強調すると親切です */
+.badge.replied {
+  font-weight: bold;
+  color: #ea580c;
+  background-color: #ffedd5;
+  border: 1px solid #fdba74;
+}
