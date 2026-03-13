@@ -38,7 +38,9 @@ export const WelcomeGuideModal = ({ isOpen }: Props) => {
               <li>自分だけの「再起動の指針」を可視化するため</li>
             </ul>
           </div>
-          <p className={styles.mustNote}>※ アプリの利用を始める前に自己分析の設定をお願いしています。</p>
+          <p className={styles.mustNote}>
+            ※ アプリの利用を始める前に自己分析の設定をお願いしています。
+          </p>
           <p className={styles.mustNote}>
             ※ ご利用にあたり、<strong>名前</strong>
             のみ初期設定で必須としています。その他の自己分析はゆっくり検討してください。

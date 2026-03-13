@@ -4,47 +4,53 @@
   flex-direction: column;
   gap: 40px;
   max-width: 1200px;
-  padding: 20px 20px 60px;
+  padding: 40px 20px 80px;
   margin: 0 auto;
 }
 
+.section {
+  margin-bottom: 20px;
+}
+
 .section h2 {
-  padding-bottom: 8px;
-  margin-bottom: 16px;
-  font-size: 18px;
+  padding-bottom: 12px;
+  margin-bottom: 24px;
+  font-size: 20px;
+  font-weight: 800;
   color: #1e293b;
   border-bottom: 2px solid #e2e8f0;
 }
 
 /* --- プロフィール・自己分析 (Tagレイアウト) --- */
 .card {
-  padding: 24px;
+  padding: 32px;
   background: white;
   border: 1px solid #e2e8f0;
-  border-radius: 12px;
+  border-radius: 16px;
   box-shadow: 0 1px 3px rgb(0 0 0 / 5%);
 }
 
 .userNameTitle {
-  margin-bottom: 24px;
-  font-size: 22px;
-  font-weight: 800;
+  margin-bottom: 28px;
+  font-size: 24px;
+  font-weight: 900;
   color: #0f172a;
 }
 
 .infoGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
+  gap: 28px;
 }
 
 .infoBox label {
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 800;
   color: #64748b;
   text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .tagWrapper {
@@ -54,193 +60,228 @@
 }
 
 .tag {
-  padding: 6px 12px;
+  padding: 6px 14px;
   font-size: 13px;
+  font-weight: 500;
   color: #475569;
-  background: #f1f5f9;
+  background: #f8fafc;
   border: 1px solid #e2e8f0;
-  border-radius: 6px;
+  border-radius: 8px;
+}
+
+.emptyLabel {
+  font-size: 13px;
+  font-style: italic;
+  color: #94a3b8;
 }
 
 /* --- アセスメント・グラフセクション --- */
 .assessmentGrid {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 32px;
 }
 
 /* PHQ-9 シンプルカード */
 .phq9SimpleCard {
-  padding: 32px;
+  padding: 40px;
   text-align: center;
-  background: #fdf2f2;
-  border: 1px solid #fecaca;
-  border-radius: 12px;
+  background: #fff5f5;
+  border: 1px solid #fee2e2;
+  border-radius: 16px;
 }
 
 .phq9SimpleCard h3 {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 800;
   color: #991b1b;
+  text-transform: uppercase;
+}
+
+.scoreContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .scoreDisplay {
   display: flex;
-  gap: 4px;
+  gap: 6px;
   align-items: baseline;
   justify-content: center;
-  margin-bottom: 8px;
 }
 
 .scoreDisplay strong {
-  font-size: 48px;
+  font-size: 56px;
   line-height: 1;
   color: #ef4444;
 }
 
 .scoreDisplay span {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 700;
   color: #7f1d1d;
 }
 
 .dateLabel {
-  font-size: 12px;
+  font-size: 13px;
+  font-weight: 600;
   color: #b91c1c;
-  opacity: 0.7;
+  opacity: 0.6;
 }
 
 /* レーダーチャート並列エリア */
 .chartFlex {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-  gap: 24px;
+  gap: 32px;
 }
 
 .chartHalf {
   display: flex;
   flex-direction: column;
-  min-height: 450px;
-  padding: 24px;
+  min-height: 480px;
+  padding: 32px;
   background: white;
   border: 1px solid #e2e8f0;
+  border-radius: 16px;
+}
+
+.chartHalf h3 {
+  margin-bottom: 24px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #334155;
+  text-align: center;
+}
+
+/* グラフがない時のプレースホルダー */
+.chartEmpty {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  border: 2px dashed #e2e8f0;
   border-radius: 12px;
 }
 
-/* --- 日記 (グリッド & カード) --- */
+.chartEmpty p {
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+/* --- 日記セクション --- */
 .diaryGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
 }
 
 .diaryCard {
-  padding: 20px;
+  position: relative;
+  padding: 24px;
   cursor: pointer;
   background: white;
   border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  transition: all 0.2s ease;
+  border-radius: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .diaryCard:hover {
-  border-color: #38bdf8;
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 10%);
-  transform: translateY(-3px);
+  border-color: #0ea5e9;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 10%);
+  transform: translateY(-4px);
 }
 
 .date {
   display: block;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   font-size: 12px;
-  font-weight: 700;
-  color: #94a3b8;
+  font-weight: 800;
+  color: #64748b;
+}
+
+.diaryBody {
+  margin-bottom: 16px;
 }
 
 .diaryTruncate {
   display: -webkit-box;
   overflow: hidden;
   font-size: 14px;
-  line-height: 1.6;
+  line-height: 1.7;
   color: #334155;
   -webkit-line-clamp: 3;
   line-clamp: 3;
   -webkit-box-orient: vertical;
 }
 
-/* --- モーダル (日記詳細) --- */
-.modalOverlay {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  background: rgb(15 23 42 / 60%);
-  backdrop-filter: blur(4px);
-}
-
-.modalContent {
-  position: relative;
-  width: 100%;
-  max-width: 650px;
-  max-height: 80vh;
-  padding: 32px;
-  overflow-y: auto;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 25%);
-}
-
-.modalHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-bottom: 16px;
-  margin-bottom: 24px;
-  border-bottom: 1px solid #f1f5f9;
-}
-
-.modalHeader span {
+.viewBadge {
+  font-size: 12px;
   font-weight: 700;
-  color: #64748b;
+  color: #0ea5e9;
+  text-align: right;
 }
 
-.modalHeader button {
-  font-size: 28px;
-  line-height: 1;
-  color: #94a3b8;
-  cursor: pointer;
-  background: none;
-  border: none;
+.emptyDiaryContainer {
+  grid-column: 1 / -1;
+  padding: 60px;
+  text-align: center;
+  background: #f8fafc;
+  border: 2px dashed #e2e8f0;
+  border-radius: 16px;
 }
 
-.modalBody {
-  font-size: 16px;
-  line-height: 1.8;
-  color: #1e293b;
-  white-space: pre-wrap;
-}
-
-/* --- 状態表示 --- */
+/* --- 状態表示・テキスト --- */
 .loading {
   display: flex;
+  align-items: center;
   justify-content: center;
-  padding: 100px;
-  font-weight: bold;
+  min-height: 400px;
+  font-weight: 800;
   color: #64748b;
+  letter-spacing: 0.1em;
 }
 
-.empty {
-  font-size: 13px;
-  font-style: italic;
-  color: #cbd5e1;
+.emptyText {
+  font-weight: 600;
+  color: #94a3b8;
+  text-align: center;
 }
+
+.noDataText {
+  font-style: italic;
+  color: #64748b;
+  text-align: center;
+}
+
+/* --- モーダル調整 (DiaryDetailModal用) --- */
+
+/* モーダルのCSSはコンポーネント側に閉じていることが多いですが、
+   こちらで上書きが必要な場合は使用してください */
 
 @media (width <= 1024px) {
   .chartFlex {
     grid-template-columns: 1fr;
+  }
+
+  .chartHalf {
+    min-height: 400px;
+  }
+}
+
+@media (width <= 640px) {
+  .container {
+    padding: 20px 16px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .scoreDisplay strong {
+    font-size: 40px;
   }
 }
