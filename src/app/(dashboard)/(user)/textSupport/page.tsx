@@ -59,7 +59,7 @@ const TextSupportListPage = () => {
       <header className={styles.header}>
         <h1 className={styles.title}>相談履歴・回答確認</h1>
         <p className={styles.subtitle}>
-          カウンセラーからの回答はこちらから確認できます。フォームで相談した内容ごとに会話が展開されます。
+          カウンセラーからの回答はこちらから確認できます。フォームで相談した内容ごとにチャット形式で会話が展開されます。
         </p>
       </header>
 

@@ -49,6 +49,8 @@ const SupportPage = () => {
         <h1>💬 カウンセラー相談</h1>
         <p>サービス期間中は、テキストでの相談が無料・無制限でご利用いただけます。</p>
         <p>悩みや困っていることだけでなくサービス内容のお問い合わせもこちらで承っております。</p>
+        <br />
+        <p>回答はサイドバーの<strong>「テキスト相談の解答確認」</strong>からご確認いただけます。</p>
       </header>
 
       <form className={styles.form} onSubmit={handleSubmit}>
