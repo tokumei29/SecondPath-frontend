@@ -10,7 +10,7 @@ const MAX_RETRIES = 3;
 const RETRY_DELAY = 1000;
 
 apiClient.interceptors.response.use(
-  (response) => response, // 成功時はそのまま返す
+  (response) => response,
   async (error) => {
     const { config } = error;
 
