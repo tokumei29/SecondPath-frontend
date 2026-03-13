@@ -96,6 +96,13 @@ export const AuthForm = () => {
           ? 'アカウントをお持ちでない方はこちら'
           : '既にアカウントをお持ちの方はこちら'}
       </button>
+      <button 
+        type="button" 
+        onClick={() => router.push('/resetPassword')}
+        className={styles.forgetButton}
+      >
+        パスワードをお忘れの場合
+      </button>
 
       <Modal isOpen={isModalOpen} title="アカウント作成完了">
         <SignupSuccessMessage email={email} onConfirm={handleCloseModal} />

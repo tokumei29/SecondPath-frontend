@@ -43,3 +43,19 @@ export const signIn = async (email: string, pass: string) => {
 export const signOut = async () => {
   return await supabase.auth.signOut();
 };
+
+// パスワードリセットメールを送信する
+export const resetPasswordRequest = async (email: string) => {
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${window.location.origin}/resetPassword/update`,
+  });
+  return { error };
+};
+
+// 新しいパスワードを保存する（ログインした状態で呼ばれる）
+export const updatePassword = async (newPassword: string) => {
+  const { error } = await supabase.auth.updateUser({
+    password: newPassword
+  });
+  return { error };
+};
