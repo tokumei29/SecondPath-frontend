@@ -1,7 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation'; // 追加
+import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/router';
+import { getCurrentUser } from '@/api/auth';
 import { getDiaries } from '@/api/diaries';
 import { getProfile } from '@/api/profile';
 import { WelcomeGuideModal } from '@/features/components/home/WelcomeGuideModal';
@@ -10,17 +12,26 @@ import styles from './layout.module.css';
 
 const UserLayout = ({ children }: { children: React.ReactNode }) => {
   const [showGuide, setShowGuide] = useState(false);
-  const pathname = usePathname(); // 現在のパスを取得
+  const [isChecking, setIsChecking] = useState(true);
+  const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
-    // 現在のページが /settings の場合は、ガイドを表示する必要がないためスキップ
-    if (pathname === '/settings') {
-      setShowGuide(false);
-      return;
-    }
-
     const checkUserStatus = async () => {
       try {
+        const user = await getCurrentUser();
+        if (!user) {
+          router.push('/login'); // 未ログインなら即リダイレクト
+          return;
+        }
+
+        // 現在のページが /settings の場合は、ガイドを表示する必要がないためスキップ
+        if (pathname === '/settings') {
+          setShowGuide(false);
+          setIsChecking(false);
+          return;
+        }
+
         const profileData = await getProfile();
         const diaryRes = await getDiaries();
         const diaryList = diaryRes.data || diaryRes;
@@ -48,11 +59,17 @@ const UserLayout = ({ children }: { children: React.ReactNode }) => {
         }
       } catch (e) {
         console.error('Status check failed', e);
+      } finally {
+        setIsChecking(false);
       }
     };
 
     checkUserStatus();
-  }, [pathname]); // パスが変わるたびに再判定（設定完了後に戻ってきた時などのため）
+  }, [pathname, router]);
+
+  if (isChecking) {
+    return <div className={styles.loading}>認証確認中...</div>;
+  }
 
   return (
     <div className={styles.container}>
