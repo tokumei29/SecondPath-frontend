@@ -7,7 +7,7 @@ const apiClient = axios.create({
 
 // リトライの設定
 const MAX_RETRIES = 3;
-const RETRY_DELAY = 1000; // 1秒待ってから再試行
+const RETRY_DELAY = 1000;
 
 apiClient.interceptors.response.use(
   (response) => response, // 成功時はそのまま返す
