@@ -101,6 +101,7 @@ const SettingsPage = () => {
         <input
           type="text"
           required
+          maxLength={50}
           className={styles.input}
           value={profile.name || ''}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

@@ -19,6 +19,7 @@ export const InputGroup = ({ title, values, onFieldChange }: InputGroupProps) =>
             i // 変数名を一文字にする
           ) => (
             <input
+              maxLength={100}
               key={i}
               className={styles.input}
               value={v}
