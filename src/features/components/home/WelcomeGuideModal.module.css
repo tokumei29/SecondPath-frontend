@@ -16,6 +16,7 @@
   max-width: 480px;
   max-height: 90vh;
   padding: 1.5rem 2rem;
+  padding: 2.5rem;
   color: #111; /* ダークテーマに合わせて文字色を調整 */
   background: #fff; /* ダークテーマで「再起動」感を演出 */
   border: 1px solid #333;
