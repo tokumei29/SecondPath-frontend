@@ -43,8 +43,9 @@ export const WelcomeGuideModal = ({ isOpen }: Props) => {
           </p>
           <div className={styles.mustNote}>
             ※ ご利用にあたり、<strong>名前</strong>
-            のみ初期設定で必須としています。</div><div>その他の自己分析はゆっくり検討してください。
+            のみ初期設定で必須としています。
           </div>
+          <p>その他の自己分析はゆっくり検討してください。</p>
         </div>
 
         <div className={styles.actions}>
