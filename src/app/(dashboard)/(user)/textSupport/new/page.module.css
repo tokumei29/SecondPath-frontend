@@ -15,11 +15,11 @@
 }
 
 /* 名前とメアドを横並びにする（PC時） */
-.row {
+/* .row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
-}
+} */
 
 @media (width <= 600px) {
   .row {

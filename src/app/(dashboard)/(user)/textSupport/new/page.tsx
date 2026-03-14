@@ -58,16 +58,16 @@ const SupportPage = () => {
       <form className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.row}>
           <div className={styles.field}>
-            <label>お名前（カウンセリング時のお名前）</label>
+            <label>お名前（カウンセリング時のお名前を入力してください）</label>
             <input
               type="text"
               value={name}
               required
               onChange={(e) => setName(e.target.value)}
-              placeholder="例：ひまわり"
+              placeholder="例：山田太郎"
             />
           </div>
-          <div className={styles.field}>
+          {/* <div className={styles.field}>
             <label>メールアドレス（記載は任意です）</label>
             <input
               type="email"
@@ -75,7 +75,7 @@ const SupportPage = () => {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="example@mail.com"
             />
-          </div>
+          </div> */}
         </div>
 
         <div className={styles.field}>
@@ -111,7 +111,7 @@ const SupportPage = () => {
         isOpen={showModal}
         onClose={() => setShowModal(false)}
         title="送信が完了しました"
-        message={`カウンセラーにメッセージを届けました。\n\nなるべく早く回答いたします。\n回答はサイドバーの「テキスト相談の解答確認」からご確認いただけます。`}
+        message={`カウンセラーにメッセージを届けました。\n\nなるべく早く回答いたします。\n回答はサイドバーの「テキスト相談の回答確認」からご確認いただけます。`}
       />
     </div>
   );
