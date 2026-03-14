@@ -41,10 +41,10 @@ export const WelcomeGuideModal = ({ isOpen }: Props) => {
           <p className={styles.mustNote}>
             ※ アプリの利用を始める前に自己分析の設定をお願いしています。
           </p>
-          <p className={styles.mustNote}>
+          <div className={styles.mustNote}>
             ※ ご利用にあたり、<strong>名前</strong>
-            のみ初期設定で必須としています。その他の自己分析はゆっくり検討してください。
-          </p>
+            のみ初期設定で必須としています。</div><div>その他の自己分析はゆっくり検討してください。
+          </div>
         </div>
 
         <div className={styles.actions}>
