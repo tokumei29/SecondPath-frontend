@@ -6,7 +6,7 @@ export const getDashboardData = async () => {
   const token = session?.access_token;
 
   // NEXT_PUBLIC_API_URL は環境に合わせて調整してください
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/dashboard`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dashboard`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
