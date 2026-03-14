@@ -1,11 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { getCurrentUser } from '@/api/auth';
-import { getDiaries } from '@/api/diaries';
-import { getProfile } from '@/api/profile';
+import { getDashboardData } from '@/api/dashboard'; // ★まとめ買いAPI
 import { WelcomeGuideModal } from '@/features/components/home/WelcomeGuideModal';
 import { Sidebar } from '@/features/components/layout/sidebar';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
@@ -21,14 +19,13 @@ const UserLayout = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const checkUserStatus = async () => {
+      // 1. ローカルストレージのセッション確認
       const storageKey = Object.keys(localStorage).find(
         (key) => key.startsWith('sb-') && key.endsWith('-auth-token')
       );
 
       if (!storageKey) {
-        // 念押しで全消去（Layoutが掴んでいるかもしれない残骸を消す）
         localStorage.clear();
-        // すでに削除・ログアウト済みなら API を叩かずにログインへ
         if (pathname !== '/login') {
           router.replace('/login');
         }
@@ -36,46 +33,33 @@ const UserLayout = ({ children }: { children: React.ReactNode }) => {
       }
 
       try {
+        // 2. Railsの認証確認
         const user = await getCurrentUser();
         if (!user) {
-          router.push('/login'); // 未ログインなら即リダイレクト
+          router.push('/login');
           return;
         }
 
-        // 現在のページが /settings の場合は、ガイドを表示する必要がないためスキップ
+        // 3. /settings ページの場合はガイド判定自体をスキップして終了
         if (pathname === '/settings') {
           setShowGuide(false);
           setIsChecking(false);
           return;
         }
 
-        const profileData = await getProfile();
-        const diaryRes = await getDiaries();
-        const diaryList = diaryRes.data || diaryRes;
+        // 4. ★ここが肝：まとめ買いAPIを1回だけ叩く
+        // これ1つで profileData と diaryList の取得・判定をRails側で済ませた結果が返ってくる
+        const dashboardData = await getDashboardData();
 
-        const isProfileEmpty = (data: any) => {
-          if (!data) return true;
-          const hasName = data.name && data.name.trim() !== '';
-          const hasArrayContent = [
-            'strengths',
-            'weaknesses',
-            'likes',
-            'hobbies',
-            'short_term_goals',
-            'long_term_goals',
-          ].some((key) => data[key] && Array.isArray(data[key]) && data[key].length > 0);
-          return !hasName && !hasArrayContent;
-        };
-
-        const profileIsInitial = isProfileEmpty(profileData);
-        const hasDiaries = Array.isArray(diaryList) && diaryList.length > 0;
-
-        // 初期状態かつ日記未作成ならガイドを表示
-        if (profileIsInitial && !hasDiaries) {
+        // Rails側で計算済みの show_guide フラグをそのまま使用
+        // これにより、どのページから入っても初回ならガイドが出る
+        if (dashboardData.show_guide) {
           setShowGuide(true);
         }
       } catch (e) {
         console.error('Status check failed', e);
+        // エラー（認証切れ等）時はログインへ飛ばすのが安全
+        if (pathname !== '/login') router.push('/login');
       } finally {
         setIsChecking(false);
       }
