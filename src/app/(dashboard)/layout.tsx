@@ -1,9 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { getCurrentUser } from '@/api/auth';
-import { getDashboardData } from '@/api/dashboard';
+import { getDiaries } from '@/api/diaries';
+import { getProfile } from '@/api/profile';
 import { WelcomeGuideModal } from '@/features/components/home/WelcomeGuideModal';
 import { Sidebar } from '@/features/components/layout/sidebar';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
@@ -18,49 +20,62 @@ const UserLayout = ({ children }: { children: React.ReactNode }) => {
   useBodyScrollLock(showGuide);
 
   useEffect(() => {
-    // 【重要】ログインページでは全てのチェックをスキップ（無限ループの絶対回避）
-    if (pathname === '/login') {
-      setIsChecking(false);
-      return;
-    }
-
     const checkUserStatus = async () => {
       const storageKey = Object.keys(localStorage).find(
         (key) => key.startsWith('sb-') && key.endsWith('-auth-token')
       );
 
       if (!storageKey) {
+        // 念押しで全消去（Layoutが掴んでいるかもしれない残骸を消す）
         localStorage.clear();
-        router.replace('/login');
+        // すでに削除・ログアウト済みなら API を叩かずにログインへ
+        if (pathname !== '/login') {
+          router.replace('/login');
+        }
         return;
       }
 
       try {
-        // 1. ユーザー確認
         const user = await getCurrentUser();
         if (!user) {
-          router.replace('/login');
+          router.push('/login'); // 未ログインなら即リダイレクト
           return;
         }
 
-        // 2. 元の仕様：/settings の場合はガイドを表示せず終了
+        // 現在のページが /settings の場合は、ガイドを表示する必要がないためスキップ
         if (pathname === '/settings') {
           setShowGuide(false);
           setIsChecking(false);
           return;
         }
 
-        // 3. 元の仕様（profileIsInitial && !hasDiaries）を
-        // Rails側で判定した結果「show_guide」として受け取る
-        const data = await getDashboardData();
-        
-        if (data.show_guide) {
+        const profileData = await getProfile();
+        const diaryRes = await getDiaries();
+        const diaryList = diaryRes.data || diaryRes;
+
+        const isProfileEmpty = (data: any) => {
+          if (!data) return true;
+          const hasName = data.name && data.name.trim() !== '';
+          const hasArrayContent = [
+            'strengths',
+            'weaknesses',
+            'likes',
+            'hobbies',
+            'short_term_goals',
+            'long_term_goals',
+          ].some((key) => data[key] && Array.isArray(data[key]) && data[key].length > 0);
+          return !hasName && !hasArrayContent;
+        };
+
+        const profileIsInitial = isProfileEmpty(profileData);
+        const hasDiaries = Array.isArray(diaryList) && diaryList.length > 0;
+
+        // 初期状態かつ日記未作成ならガイドを表示
+        if (profileIsInitial && !hasDiaries) {
           setShowGuide(true);
         }
-
       } catch (e) {
         console.error('Status check failed', e);
-        // 通信エラー時はループを防ぐため何もしないか、ログインへ
       } finally {
         setIsChecking(false);
       }
@@ -68,11 +83,6 @@ const UserLayout = ({ children }: { children: React.ReactNode }) => {
 
     checkUserStatus();
   }, [pathname, router]);
-
-  // ログインページの場合は、サイドバーなしでコンテンツだけ出す
-  if (pathname === '/login') {
-    return <>{children}</>;
-  }
 
   if (isChecking) {
     return <div className={styles.loading}>loading...</div>;
@@ -82,7 +92,7 @@ const UserLayout = ({ children }: { children: React.ReactNode }) => {
     <div className={styles.container}>
       <Sidebar />
       <main className={styles.mainContent}>{children}</main>
-      {/* 元の仕様：settings以外、かつ判定trueなら表示 */}
+      {/* settingsページ以外、かつ判定がtrueの場合のみ表示 */}
       {pathname !== '/settings' && <WelcomeGuideModal isOpen={showGuide} />}
     </div>
   );
