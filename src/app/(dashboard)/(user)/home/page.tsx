@@ -106,9 +106,9 @@ const HomePage = () => {
         <Link href="/counselingRecords" className={styles.adviceAlert}>
           <span className={styles.alertIcon}>📢</span>
           <div className={styles.alertContent}>
-            <strong>カウンセラーからのアドバイス（復帰支援・方針）が届いています</strong>
+            <strong>カウンセラーからのアドバイス（支援・方針）が届いています</strong>
             <p>
-              復帰プログラムやアドバイスが更新されました。内容を確認しましょう。（アドバイスのあった当日中この案内は表示されます）
+              支援プログラムやアドバイスが更新されました。内容を確認しましょう。（アドバイスのあった当日中この案内は表示されます）
             </p>
           </div>
           <span className={styles.alertArrow}>&rarr;</span>

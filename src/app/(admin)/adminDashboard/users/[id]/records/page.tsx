@@ -64,7 +64,7 @@ const UserRecordsPage = ({ params }: { params: Promise<{ id: string }> }) => {
     <div className={styles.container}>
       <header className={styles.header}>
         <div>
-          <h1>📋 復帰プログラム・記録: {data.user_name}</h1>
+          <h1>📋 支援プログラム・記録: {data.user_name}</h1>
           <p>相談記録・所見の管理、相談者に伝えたいこと</p>
           <p>ユーザーページの「カウンセラーからのアドバイス」に反映されます</p>
         </div>

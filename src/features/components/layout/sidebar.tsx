@@ -152,7 +152,7 @@ export const Sidebar = () => {
             href={getPath('/counselingRecords')}
             active={pathname.includes('/counselingRecords')}
             icon="📋"
-            label="カウンセラーからのアドバイス（復帰支援・方針）"
+            label="カウンセラーからのアドバイス（支援・方針）"
           />
         </div>
         <div className={styles.navGroup}>
