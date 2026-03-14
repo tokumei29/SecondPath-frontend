@@ -32,7 +32,7 @@ const AdminDashboardMain = () => {
       <div className={styles.statsGrid}>
         <div className={`${styles.statCard} ${stats.unresolved > 0 ? styles.alert : ''}`}>
           <div className={styles.statInfo}>
-            <span className={styles.statLabel}>未対応の相談</span>
+            <span className={styles.statLabel}>未対応のテキスト相談</span>
             <span className={styles.statValue}>{loading ? '...' : `${stats.unresolved} 件`}</span>
           </div>
           <div className={styles.icon}>⚠️</div>

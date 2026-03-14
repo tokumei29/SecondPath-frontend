@@ -47,7 +47,7 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
             href="/adminDashboard/inquiry"
             className={pathname.includes('/inquiry') ? styles.navItemActive : styles.navItem}
           >
-            💬 お問い合わせ確認
+            💬 テキスト相談・お問い合わせ確認
           </Link>
           <Link
             href="/adminDashboard/users"
