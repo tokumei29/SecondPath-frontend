@@ -109,3 +109,44 @@
   color: #334155;
   white-space: pre-wrap;
 }
+
+.headerActions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.editBtn {
+  padding: 4px 12px;
+  color: #2563eb;
+  cursor: pointer;
+  background: none;
+  border: 1px solid #2563eb;
+  border-radius: 4px;
+}
+
+.deleteBtn {
+  padding: 4px 12px;
+  color: #ef4444;
+  cursor: pointer;
+  background: none;
+  border: 1px solid #ef4444;
+  border-radius: 4px;
+}
+
+.editTextarea {
+  width: 100%;
+  padding: 1rem;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.6;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.modalFooter {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}

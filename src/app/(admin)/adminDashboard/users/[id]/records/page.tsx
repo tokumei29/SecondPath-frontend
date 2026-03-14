@@ -1,7 +1,12 @@
 'use client';
 
 import { useEffect, useState, use, useCallback } from 'react';
-import { createUserRecord, getUserRecords } from '@/api/userRecords';
+import {
+  createUserRecord,
+  getUserRecords,
+  updateUserRecord,
+  deleteUserRecord,
+} from '@/api/userRecords';
 import { CreateRecordModal } from '@/features/components/medicalRecord/CreateRecordModal';
 import { RecordDetailModal } from '@/features/components/medicalRecord/RecordDetailModal';
 import styles from './page.module.css';
@@ -32,14 +37,33 @@ const UserRecordsPage = ({ params }: { params: Promise<{ id: string }> }) => {
     await fetchRecords();
   };
 
+  const handleUpdateRecord = async (recordId: string, content: string) => {
+    try {
+      await updateUserRecord(recordId, content);
+      await fetchRecords(); // 一覧更新
+    } catch (err) {
+      alert('更新に失敗しました');
+    }
+  };
+
+  const handleDeleteRecord = async (recordId: string) => {
+    try {
+      await deleteUserRecord(recordId);
+      await fetchRecords(); // 一覧更新
+    } catch (err) {
+      alert('削除に失敗しました');
+    }
+  };
+
   if (!data) return <div className={styles.loading}>読み込み中...</div>;
 
   return (
     <div className={styles.container}>
       <header className={styles.header}>
         <div>
-          <h1>📋 管理カルテ: {data.user_name}</h1>
-          <p>相談記録・所見の管理</p>
+          <h1>📋 復帰プログラム・記録: {data.user_name}</h1>
+          <p>相談記録・所見の管理、相談者に伝えたいこと</p>
+          <p>ユーザーページの「カウンセラーからのアドバイス」に反映されます</p>
         </div>
         <button className={styles.createBtn} onClick={() => setShowCreateModal(true)}>
           ＋ 新規記録を作成
@@ -67,7 +91,12 @@ const UserRecordsPage = ({ params }: { params: Promise<{ id: string }> }) => {
       )}
 
       {selectedRecord && (
-        <RecordDetailModal record={selectedRecord} onClose={() => setSelectedRecord(null)} />
+        <RecordDetailModal
+          record={selectedRecord}
+          onClose={() => setSelectedRecord(null)}
+          onUpdate={handleUpdateRecord}
+          onDelete={handleDeleteRecord}
+        />
       )}
     </div>
   );

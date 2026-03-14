@@ -56,6 +56,12 @@ export const Sidebar = () => {
             icon="📚"
             label="過去の日報記録"
           />
+          <SidebarItem
+            href={getPath('/counselingRecords')}
+            active={pathname.includes('/counselingRecords')}
+            icon="📋"
+            label="カウンセラーからのアドバイス（復帰支援・方針）"
+          />
         </div>
         <div className={styles.navGroup}>
           <div className={styles.navLabel}>カウンセラーに相談する</div>
