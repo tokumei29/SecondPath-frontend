@@ -126,7 +126,7 @@ const SettingsPage = () => {
 
       {/* 2. 弱み */}
       <InputGroup
-        title="克服したいこと（弱み）"
+        title="克服したいこと"
         values={profile.weaknesses}
         onFieldChange={(i, v) => handleArrayChange('weaknesses', i, v)}
       />
@@ -147,14 +147,14 @@ const SettingsPage = () => {
 
       {/* 5. 短期目標 */}
       <InputGroup
-        title="直近の成し遂げたいこと"
+        title="直近の成し遂げたいこと（短期目標）"
         values={profile.short_term_goals}
         onFieldChange={(i, v) => handleArrayChange('short_term_goals', i, v)}
       />
 
       {/* 6. 長期目標 */}
       <InputGroup
-        title="長期の成し遂げたいこと"
+        title="長期の成し遂げたいこと（長期目標）"
         values={profile.long_term_goals}
         onFieldChange={(i, v) => handleArrayChange('long_term_goals', i, v)}
       />

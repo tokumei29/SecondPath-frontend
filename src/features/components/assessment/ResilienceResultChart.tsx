@@ -54,7 +54,7 @@ export const ResilienceResultChart = ({ data }: { data: ResilienceData }) => {
           <strong>{data.emotional_regulation} / 9</strong>
         </div>
         <div className={styles.scoreItem}>
-          <span>適応対処</span>
+          <span>適応的対処</span>
           <strong>{data.adaptive_coping} / 9</strong>
         </div>
       </div>
