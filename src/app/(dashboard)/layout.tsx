@@ -26,6 +26,8 @@ const UserLayout = ({ children }: { children: React.ReactNode }) => {
       );
 
       if (!storageKey) {
+        // 念押しで全消去（Layoutが掴んでいるかもしれない残骸を消す）
+        localStorage.clear();
         // すでに削除・ログアウト済みなら API を叩かずにログインへ
         if (pathname !== '/login') {
           router.replace('/login');
