@@ -105,11 +105,14 @@ const Memos = () => {
           📋 カウンセリング記録管理
           {isLoading && <span className={styles.loadingText}>読み込み中...</span>}
         </h1>
-        <p>ユーザーに公開されない記録を管理します。カウンセリング後のメモ用などにご利用ください。</p>
         <button onClick={() => handleOpenModal()} className={styles.createButton}>
           + 新規記録作成
         </button>
       </header>
+
+      <div>
+        <p>ユーザーに公開されない記録を管理します。カウンセリング後のメモ用などにご利用ください。</p>
+      </div>
 
       <div className={styles.searchSection}>
         <div className={styles.searchWrapper}>
