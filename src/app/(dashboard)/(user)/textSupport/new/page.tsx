@@ -79,7 +79,7 @@ const SupportPage = () => {
         </div>
 
         <div className={styles.field}>
-          <label>件名（任意）</label>
+          <label>件名</label>
           <input
             type="text"
             required
