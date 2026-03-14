@@ -74,6 +74,9 @@
   background: #8de055; /* LINE風の緑（自分の発言） */
   border-radius: 18px 18px 4px; /* 右下が尖る */
   box-shadow: 0 1px 2px rgb(0 0 0 / 10%);
+  white-space: pre-wrap;
+  /* 長い英単語などが突き抜けないようにこれも推奨 */
+  word-break: break-word;
 }
 
 /* 管理者（相手）：左側に配置 */
@@ -94,6 +97,9 @@
   background: white; /* 相手の発言は白 */
   border-radius: 18px 18px 18px 4px; /* 左下が尖る */
   box-shadow: 0 1px 2px rgb(0 0 0 / 10%);
+  white-space: pre-wrap;
+  /* 長い英単語などが突き抜けないようにこれも推奨 */
+  word-break: break-word;
 }
 
 .time {
