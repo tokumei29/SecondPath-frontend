@@ -103,7 +103,7 @@ const DiaryPage = () => {
       <SuccessModal
         isOpen={showSuccessModal}
         onClose={() => setShowSuccessModal(false)}
-        title="ナイス積み上げです！"
+        title="ご苦労様でした！"
         message={`今日という日を振り返り、言語化した自分を誇ってください！\n\n一歩一歩の記録が、未来のあなたを強く支える財産になります。\n明日の自分にバトンを繋げましたね！`}
       />
     </div>

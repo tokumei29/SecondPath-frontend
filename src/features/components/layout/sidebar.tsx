@@ -1,6 +1,8 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import { getTextSupports } from '@/api/textSupport';
 import { createClient } from '@/lib/supabase/client';
 import styles from './sidebar.module.css';
 import { SidebarItem } from './sidebarItem';
@@ -9,6 +11,30 @@ export const Sidebar = () => {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
+  const [hasUnread, setHasUnread] = useState(false);
+
+  // チャットの既読判定
+  useEffect(() => {
+    const checkUnreadStatus = async () => {
+      try {
+        const supports = await getTextSupports();
+        const unreadExists = supports.some((support: any) => {
+          if (support.status !== 'replied') return false;
+
+          const lastRead = localStorage.getItem(`read_support_${support.id}`);
+          if (!lastRead) return true; // 未読
+
+          return new Date(lastRead).getTime() < new Date(support.updated_at).getTime(); // 更新が新しいなら未読
+        });
+
+        setHasUnread(unreadExists);
+      } catch (error) {
+        console.error('未読チェック失敗', error);
+      }
+    };
+
+    checkUnreadStatus();
+  }, [pathname]);
 
   const handleLogout = async () => {
     if (!window.confirm('ログアウトしますか？')) return;
@@ -76,6 +102,7 @@ export const Sidebar = () => {
             active={pathname === getPath('/textSupport')}
             icon="📂"
             label="テキスト相談の回答確認"
+            showBadge={hasUnread}
           />
         </div>
 

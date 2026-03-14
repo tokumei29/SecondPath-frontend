@@ -1,4 +1,5 @@
 .navItem {
+  position: relative;
   display: flex;
   gap: 12px;
   align-items: center;
@@ -33,4 +34,15 @@
 
 .label {
   flex: 1;
+}
+
+.unreadBadge {
+  padding: 2px 6px;
+  margin-left: auto; /* 右端に寄せる */
+  font-size: 0.65rem;
+  font-weight: bold;
+  color: white;
+  background-color: #ef4444; /* 赤 */
+  border-radius: 999px;
+  box-shadow: 0 0 5px rgb(239 68 68 / 40%);
 }

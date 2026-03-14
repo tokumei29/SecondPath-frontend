@@ -5,7 +5,7 @@ import { getMyRecords, type CounselingRecord } from '@/api/userRecords';
 import RecordDetailModal from '@/features/components/counselingRecords/RecordDetailModal';
 import styles from './page.module.css';
 
-export default function CounselingRecordsPage() {
+const CounselingRecordsPage = () => {
   const [records, setRecords] = useState<CounselingRecord[]>([]);
   const [selectedRecord, setSelectedRecord] = useState<CounselingRecord | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -102,4 +102,6 @@ export default function CounselingRecordsPage() {
       />
     </div>
   );
-}
+};
+
+export default CounselingRecordsPage;
