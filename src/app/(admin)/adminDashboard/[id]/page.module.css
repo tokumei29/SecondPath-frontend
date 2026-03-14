@@ -69,12 +69,13 @@
   font-size: 15px;
   line-height: 1.5;
   color: black;
+
+  /* 長い英単語などが突き抜けないようにこれも推奨 */
+  word-break: break-word;
+  white-space: pre-wrap;
   background: white;
   border-radius: 18px 18px 18px 4px;
   box-shadow: 0 1px 2px rgb(0 0 0 / 10%);
-  white-space: pre-wrap;
-  /* 長い英単語などが突き抜けないようにこれも推奨 */
-  word-break: break-word;
 }
 
 .bubbleHeader {
@@ -100,12 +101,13 @@
   font-size: 15px;
   line-height: 1.5;
   color: black;
+
+  /* 長い英単語などが突き抜けないようにこれも推奨 */
+  word-break: break-word;
+  white-space: pre-wrap;
   background: #8de055; /* LINE風の緑 */
   border-radius: 18px 18px 4px;
   box-shadow: 0 1px 2px rgb(0 0 0 / 10%);
-  white-space: pre-wrap;
-  /* 長い英単語などが突き抜けないようにこれも推奨 */
-  word-break: break-word;
 }
 
 .time {

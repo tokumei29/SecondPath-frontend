@@ -10,7 +10,7 @@ type SidebarItemProps = {
 };
 
 export const SidebarItem = ({ href, active, icon, label, showBadge }: SidebarItemProps) => (
-  <Link href={href} className={`${styles.navItem} ${active ? styles.active : ''}`}>
+  <Link href={href} prefetch={false} className={`${styles.navItem} ${active ? styles.active : ''}`}>
     <span className={styles.icon}>{icon}</span>
     <span className={styles.label}>{label}</span>
     {/* ★ 未読がある場合に赤いドットなどを表示 */}

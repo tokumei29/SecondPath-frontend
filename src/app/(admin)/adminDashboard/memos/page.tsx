@@ -111,7 +111,9 @@ const Memos = () => {
       </header>
 
       <div className={styles.description}>
-        <p>ユーザーに公開されない記録を管理します。カウンセリング後のメモ用などにご利用ください。</p>
+        <p>
+          ユーザーに公開されない記録を管理します。カウンセリング後のメモ用などにご利用ください。
+        </p>
       </div>
 
       <div className={styles.searchSection}>
