@@ -3,7 +3,9 @@
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { getTextSupports } from '@/api/textSupport';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import { createClient } from '@/lib/supabase/client';
+import { DeleteAccountModal } from './DeleteAccountModal';
 import styles from './sidebar.module.css';
 import { SidebarItem } from './sidebarItem';
 
@@ -12,6 +14,10 @@ export const Sidebar = () => {
   const router = useRouter();
   const supabase = createClient();
   const [hasUnread, setHasUnread] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useBodyScrollLock(isDeleteModalOpen);
 
   // チャットの既読判定
   useEffect(() => {
@@ -40,7 +46,7 @@ export const Sidebar = () => {
     if (!window.confirm('ログアウトしますか？')) return;
     try {
       await supabase.auth.signOut();
-      Object.keys(localStorage).forEach(key => {
+      Object.keys(localStorage).forEach((key) => {
         // 既読フラグ以外を消去する（sb- で始まるSupabase関連など）
         if (!key.startsWith('read_support_')) {
           localStorage.removeItem(key);
@@ -50,6 +56,61 @@ export const Sidebar = () => {
       router.refresh();
     } catch (error) {
       alert('ログアウトに失敗しました');
+    }
+  };
+
+  const confirmAccountDelete = async () => {
+    if (isDeleting) return;
+    setIsDeleting(true);
+
+    try {
+      // 1. localStorage から Supabase の auth-token キーを自動検索
+      const storageKey = Object.keys(localStorage).find(
+        (key) => key.startsWith('sb-') && key.endsWith('-auth-token')
+      );
+
+      if (!storageKey) {
+        alert('セッションが見つかりません。再ログインしてください。');
+        return;
+      }
+
+      const rawData = localStorage.getItem(storageKey);
+      if (!rawData) return;
+
+      const { user, access_token } = JSON.parse(rawData);
+
+      if (!user?.id || !access_token) {
+        alert('認証情報の解析に失敗しました。');
+        return;
+      }
+
+      // 2. サーバーサイドAPIへリクエスト
+      const response = await fetch('/api/delete-account', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
+        },
+        body: JSON.stringify({ userId: user.id }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || '削除に失敗しました。');
+      }
+
+      localStorage.clear();
+
+      alert('アカウントの削除が完了しました。');
+      router.push('/');
+      router.refresh();
+    } catch (e: any) {
+      console.error('削除エラー:', e);
+      alert(`エラーが発生しました: ${e.message}`);
+    } finally {
+      setIsDeleting(false);
+      setIsDeleteModalOpen(false);
     }
   };
 
@@ -180,8 +241,20 @@ export const Sidebar = () => {
           <button type="button" onClick={handleLogout} className={styles.logoutButton}>
             🚪 ログアウト
           </button>
+          <button
+            type="button"
+            onClick={() => setIsDeleteModalOpen(true)}
+            className={styles.deleteAccountButton}
+          >
+            👤 アカウント削除
+          </button>
         </div>
       </nav>
+      <DeleteAccountModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={confirmAccountDelete}
+      />
     </aside>
   );
 };

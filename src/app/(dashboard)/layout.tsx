@@ -21,6 +21,18 @@ const UserLayout = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const checkUserStatus = async () => {
+      const storageKey = Object.keys(localStorage).find(
+        (key) => key.startsWith('sb-') && key.endsWith('-auth-token')
+      );
+
+      if (!storageKey) {
+        // すでに削除・ログアウト済みなら API を叩かずにログインへ
+        if (pathname !== '/login') {
+          router.replace('/login');
+        }
+        return;
+      }
+
       try {
         const user = await getCurrentUser();
         if (!user) {
