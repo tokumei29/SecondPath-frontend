@@ -61,7 +61,6 @@ const UserLayout = ({ children }: { children: React.ReactNode }) => {
   }, [pathname, router]);
 
   const handleCloseGuide = () => {
-    localStorage.setItem('has_seen_welcome_guide', 'true');
     setShowGuide(false);
   };
 
