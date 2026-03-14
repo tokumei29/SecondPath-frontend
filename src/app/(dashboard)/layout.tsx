@@ -1,11 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { getCurrentUser } from '@/api/auth';
-import { getDiaries } from '@/api/diaries';
-import { getProfile } from '@/api/profile';
+import { getProfile } from '@/api/profile'; // getDiaries は削除
 import { WelcomeGuideModal } from '@/features/components/home/WelcomeGuideModal';
 import { Sidebar } from '@/features/components/layout/sidebar';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
@@ -20,59 +18,37 @@ const UserLayout = ({ children }: { children: React.ReactNode }) => {
   useBodyScrollLock(showGuide);
 
   useEffect(() => {
-    const checkUserStatus = async () => {
-      const storageKey = Object.keys(localStorage).find(
-        (key) => key.startsWith('sb-') && key.endsWith('-auth-token')
-      );
+    if (pathname === '/login') {
+      setIsChecking(false);
+      return;
+    }
 
-      if (!storageKey) {
-        // 念押しで全消去（Layoutが掴んでいるかもしれない残骸を消す）
-        localStorage.clear();
-        // すでに削除・ログアウト済みなら API を叩かずにログインへ
-        if (pathname !== '/login') {
-          router.replace('/login');
-        }
-        return;
-      }
+    const checkUserStatus = async () => {
+      // 1. まずフラグチェック（これがあれば API は一切叩かない）
+      const hasSeenGuide = localStorage.getItem('has_seen_welcome_guide');
 
       try {
         const user = await getCurrentUser();
         if (!user) {
-          router.push('/login'); // 未ログインなら即リダイレクト
+          router.replace('/login');
           return;
         }
 
-        // 現在のページが /settings の場合は、ガイドを表示する必要がないためスキップ
-        if (pathname === '/settings') {
-          setShowGuide(false);
+        // 2. /settings なら出さない、または既にフラグがあるなら即終了
+        if (pathname === '/settings' || hasSeenGuide === 'true') {
           setIsChecking(false);
           return;
         }
 
+        // 3. フラグがない場合のみ、プロフを確認（名前があるかチェック）
         const profileData = await getProfile();
-        const diaryRes = await getDiaries();
-        const diaryList = diaryRes.data || diaryRes;
 
-        const isProfileEmpty = (data: any) => {
-          if (!data) return true;
-          const hasName = data.name && data.name.trim() !== '';
-          const hasArrayContent = [
-            'strengths',
-            'weaknesses',
-            'likes',
-            'hobbies',
-            'short_term_goals',
-            'long_term_goals',
-          ].some((key) => data[key] && Array.isArray(data[key]) && data[key].length > 0);
-          return !hasName && !hasArrayContent;
-        };
-
-        const profileIsInitial = isProfileEmpty(profileData);
-        const hasDiaries = Array.isArray(diaryList) && diaryList.length > 0;
-
-        // 初期状態かつ日記未作成ならガイドを表示
-        if (profileIsInitial && !hasDiaries) {
+        // 名前が空、またはプロフィール自体が存在しない場合は「未設定」とみなす
+        if (!profileData || !profileData.name || profileData.name.trim() === '') {
           setShowGuide(true);
+        } else {
+          // すでに名前があるなら、もうガイドは不要なのでフラグを立てる
+          localStorage.setItem('has_seen_welcome_guide', 'true');
         }
       } catch (e) {
         console.error('Status check failed', e);
@@ -84,16 +60,19 @@ const UserLayout = ({ children }: { children: React.ReactNode }) => {
     checkUserStatus();
   }, [pathname, router]);
 
-  if (isChecking) {
-    return <div className={styles.loading}>loading...</div>;
-  }
+  const handleCloseGuide = () => {
+    localStorage.setItem('has_seen_welcome_guide', 'true');
+    setShowGuide(false);
+  };
+
+  if (pathname === '/login') return <>{children}</>;
+  if (isChecking) return <div className={styles.loading}>loading...</div>;
 
   return (
     <div className={styles.container}>
       <Sidebar />
       <main className={styles.mainContent}>{children}</main>
-      {/* settingsページ以外、かつ判定がtrueの場合のみ表示 */}
-      {pathname !== '/settings' && <WelcomeGuideModal isOpen={showGuide} />}
+      <WelcomeGuideModal isOpen={showGuide} onClose={handleCloseGuide} />
     </div>
   );
 };
