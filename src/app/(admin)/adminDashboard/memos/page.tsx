@@ -16,17 +16,18 @@ const Memos = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentMemo, setCurrentMemo] = useState<Partial<MemoResponse> | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [isReadOnly, setIsReadOnly] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchMemos = useCallback(async () => {
+  const fetchMemos = useCallback(async (query?: string) => {
     setIsLoading(true);
     try {
-      const data = await getAdminMemos();
+      // 引数に query を渡すだけで、Rails 側の index(params[:q]) と連動します
+      const data = await getAdminMemos(query);
       setMemos(data);
     } catch (error) {
       console.error(error);
-      alert('失敗しました。');
     } finally {
       setIsLoading(false);
     }
@@ -35,6 +36,16 @@ const Memos = () => {
   useEffect(() => {
     fetchMemos();
   }, [fetchMemos]);
+
+  // ★ 検索実行ロジック
+  useEffect(() => {
+    // 1文字打つたびにAPIを叩くと重いので、入力が止まってから500ms後に実行する
+    const timer = setTimeout(() => {
+      fetchMemos(searchQuery);
+    }, 1000);
+
+    return () => clearTimeout(timer); // 次の文字が打たれたらタイマーをリセット
+  }, [searchQuery, fetchMemos]);
 
   const handleOpenModal = (
     memo: MemoResponse | null = null,
@@ -96,6 +107,19 @@ const Memos = () => {
         </button>
       </header>
 
+      <div className={styles.searchSection}>
+        <div className={styles.searchWrapper}>
+          <span className={styles.searchIcon}>🔍</span>
+          <input
+            type="text"
+            placeholder="相談者の名前で検索..."
+            className={styles.searchInput}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+      </div>
+
       <div className={styles.tableContainer}>
         <table className={styles.table}>
           <thead className={styles.thead}>
@@ -132,7 +156,9 @@ const Memos = () => {
           </tbody>
         </table>
         {!isLoading && memos.length === 0 && (
-          <div className={styles.emptyMessage}>記録がありません。</div>
+          <div className={styles.emptyMessage}>
+            {searchQuery ? `「${searchQuery}」に一致する記録はありません。` : '記録がありません。'}
+          </div>
         )}
       </div>
 

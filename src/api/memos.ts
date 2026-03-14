@@ -17,11 +17,13 @@ export type MemoResponse = MemoData & {
 };
 
 /**
- * 全てのカウンセリングメモを取得する（管理者用）
+ * カウンセリングメモを取得する（検索クエリ q があれば絞り込み）
  */
-export const getAdminMemos = async (): Promise<MemoResponse[]> => {
-  // GET /api/v1/admin/memos
-  const response = await apiClient.get('/admin/memos');
+export const getAdminMemos = async (searchQuery?: string): Promise<MemoResponse[]> => {
+  // GET /api/v1/admin/memos?q=xxx
+  const response = await apiClient.get('/admin/memos', {
+    params: { q: searchQuery },
+  });
   return response.data;
 };
 
