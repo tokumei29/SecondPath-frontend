@@ -9,6 +9,7 @@ import {
   type MemoResponse,
 } from '@/api/memos';
 import MemoModal from '@/features/components/admin/MemoModal';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import styles from './page.module.css';
 
 const Memos = () => {
@@ -19,6 +20,8 @@ const Memos = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isReadOnly, setIsReadOnly] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  useBodyScrollLock(isModalOpen);
 
   const fetchMemos = useCallback(async (query?: string) => {
     setIsLoading(true);

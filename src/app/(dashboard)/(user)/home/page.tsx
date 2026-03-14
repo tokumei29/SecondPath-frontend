@@ -10,6 +10,7 @@ import { DiaryDetailModal } from '@/features/components/diaries/modal';
 import { GoalSection } from '@/features/components/home/goalSection';
 import { StrengthSection } from '@/features/components/home/strengthSection';
 import { ProfileResponse } from '@/features/types/profile';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import styles from './page.module.css';
 
 export type Diary = {
@@ -29,6 +30,8 @@ const HomePage = () => {
   const [hasTodayAdvice, setHasTodayAdvice] = useState(false);
   const [hasUnreadChat, setHasUnreadChat] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
+  useBodyScrollLock(!!selectedDiary);
 
   useEffect(() => {
     const fetchDashboardData = async () => {

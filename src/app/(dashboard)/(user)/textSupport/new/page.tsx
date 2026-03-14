@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { createTextSupport, TextSupportPayload } from '@/api/textSupport';
 import { SuccessModal } from '@/features/components/home/SuccessModal';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import styles from './page.module.css';
 
 const SupportPage = () => {
@@ -12,6 +13,8 @@ const SupportPage = () => {
   const [content, setContent] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [showModal, setShowModal] = useState(false);
+
+  useBodyScrollLock(showModal);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -6,6 +6,7 @@ import { getProfile, updateProfile } from '@/api/profile';
 import { SuccessModal } from '@/features/components/home/SuccessModal';
 import { InputGroup } from '@/features/components/inputGroup/inputGroup';
 import { Profile, ProfileArrayKeys } from '@/features/types/profile';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import styles from './page.module.css';
 
 /**
@@ -14,6 +15,7 @@ import styles from './page.module.css';
 const SettingsPage = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  useBodyScrollLock(showSuccessModal);
 
   const [profile, setProfile] = useState<Profile>({
     name: '',

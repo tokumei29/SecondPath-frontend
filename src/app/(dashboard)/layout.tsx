@@ -8,6 +8,7 @@ import { getDiaries } from '@/api/diaries';
 import { getProfile } from '@/api/profile';
 import { WelcomeGuideModal } from '@/features/components/home/WelcomeGuideModal';
 import { Sidebar } from '@/features/components/layout/sidebar';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import styles from './layout.module.css';
 
 const UserLayout = ({ children }: { children: React.ReactNode }) => {
@@ -15,6 +16,8 @@ const UserLayout = ({ children }: { children: React.ReactNode }) => {
   const [isChecking, setIsChecking] = useState(true);
   const pathname = usePathname();
   const router = useRouter();
+
+  useBodyScrollLock(showGuide);
 
   useEffect(() => {
     const checkUserStatus = async () => {

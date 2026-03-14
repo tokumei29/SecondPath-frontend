@@ -9,6 +9,7 @@ import {
 } from '@/api/userRecords';
 import { CreateRecordModal } from '@/features/components/medicalRecord/CreateRecordModal';
 import { RecordDetailModal } from '@/features/components/medicalRecord/RecordDetailModal';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import styles from './page.module.css';
 
 const UserRecordsPage = ({ params }: { params: Promise<{ id: string }> }) => {
@@ -16,6 +17,8 @@ const UserRecordsPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const [data, setData] = useState<any>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState<any>(null);
+
+  useBodyScrollLock(showCreateModal || !!selectedRecord);
 
   const fetchRecords = useCallback(async () => {
     try {

@@ -5,6 +5,7 @@ import axios from 'axios';
 import { createDiary, type DiaryPayload } from '@/api/diaries';
 import { DiaryField } from '@/features/components/diaries/diaryField';
 import { SuccessModal } from '@/features/components/home/SuccessModal';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import styles from './page.module.css';
 
 const DiaryPage = () => {
@@ -17,6 +18,8 @@ const DiaryPage = () => {
 
   const [isSaving, setIsSaving] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  useBodyScrollLock(showSuccessModal);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.target;

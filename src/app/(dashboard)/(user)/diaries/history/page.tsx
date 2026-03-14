@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { deleteDiary, getDiaries } from '@/api/diaries';
 import { DiaryDetailModal } from '@/features/components/diaries/modal';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import styles from './page.module.css';
 import type { Diary } from '../../home/page';
 
@@ -12,6 +13,8 @@ const HistoryPage = () => {
   const [diaries, setDiaries] = useState<Diary[]>([]);
   const [selectedDiary, setSelectedDiary] = useState<Diary | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  useBodyScrollLock(!!selectedDiary);
 
   const fetchAllDiaries = async () => {
     try {

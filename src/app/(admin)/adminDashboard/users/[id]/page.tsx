@@ -5,12 +5,15 @@ import apiClient from '@/api/client';
 import { CognitiveDistortionChart } from '@/features/components/assessment/CognitiveDistortionChart';
 import { ResilienceResultChart } from '@/features/components/assessment/ResilienceResultChart';
 import { DiaryDetailModal } from '@/features/components/diaries/modal';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import styles from './page.module.css';
 
 const UserDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = use(params);
   const [data, setData] = useState<any>(null);
   const [selectedDiary, setSelectedDiary] = useState<any>(null);
+
+  useBodyScrollLock(!!selectedDiary);
 
   useEffect(() => {
     const fetchUserActivity = async () => {

@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getMyRecords, type CounselingRecord } from '@/api/userRecords';
 import RecordDetailModal from '@/features/components/counselingRecords/RecordDetailModal';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import styles from './page.module.css';
 
 const CounselingRecordsPage = () => {
@@ -10,6 +11,8 @@ const CounselingRecordsPage = () => {
   const [selectedRecord, setSelectedRecord] = useState<CounselingRecord | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  useBodyScrollLock(isModalOpen);
 
   // 1. 自分の記録を取得
   const fetchRecords = useCallback(async () => {
