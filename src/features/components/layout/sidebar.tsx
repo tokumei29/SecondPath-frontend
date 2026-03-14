@@ -40,7 +40,12 @@ export const Sidebar = () => {
     if (!window.confirm('ログアウトしますか？')) return;
     try {
       await supabase.auth.signOut();
-      window.localStorage.clear();
+      Object.keys(localStorage).forEach(key => {
+        // 既読フラグ以外を消去する（sb- で始まるSupabase関連など）
+        if (!key.startsWith('read_support_')) {
+          localStorage.removeItem(key);
+        }
+      });
       router.push('/login');
       router.refresh();
     } catch (error) {
