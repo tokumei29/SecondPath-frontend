@@ -1,0 +1,96 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background-color: rgb(0 0 0 / 50%);
+}
+
+.modal {
+  width: 100%;
+  max-width: 32rem;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 25%);
+}
+
+.title {
+  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.formGroup {
+  margin-bottom: 1rem;
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #475569;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  outline: none;
+  transition: ring 0.2s;
+}
+
+.input:focus,
+.textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgb(37 99 235 / 20%);
+}
+
+.textarea {
+  resize: vertical;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+
+.cancelButton {
+  padding: 0.5rem 1rem;
+  color: #64748b;
+  cursor: pointer;
+  background: none;
+  border: none;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.cancelButton:hover {
+  background-color: #f1f5f9;
+}
+
+.saveButton {
+  padding: 0.5rem 1.5rem;
+  font-weight: 700;
+  color: white;
+  cursor: pointer;
+  background-color: #2563eb;
+  border: none;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 10%);
+  transition: background-color 0.2s;
+}
+
+.saveButton:hover {
+  background-color: #1d4ed8;
+}

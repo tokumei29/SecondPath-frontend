@@ -61,6 +61,12 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
           >
             📝 支援記事の投稿・管理
           </Link>
+          <Link
+            href="/adminDashboard/memos"
+            className={pathname.includes('/memos') ? styles.navItemActive : styles.navItem}
+          >
+            📋 カウンセリング記録
+          </Link>
         </nav>
       </aside>
 

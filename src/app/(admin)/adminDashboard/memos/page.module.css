@@ -1,0 +1,146 @@
+.container {
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: #f8fafc;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.title {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.loadingText {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: #94a3b8;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.createButton {
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  background-color: #2563eb;
+  border: none;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.createButton:hover {
+  background-color: #1d4ed8;
+}
+
+.tableContainer {
+  overflow: hidden;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%);
+}
+
+.table {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+}
+
+.thead {
+  background-color: #f1f5f9;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.th {
+  padding: 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.tr {
+  cursor: pointer;
+  border-bottom: 1px solid #f1f5f9;
+  transition: background-color 0.2s;
+}
+
+.tr:hover {
+  background-color: #f8fafc;
+}
+
+.td {
+  padding: 1rem;
+  font-size: 0.9375rem;
+  color: #334155;
+}
+
+.userName {
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.contentSummary {
+  max-width: 300px;
+  overflow: hidden;
+  color: #64748b;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.editLink {
+  font-weight: 500;
+  color: #2563eb;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.editLink:hover {
+  text-decoration: underline;
+}
+
+.deleteLink {
+  font-weight: 500;
+  color: #ef4444;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.deleteLink:hover {
+  text-decoration: underline;
+}
+
+.emptyMessage {
+  padding: 3rem;
+  color: #94a3b8;
+  text-align: center;
+  background-color: #fff;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
