@@ -114,7 +114,7 @@ const TextSupportDetailPage = ({ params }: { params: Promise<{ id: string }> }) 
               <p>{msg.message}</p>
             </div>
             <span className={styles.time}>
-              {new Date(detail.created_at).toLocaleString('ja-JP', {
+              {new Date(msg.created_at).toLocaleString('ja-JP', {
                 year: 'numeric',
                 month: '2-digit',
                 day: '2-digit',
