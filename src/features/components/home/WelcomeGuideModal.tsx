@@ -8,12 +8,15 @@ type Props = {
   onClose?: () => void;
 };
 
-export const WelcomeGuideModal = ({ isOpen }: Props) => {
+export const WelcomeGuideModal = ({ isOpen, onClose }: Props) => {
   const router = useRouter();
 
   if (!isOpen) return null;
 
   const handleStartSetup = () => {
+    if (onClose) {
+      onClose();
+    }
     router.push('/settings');
   };
 
