@@ -59,7 +59,7 @@ const DiaryPage = () => {
 
       <section className={styles.editorSection}>
         <DiaryField
-          label="今日の内容"
+          label="今日の内容（必須）"
           name="content"
           value={formData.content}
           onChange={handleChange}
