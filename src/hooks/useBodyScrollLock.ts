@@ -1,6 +1,6 @@
-// hooks/useBodyScrollLock.ts
 import { useEffect } from 'react';
 
+// モーダルやガイド表示時に背景のスクロールをロックするカスタムフック
 export const useBodyScrollLock = (isLocked: boolean) => {
   useEffect(() => {
     // 確実に要素を取得
