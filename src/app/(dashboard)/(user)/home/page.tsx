@@ -101,12 +101,12 @@ const HomePage = () => {
         </div>
       </header>
 
-      {/* ★ カウンセラーからのアドバイス通知アラート */}
+      {/* ★ カウンセラーからのフィードバック通知アラート */}
       {hasTodayAdvice && (
         <Link href="/counselingRecords" className={styles.adviceAlert}>
           <span className={styles.alertIcon}>📢</span>
           <div className={styles.alertContent}>
-            <strong>カウンセラーからのアドバイス（支援・方針）が届いています</strong>
+            <strong>カウンセラーからのフィードバック（支援・方針）が届いています</strong>
             <p>
               支援プログラムやアドバイスが更新されました。内容を確認しましょう。（アドバイスのあった当日中この案内は表示されます）
             </p>

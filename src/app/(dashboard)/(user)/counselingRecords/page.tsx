@@ -54,7 +54,7 @@ const CounselingRecordsPage = () => {
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <h1 className={styles.title}>📋 カウンセラーからのアドバイス</h1>
+        <h1 className={styles.title}>📋 カウンセラーからのフィードバック</h1>
         <p className={styles.subtitle}>
           あなた専用の支援プログラムや、カウンセラーからの支援内容をいつでも確認できます。
         </p>

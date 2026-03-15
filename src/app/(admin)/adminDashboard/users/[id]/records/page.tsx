@@ -66,7 +66,7 @@ const UserRecordsPage = ({ params }: { params: Promise<{ id: string }> }) => {
         <div>
           <h1>📋 支援プログラム・記録: {data.user_name}</h1>
           <p>相談記録・所見の管理、相談者に伝えたいこと</p>
-          <p>ユーザーページの「カウンセラーからのアドバイス」に反映されます</p>
+          <p>ユーザーページの「カウンセラーからのフィードバック」に反映されます</p>
         </div>
         <button className={styles.createBtn} onClick={() => setShowCreateModal(true)}>
           ＋ 新規記録を作成
