@@ -1,0 +1,23 @@
+# 依存関係
+node_modules
+npm-debug.log
+
+# ビルド成果物
+.next
+out
+build
+
+# 環境変数（セキュリティのため）
+.env
+.env.local
+.env.production
+.env.development
+
+# Git
+.git
+.gitignore
+
+# その他
+README.md
+.dockerignore
+Dockerfile

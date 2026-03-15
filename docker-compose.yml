@@ -1,0 +1,15 @@
+services:
+  app-frontend:
+    build:
+      context: .
+      args:
+        # Macにある環境変数を、Dockerビルドの中に流し込む設定
+        - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+        - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+    ports:
+      - "3001:3001"
+    # 実行時にも必要なので env_file を指定
+    env_file:
+      - .env.local
+    environment:
+      - HOST=0.0.0.0
