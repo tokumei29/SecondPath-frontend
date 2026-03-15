@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { getProfile } from '@/api/profile';
 import { createTextSupport, TextSupportPayload } from '@/api/textSupport';
 import { SuccessModal } from '@/features/components/home/SuccessModal';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
@@ -13,8 +14,27 @@ const SupportPage = () => {
   const [content, setContent] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [isLoadingProfile, setIsLoadingProfile] = useState(true);
 
   useBodyScrollLock(showModal);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const profileData = await getProfile();
+        if (profileData && profileData.name) {
+          setName(profileData.name);
+        } else {
+          setName('名称取得失敗。リロードしてください');
+        }
+      } catch (error) {
+        setName('名称取得失敗。リロードしてください');
+      } finally {
+        setIsLoadingProfile(false);
+      }
+    };
+    fetchProfile();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,9 +45,9 @@ const SupportPage = () => {
       // 型安全なペイロードを作成
       const payload: TextSupportPayload = {
         text_support: {
-          name: name || '匿名希望',
+          name: name, // 固定された名前
           email: email,
-          subject: subject || '無題の相談',
+          subject: subject,
           message: content,
         },
       };
@@ -35,7 +55,6 @@ const SupportPage = () => {
       await createTextSupport(payload);
 
       setShowModal(true);
-      setName('');
       setEmail('');
       setSubject('');
       setContent('');
@@ -61,11 +80,12 @@ const SupportPage = () => {
       <form className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.row}>
           <div className={styles.field}>
-            <label>お名前（カウンセリング時のお名前を入力してください）</label>
+            <label>お名前（自己分析設定のお名前が自動適用されます）</label>
             <input
               type="text"
-              value={name}
-              required
+              value={isLoadingProfile ? '読み込み中...' : name}
+              readOnly
+              style={{ backgroundColor: '#f5f5f5', cursor: 'not-allowed' }}
               onChange={(e) => setName(e.target.value)}
               placeholder="例：山田太郎"
             />
