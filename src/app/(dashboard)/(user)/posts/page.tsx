@@ -34,6 +34,6 @@ const PostsIndexPage = () => {
       </div>
     </div>
   );
-}
+};
 
-export default PostsIndexPage
+export default PostsIndexPage;
