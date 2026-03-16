@@ -2,7 +2,7 @@
 
 import { InputGroup } from '@/features/components/inputGroup/inputGroup';
 import { Profile, ProfileArrayKeys } from '@/features/types/profile';
-import styles from './ProfileForm.module.css';
+import styles from './profileForm.module.css';
 
 type ProfileFormProps = {
   localProfile: Profile;
