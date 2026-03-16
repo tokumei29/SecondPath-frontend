@@ -55,6 +55,7 @@ export const useDiaryActions = () => {
   const update = async (id: string, payload: DiaryPayload) => {
     const result = await updateDiary(id, payload);
     await globalMutate(`/diaries/${id}`); // 詳細キャッシュを更新
+    await globalMutate('/diaries'); // 一覧キャッシュを更新
     return result;
   };
 
