@@ -11,7 +11,11 @@ import {
 // --- PHQ-9 用フック ---
 
 export const usePhq9 = () => {
-  const { data, error, isLoading } = useSWR('/phq9_assessments', getPhq9Assessments);
+  const { data, error, isLoading } = useSWR('/phq9_assessments', getPhq9Assessments,{
+      revalidateOnMount: false,     // ★ ページを開いた時の自動GETをオフにする
+      revalidateOnFocus: false,     // ★ ウィンドウにフォーカスした時のGETもオフにする
+      revalidateIfStale: false,     // ★ キャッシュが古くても勝手に取らない
+    });
 
   // データの加工ロジックをフック内に移管
   const processedHistory = data
@@ -46,7 +50,11 @@ export const usePhq9 = () => {
 export const useResilience = () => {
   const { data, error, isLoading } = useSWR(
     '/resilience_assessments',
-    getResilienceHistory
+    getResilienceHistory,{
+      revalidateOnMount: false,     // ★ ページを開いた時の自動GETをオフにする
+      revalidateOnFocus: false,     // ★ ウィンドウにフォーカスした時のGETもオフにする
+      revalidateIfStale: false,     // ★ キャッシュが古くても勝手に取らない
+    }
   );
 
   // 最新の1件を抽出するロジックをフック側に持たせる
@@ -70,7 +78,11 @@ export const useResilience = () => {
 export const useCognitiveDistortion = () => {
   const { data, error, isLoading } = useSWR(
     '/cognitive_distortion_assessments',
-    getCognitiveDistortionHistory
+    getCognitiveDistortionHistory,{
+      revalidateOnMount: false,     // ★ ページを開いた時の自動GETをオフにする
+      revalidateOnFocus: false,     // ★ ウィンドウにフォーカスした時のGETもオフにする
+      revalidateIfStale: false,     // ★ キャッシュが古くても勝手に取らない
+    }
   );
 
   const latestResult = data && data.length > 0 ? data[data.length - 1] : null;
