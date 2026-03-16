@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { calculatePHQ9 } from '@/features/types/assessment';
-import { usePhq9 } from '@/hooks/useAssessments';
+import { usePhq9 } from '@/services/useAssessments';
 import styles from './PHQ9Assessment.module.css';
 
 const QUESTIONS = [

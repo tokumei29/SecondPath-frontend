@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getMyRecords, type CounselingRecord } from '@/api/userRecords';
 import RecordDetailModal from '@/features/components/counselingRecords/RecordDetailModal';
-import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
+import { useBodyScrollLock } from '@/services/useBodyScrollLock';
 import styles from './page.module.css';
 
 const CounselingRecordsPage = () => {

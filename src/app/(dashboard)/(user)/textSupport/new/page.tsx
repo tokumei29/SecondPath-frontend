@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import { TextSupportPayload } from '@/api/textSupport';
 import { SuccessModal } from '@/features/components/home/SuccessModal';
-import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
-import { useProfile } from '@/hooks/useProfile';
-import { useTextSupports } from '@/hooks/useTextSupport';
+import { useBodyScrollLock } from '@/services/useBodyScrollLock';
+import { useProfile } from '@/services/useProfile';
+import { useTextSupports } from '@/services/useTextSupport';
 import styles from './page.module.css';
 
 const SupportPage = () => {

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 // カスタムフックをインポート
-import { useResilience } from '@/hooks/useAssessments';
+import { useResilience } from '@/services/useAssessments';
 import styles from './ResilienceAssessment.module.css';
 
 const QUESTIONS = [

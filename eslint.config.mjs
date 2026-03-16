@@ -2,6 +2,7 @@ import { FlatCompat } from "@eslint/eslintrc";
 import js from "@eslint/js";
 import path from "path";
 import { fileURLToPath } from "url";
+import importPlugin from "eslint-plugin-import";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,6 +19,9 @@ export default [
   {
     // 2. 対象ファイルを指定
     files: ["src/**/*.{ts,tsx}"],
+    plugins: {
+      import: importPlugin,
+    },
     rules: {
       "no-unused-vars": "off",
       "no-console": ["warn", { allow: ["warn", "error"] }],

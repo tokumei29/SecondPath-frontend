@@ -3,8 +3,8 @@
 import { useState } from 'react'; // useEffect は削除
 import { usePathname, useRouter } from 'next/navigation';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
-import { useTextSupports } from '@/hooks/useTextSupport';
 import { createClient } from '@/lib/supabase/client';
+import { useTextSupports } from '@/services/useTextSupport';
 import { DeleteAccountModal } from './DeleteAccountModal';
 import styles from './sidebar.module.css';
 import { SidebarItem } from './sidebarItem';

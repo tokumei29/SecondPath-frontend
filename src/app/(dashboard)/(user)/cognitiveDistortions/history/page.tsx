@@ -2,7 +2,7 @@
 
 // 不要な useEffect, useState は削除
 import { CognitiveDistortionChart } from '@/features/components/assessment/CognitiveDistortionChart';
-import { useCognitiveDistortion } from '@/hooks/useAssessments';
+import { useCognitiveDistortion } from '@/services/useAssessments';
 import styles from './page.module.css';
 
 const CognitiveDistortionHistory = () => {

@@ -5,11 +5,11 @@ import Link from 'next/link';
 import { DiaryDetailModal } from '@/features/components/diaries/modal';
 import { GoalSection } from '@/features/components/home/goalSection';
 import { StrengthSection } from '@/features/components/home/strengthSection';
-import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
-import { useDiaries } from '@/hooks/useDiaries';
-import { useProfile } from '@/hooks/useProfile';
-import { useTextSupports } from '@/hooks/useTextSupport';
-import { useMyRecords } from '@/hooks/useUserRecords';
+import { useBodyScrollLock } from '@/services/useBodyScrollLock';
+import { useDiaries } from '@/services/useDiaries';
+import { useProfile } from '@/services/useProfile';
+import { useTextSupports } from '@/services/useTextSupport';
+import { useMyRecords } from '@/services/useUserRecords';
 import styles from './page.module.css';
 
 const HomePage = () => {

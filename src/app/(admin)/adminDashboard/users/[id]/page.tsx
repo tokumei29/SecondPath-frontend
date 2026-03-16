@@ -5,7 +5,7 @@ import apiClient from '@/api/client';
 import { CognitiveDistortionChart } from '@/features/components/assessment/CognitiveDistortionChart';
 import { ResilienceResultChart } from '@/features/components/assessment/ResilienceResultChart';
 import { DiaryDetailModal } from '@/features/components/diaries/modal';
-import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
+import { useBodyScrollLock } from '@/services/useBodyScrollLock';
 import styles from './page.module.css';
 
 const UserDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {

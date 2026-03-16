@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePosts } from '@/hooks/usePosts';
+import { usePosts } from '@/services/usePosts';
 import styles from './page.module.css';
 
 export default function PostsIndexPage() {

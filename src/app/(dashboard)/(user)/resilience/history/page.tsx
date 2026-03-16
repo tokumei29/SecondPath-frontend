@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { ResilienceResultChart } from '@/features/components/assessment/ResilienceResultChart';
-import { useResilience } from '@/hooks/useAssessments';
+import { useResilience } from '@/services/useAssessments';
 import styles from './page.module.css';
 
 const ResilienceResultPage = () => {

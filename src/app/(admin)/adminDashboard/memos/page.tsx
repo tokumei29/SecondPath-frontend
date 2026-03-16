@@ -9,7 +9,7 @@ import {
   type MemoResponse,
 } from '@/api/memos';
 import MemoModal from '@/features/components/admin/MemoModal';
-import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
+import { useBodyScrollLock } from '@/services/useBodyScrollLock';
 import styles from './page.module.css';
 
 const Memos = () => {

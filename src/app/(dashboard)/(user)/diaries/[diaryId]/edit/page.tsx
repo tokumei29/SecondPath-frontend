@@ -6,7 +6,7 @@ import axios from 'axios';
 import { type DiaryPayload } from '@/api/diaries';
 import styles from '@/app/(dashboard)/(user)/diaries/page.module.css';
 import { DiaryField } from '@/features/components/diaries/diaryField';
-import { useDiary } from '@/hooks/useDiaries';
+import { useDiary } from '@/services/useDiaries';
 
 const DiaryEditPage = () => {
   const router = useRouter();

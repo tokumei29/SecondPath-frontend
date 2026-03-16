@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
-import { useTextSupportDetail } from '@/hooks/useTextSupport';
+import { useTextSupportDetail } from '@/services/useTextSupport';
 import styles from './page.module.css';
 
 const TextSupportDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {

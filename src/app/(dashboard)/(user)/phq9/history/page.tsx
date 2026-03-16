@@ -1,7 +1,7 @@
 'use client';
 
 import { PHQ9HistoryChart } from '@/features/components/assessment/PHQ9HistoryChart';
-import { usePhq9 } from '@/hooks/useAssessments';
+import { usePhq9 } from '@/services/useAssessments';
 import styles from './page.module.css';
 
 const AssessmentHistoryPage = () => {

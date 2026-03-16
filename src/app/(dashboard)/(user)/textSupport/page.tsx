@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useTextSupports } from '@/hooks/useTextSupport';
+import { useTextSupports } from '@/services/useTextSupport';
 import styles from './page.module.css';
 
 const TextSupportListPage = () => {

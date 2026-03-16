@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { DiaryDetailModal } from '@/features/components/diaries/modal';
-import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
-import { useDiaries, useDiary } from '@/hooks/useDiaries';
+import { useBodyScrollLock } from '@/services/useBodyScrollLock';
+import { useDiaries, useDiary } from '@/services/useDiaries';
 import styles from './page.module.css';
 
 const HistoryPage = () => {

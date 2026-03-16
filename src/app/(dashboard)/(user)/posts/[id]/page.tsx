@@ -2,7 +2,7 @@
 
 import { use } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { usePost } from '@/hooks/usePosts';
+import { usePost } from '@/services/usePosts';
 import styles from './page.module.css';
 
 const PostDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
