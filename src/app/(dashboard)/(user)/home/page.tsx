@@ -58,7 +58,7 @@ const HomePage = () => {
           <span className={styles.alertIcon}>📢</span>
           <div className={styles.alertContent}>
             <strong>カウンセラーからのフィードバック（支援・方針）が届いています</strong>
-            <p>支援プログラムやアドバイスが更新されました。内容を確認しましょう。</p>
+            <p>支援プログラムやアドバイスが更新されました。内容を確認しましょう。（この案内は当日中表示されます）</p>
           </div>
           <span className={styles.alertArrow}>&rarr;</span>
         </Link>
