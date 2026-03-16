@@ -65,11 +65,11 @@ const ResilienceResultPage = () => {
             </div>
           </div>
 
-          <div className={styles.actionArea}>
+          {/* <div className={styles.actionArea}>
             <button className={styles.backBtn} onClick={() => router.push('/home')}>
               ダッシュボードに戻る
             </button>
-          </div>
+          </div> */}
         </>
       )}
     </main>
