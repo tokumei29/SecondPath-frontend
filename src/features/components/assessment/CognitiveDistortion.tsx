@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useCognitiveDistortion } from '@/services/useAssessments';
 import styles from './CognitiveDistortion.module.css';
 
 const DISTORTION_QUESTIONS = [

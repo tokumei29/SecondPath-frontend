@@ -11,7 +11,7 @@ import {
 // --- PHQ-9 用フック ---
 
 export const usePhq9 = () => {
-  const { data, error, mutate, isLoading } = useSWR('/phq9_assessments', getPhq9Assessments);
+  const { data, error, isLoading } = useSWR('/phq9_assessments', getPhq9Assessments);
 
   // データの加工ロジックをフック内に移管
   const processedHistory = data
@@ -30,7 +30,6 @@ export const usePhq9 = () => {
 
   const create = async (formData: any) => {
     const result = await createPhq9Assessment(formData);
-    await mutate(); // 保存後にキャッシュを更新
     return result;
   };
 
@@ -39,14 +38,13 @@ export const usePhq9 = () => {
     rawItems: data, // 必要なら生データも返せる
     isLoading,
     isError: error,
-    mutate,
     create,
   };
 };
 
 // --- レジリエンス用フック ---
 export const useResilience = () => {
-  const { data, error, mutate, isLoading } = useSWR(
+  const { data, error, isLoading } = useSWR(
     '/resilience_assessments',
     getResilienceHistory
   );
@@ -56,7 +54,6 @@ export const useResilience = () => {
 
   const create = async (formData: any) => {
     const result = await createResilienceAssessment(formData);
-    await mutate(); // 保存後にキャッシュを更新
     return result;
   };
 
@@ -71,7 +68,7 @@ export const useResilience = () => {
 
 // --- 認知の歪み用フック ---
 export const useCognitiveDistortion = () => {
-  const { data, error, mutate, isLoading } = useSWR(
+  const { data, error, isLoading } = useSWR(
     '/cognitive_distortion_assessments',
     getCognitiveDistortionHistory
   );
