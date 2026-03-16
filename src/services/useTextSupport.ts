@@ -23,7 +23,6 @@ export const useTextSupports = () => {
 
   const create = async (payload: TextSupportPayload) => {
     const result = await createTextSupport(payload);
-    await mutate(); // 新しい相談を送ったら一覧を更新
     return result;
   };
 

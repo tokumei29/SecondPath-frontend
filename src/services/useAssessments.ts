@@ -80,7 +80,6 @@ export const useCognitiveDistortion = () => {
 
   const create = async (formData: any) => {
     const result = await createCognitiveDistortionAssessment(formData);
-    mutate();
     return result;
   };
 
