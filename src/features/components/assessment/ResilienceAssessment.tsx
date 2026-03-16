@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createResilienceAssessment } from '@/api/assessments';
+// カスタムフックをインポート
+import { useResilience } from '@/hooks/useAssessments';
 import styles from './ResilienceAssessment.module.css';
 
 const QUESTIONS = [
@@ -25,10 +26,13 @@ const OPTIONS = [
 ];
 
 export const ResilienceAssessmentForm = () => {
+  const router = useRouter();
+  // SWRのカスタムフックから保存関数(create)を取得
+  const { create } = useResilience();
+
   const [answers, setAnswers] = useState<number[]>(new Array(9).fill(-1));
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showInfo, setShowInfo] = useState<boolean>(false);
-  const router = useRouter();
 
   const handleSelect = (idx: number, val: number) => {
     const newAns = [...answers];
@@ -43,7 +47,9 @@ export const ResilienceAssessmentForm = () => {
 
     setIsSubmitting(true);
     try {
-      await createResilienceAssessment({
+      // フックの create を使用
+      // 内部で mutate() が呼ばれるため、遷移後の history 画面で最新の結果が表示されます
+      await create({
         q1: answers[0],
         q2: answers[1],
         q3: answers[2],
@@ -54,7 +60,7 @@ export const ResilienceAssessmentForm = () => {
         q8: answers[7],
         q9: answers[8],
       });
-      // 保存完了後、結果（チャート）ページへ遷移させる
+
       router.push('/resilience/history');
     } catch (err) {
       alert('保存に失敗しました。');
@@ -70,7 +76,6 @@ export const ResilienceAssessmentForm = () => {
         <p className={styles.subtitle}>今のあなたの「折れない心」のバランスを測定します。</p>
       </header>
 
-      {/* レジリエンス診断の説明セクション */}
       <div className={styles.infoSection}>
         <button className={styles.infoToggleButton} onClick={() => setShowInfo(!showInfo)}>
           {showInfo ? '▲ 説明を閉じる' : '▼ 職業的レジリエンス尺度とは？（必ずお読みください）'}

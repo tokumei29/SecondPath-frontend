@@ -3,14 +3,18 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import axios from 'axios';
-import { getDiary, updateDiary, type DiaryPayload } from '@/api/diaries';
+import { type DiaryPayload } from '@/api/diaries';
 import styles from '@/app/(dashboard)/(user)/diaries/page.module.css';
 import { DiaryField } from '@/features/components/diaries/diaryField';
+import { useDiary } from '@/hooks/useDiaries';
 
 const DiaryEditPage = () => {
   const router = useRouter();
   const params = useParams();
   const diaryId = params?.diaryId as string;
+
+  // SWRフックを使用
+  const { diary: serverDiary, isLoading, update } = useDiary(diaryId);
 
   const [formData, setFormData] = useState({
     content: '',
@@ -19,32 +23,19 @@ const DiaryEditPage = () => {
     tomorrow_goal: '',
   });
 
-  const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
-  // 【最重要】初期レンダリング時にデータを取得してフォームに入れる
+  // サーバーからデータが届いたら、フォームの初期値としてセット
   useEffect(() => {
-    const fetchDiary = async () => {
-      if (!diaryId) return;
-      try {
-        const res = await getDiary(diaryId);
-        // APIから返ってきたデータをstateにセットすることで、入力欄に値が入る
-        const d = res.data;
-        setFormData({
-          content: d.content || '',
-          good_thing: d.good_thing || '',
-          improvement: d.improvement || '',
-          tomorrow_goal: d.tomorrow_goal || '',
-        });
-      } catch (error) {
-        console.error('Failed to fetch diary:', error);
-        alert('データの取得に失敗しました。');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchDiary();
-  }, [diaryId]);
+    if (serverDiary) {
+      setFormData({
+        content: serverDiary.content || '',
+        good_thing: serverDiary.good_thing || '',
+        improvement: serverDiary.improvement || '',
+        tomorrow_goal: serverDiary.tomorrow_goal || '',
+      });
+    }
+  }, [serverDiary]);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -57,18 +48,14 @@ const DiaryEditPage = () => {
     setIsSaving(true);
     try {
       const payload: DiaryPayload = {
-        diary: {
-          content: formData.content,
-          good_thing: formData.good_thing,
-          improvement: formData.improvement,
-          tomorrow_goal: formData.tomorrow_goal,
-        },
+        diary: formData,
       };
 
-      // payload をそのまま渡す
-      await updateDiary(diaryId, payload);
+      // フック経由で更新（内部で mutate が走り、キャッシュが最新になります）
+      await update(payload);
+
       alert('更新しました！');
-      router.push('/diaries/history'); // 保存後は履歴などへ遷移
+      router.push('/diaries/history');
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         console.error('Update Error:', error.response?.data);

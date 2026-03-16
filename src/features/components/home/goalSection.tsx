@@ -1,8 +1,8 @@
-import { ProfileResponse } from '@/features/types/profile';
+import { Profile } from '@/features/types/profile';
 import styles from './goalSection.module.css';
 
 type GoalSectionProps = {
-  profile: ProfileResponse | null;
+  profile: Profile | null;
 };
 
 export const GoalSection = ({ profile }: GoalSectionProps) => {

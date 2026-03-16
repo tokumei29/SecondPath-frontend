@@ -1,60 +1,40 @@
 'use client';
 
-import { useEffect, useState, useRef, useCallback, use } from 'react';
+import { useState, useRef, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
-import { getTextSupportDetail, postSupportMessage } from '@/api/textSupport';
+import { useTextSupportDetail } from '@/hooks/useTextSupport';
 import styles from './page.module.css';
-
-type Message = {
-  id: number;
-  message: string; // content から message に統一
-  sender_type: 'user' | 'counselor';
-  created_at: string;
-};
-
-type SupportDetail = {
-  id: number;
-  subject: string;
-  message: string;
-  status: 'waiting' | 'replied';
-  created_at: string;
-  support_messages: Message[];
-};
 
 const TextSupportDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = use(params);
   const router = useRouter();
-  const [detail, setDetail] = useState<SupportDetail | null>(null);
-  const [replyText, setReplyText] = useState('');
-  const [isSending, setIsSending] = useState(false);
   const scrollEndRef = useRef<HTMLDivElement>(null);
 
-  const fetchDetail = useCallback(async () => {
-    try {
-      const data = await getTextSupportDetail(id);
-      setDetail(data);
-    } catch (error) {
-      console.error(error);
+  // SWRフックを使用
+  const { detail, addMessage, isLoading } = useTextSupportDetail(id);
+  const [replyText, setReplyText] = useState('');
+  const [isSending, setIsSending] = useState(false);
+
+  // 既読処理（コンポーネント読み込み時に実行）
+  useEffect(() => {
+    if (id) {
+      localStorage.setItem(`read_support_${id}`, new Date().toISOString());
     }
   }, [id]);
 
-  useEffect(() => {
-    fetchDetail();
-    localStorage.setItem(`read_support_${id}`, new Date().toISOString());
-  }, [fetchDetail, id]);
-
+  // メッセージが更新されたら下までスクロール
   useEffect(() => {
     scrollEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [detail]);
+  }, [detail?.support_messages]);
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!replyText.trim() || isSending) return;
+
     setIsSending(true);
     try {
-      await postSupportMessage(id, replyText);
+      await addMessage(replyText); // フックの関数を呼ぶだけで自動リロードされる
       setReplyText('');
-      await fetchDetail();
     } catch (error) {
       alert('送信に失敗しました');
     } finally {
@@ -62,11 +42,10 @@ const TextSupportDetailPage = ({ params }: { params: Promise<{ id: string }> }) 
     }
   };
 
-  if (!detail) return <div className={styles.loading}>読み込み中...</div>;
+  if (isLoading || !detail) return <div className={styles.loading}>読み込み中...</div>;
 
   return (
     <div className={styles.container}>
-      {/* ヘッダー */}
       <header className={styles.header}>
         <button onClick={() => router.back()} className={styles.backBtn}>
           戻る
@@ -79,30 +58,20 @@ const TextSupportDetailPage = ({ params }: { params: Promise<{ id: string }> }) 
         </div>
       </header>
 
-      {/* トークエリア */}
       <div className={styles.talkArea}>
-        {/* 1. 最初の相談内容：ユーザーなので【左側(userRow)】 */}
+        {/* 初回の相談内容 */}
         <div className={styles.userRow}>
           <div className={styles.userBubble}>
-            {/* 件名を表示 */}
             <div className={styles.bubbleHeader}>
               <span className={styles.subjectLabel}>件名:</span> {detail.subject || '無題の相談'}
             </div>
             <p className={styles.mainMessage}>{detail.message}</p>
           </div>
-          <span className={styles.time}>
-            {new Date(detail.created_at).toLocaleString('ja-JP', {
-              year: 'numeric',
-              month: '2-digit',
-              day: '2-digit',
-              hour: '2-digit',
-              minute: '2-digit',
-            })}
-          </span>
+          <span className={styles.time}>{new Date(detail.created_at).toLocaleString('ja-JP')}</span>
         </div>
 
-        {/* 2. 以降のやり取り */}
-        {detail.support_messages.map((msg) => (
+        {/* トーク履歴 */}
+        {detail.support_messages?.map((msg: any) => (
           <div
             key={msg.id}
             className={msg.sender_type === 'counselor' ? styles.adminRow : styles.userRow}
@@ -110,24 +79,14 @@ const TextSupportDetailPage = ({ params }: { params: Promise<{ id: string }> }) 
             <div
               className={msg.sender_type === 'counselor' ? styles.adminBubble : styles.userBubble}
             >
-              {/* msg.content ではなく msg.message を表示 */}
               <p>{msg.message}</p>
             </div>
-            <span className={styles.time}>
-              {new Date(msg.created_at).toLocaleString('ja-JP', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-              })}
-            </span>
+            <span className={styles.time}>{new Date(msg.created_at).toLocaleString('ja-JP')}</span>
           </div>
         ))}
         <div ref={scrollEndRef} />
       </div>
 
-      {/* 入力フッター */}
       <footer className={styles.footer}>
         <form onSubmit={handleSend} className={styles.inputForm}>
           <textarea

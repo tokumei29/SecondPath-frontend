@@ -49,7 +49,7 @@ export const updateDiary = async (diaryId: string, data: DiaryPayload) => {
 /**
  * 特定の日報を削除する
  */
-export const deleteDiary = async (diaryId: string) => {
+export const deleteDiary = async (diaryId: number) => {
   // DELETE /api/v1/diaries/[ID]
   const response = await apiClient.delete(`/diaries/${diaryId}`);
   return response.data;

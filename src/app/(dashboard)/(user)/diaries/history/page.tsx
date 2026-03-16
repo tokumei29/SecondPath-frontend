@@ -1,47 +1,32 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { deleteDiary, getDiaries } from '@/api/diaries';
 import { DiaryDetailModal } from '@/features/components/diaries/modal';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
+import { useDiaries, useDiary } from '@/hooks/useDiaries';
 import styles from './page.module.css';
-import type { Diary } from '../../home/page';
 
 const HistoryPage = () => {
   const router = useRouter();
-  const [diaries, setDiaries] = useState<Diary[]>([]);
-  const [selectedDiary, setSelectedDiary] = useState<Diary | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [selectedDiary, setSelectedDiary] = useState<any>(null);
+
+  // SWRフックからデータと機能を抽出
+  const { diaries, isLoading } = useDiaries();
+  const { remove } = useDiary();
 
   useBodyScrollLock(!!selectedDiary);
 
-  const fetchAllDiaries = async () => {
-    try {
-      const res = await getDiaries();
-      setDiaries(res.data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchAllDiaries();
-  }, []);
-
-  // 削除処理
   const handleDelete = async (diaryId: number) => {
     if (!window.confirm('この記録を削除してもよろしいですか？\n削除したデータは元に戻せません。')) {
       return;
     }
 
     try {
-      await deleteDiary(String(diaryId));
+      // 改造した remove 関数に ID を渡すだけ！
+      // 内部で globalMutate が走るので、自動的に一覧から消えます
+      await remove(diaryId);
       alert('削除しました。');
-      // 削除に成功したら一覧を更新
-      fetchAllDiaries();
     } catch (error) {
       console.error('削除失敗:', error);
       alert('削除に失敗しました。');
@@ -49,7 +34,7 @@ const HistoryPage = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className={styles.loading}>読み込み中...</div>;
   }
 
   return (
@@ -69,26 +54,34 @@ const HistoryPage = () => {
             </tr>
           </thead>
           <tbody>
-            {diaries.map((diary) => (
-              <tr key={diary.id}>
-                <td>{new Date(diary.created_at).toLocaleDateString()}</td>
-                <td>{diary.content.substring(0, 50)}...</td>
-                <td className={styles.actions}>
-                  <button onClick={() => setSelectedDiary(diary)} className={styles.viewBtn}>
-                    日報を見る
-                  </button>
-                  <button
-                    className={styles.editBtn}
-                    onClick={() => router.push(`/diaries/${diary.id}/edit`)}
-                  >
-                    編集
-                  </button>
-                  <button className={styles.deleteBtn} onClick={() => handleDelete(diary.id)}>
-                    削除
-                  </button>
+            {diaries && diaries.length > 0 ? (
+              diaries.map((diary: any) => (
+                <tr key={diary.id}>
+                  <td>{new Date(diary.created_at).toLocaleDateString()}</td>
+                  <td>{diary.content.substring(0, 50)}...</td>
+                  <td className={styles.actions}>
+                    <button onClick={() => setSelectedDiary(diary)} className={styles.viewBtn}>
+                      日報を見る
+                    </button>
+                    <button
+                      className={styles.editBtn}
+                      onClick={() => router.push(`/diaries/${diary.id}/edit`)}
+                    >
+                      編集
+                    </button>
+                    <button className={styles.deleteBtn} onClick={() => handleDelete(diary.id)}>
+                      削除
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={3} style={{ textAlign: 'center', padding: '2rem' }}>
+                  記録がまだありません。
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>

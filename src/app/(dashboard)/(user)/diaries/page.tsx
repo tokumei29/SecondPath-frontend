@@ -1,14 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import axios from 'axios';
-import { createDiary, type DiaryPayload } from '@/api/diaries';
+import { type DiaryPayload } from '@/api/diaries';
 import { DiaryField } from '@/features/components/diaries/diaryField';
 import { SuccessModal } from '@/features/components/home/SuccessModal';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
+import { useDiaries } from '@/hooks/useDiaries';
 import styles from './page.module.css';
 
 const DiaryPage = () => {
+  // SWRフックから作成用関数を取得
+  const { create } = useDiaries();
+
   const [formData, setFormData] = useState({
     content: '',
     good_thing: '',
@@ -31,7 +34,6 @@ const DiaryPage = () => {
 
     setIsSaving(true);
     try {
-      // APIにオブジェクトごと渡す
       const payload: DiaryPayload = {
         diary: {
           content: formData.content,
@@ -40,13 +42,14 @@ const DiaryPage = () => {
           tomorrow_goal: formData.tomorrow_goal,
         },
       };
-      await createDiary(payload);
+
+      // フック経由で保存（内部で mutate が走り、キャッシュが更新される）
+      await create(payload);
+
       setShowSuccessModal(true);
       setFormData({ content: '', good_thing: '', improvement: '', tomorrow_goal: '' });
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        console.error('Save Error:', error.response?.data || error.message);
-      }
+    } catch (error: any) {
+      console.error('Save Error:', error);
       alert('保存に失敗しました。');
     } finally {
       setIsSaving(false);
@@ -102,7 +105,7 @@ const DiaryPage = () => {
           </button>
         </div>
       </section>
-      {/* 褒め称えるモーダル */}
+
       <SuccessModal
         isOpen={showSuccessModal}
         onClose={() => setShowSuccessModal(false)}

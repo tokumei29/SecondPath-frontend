@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createCognitiveDistortionAssessment } from '@/api/assessments';
+import { useCognitiveDistortion } from '@/hooks/useAssessments';
 import styles from './CognitiveDistortion.module.css';
 
 const DISTORTION_QUESTIONS = [
@@ -137,6 +137,9 @@ const OPTIONS = [
 
 export const CognitiveDistortionForm = () => {
   const router = useRouter();
+  // SWR のカスタムフックから create (mutateを含む) を取り出す
+  const { create } = useCognitiveDistortion();
+
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [showInfo, setShowInfo] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -155,19 +158,16 @@ export const CognitiveDistortionForm = () => {
 
     setIsSubmitting(true);
     try {
-      /** * データ整形ロジック:
-       * 1因子につき2つの設問があるため、factorごとの合計値を算出する。
-       * 例: all_or_nothing (ID 1: 2点, ID 2: 3点) => { all_or_nothing: 5 }
-       */
       const scoresByFactor: Record<string, number> = {};
-
       DISTORTION_QUESTIONS.forEach((q) => {
         const score = answers[q.id] || 0;
-        // 同一factorの値を加算していく
         scoresByFactor[q.factor] = (scoresByFactor[q.factor] || 0) + score;
       });
 
-      await createCognitiveDistortionAssessment(scoresByFactor);
+      // 直接 API を叩くのではなく、フックの create を使う
+      // この内部で mutate() が走るので、キャッシュが自動更新されます
+      await create(scoresByFactor);
+
       router.push('/cognitiveDistortions/history');
     } catch (error) {
       alert('保存に失敗しました');
@@ -178,6 +178,7 @@ export const CognitiveDistortionForm = () => {
 
   return (
     <div className={styles.container}>
+      {/* 以下の JSX 構造は一切変更なし */}
       <h1 className={styles.title}>認知の歪みアセスメント</h1>
 
       <div className={styles.infoSection}>

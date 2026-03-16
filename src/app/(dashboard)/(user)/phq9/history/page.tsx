@@ -1,55 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { getPhq9Assessments } from '@/api/assessments';
 import { PHQ9HistoryChart } from '@/features/components/assessment/PHQ9HistoryChart';
+import { usePhq9 } from '@/hooks/useAssessments';
 import styles from './page.module.css';
 
-type HistoryData = {
-  date: string;
-  score: number;
-};
-
 const AssessmentHistoryPage = () => {
-  const router = useRouter();
-
-  const [history, setHistory] = useState<HistoryData[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchHistory = async () => {
-      try {
-        const data = await getPhq9Assessments();
-
-        /**
-         * 1. 日付(item.date)をキーにしたオブジェクトを作成。
-         * Railsが昇順(ASC)で送ってくるなら、ループの後半で出てくる「新しいデータ」が
-         * 同じ日付の「古いデータ」を自動的に上書きします。
-         */
-        const dailyLatestMap: Record<string, HistoryData> = {};
-
-        data.forEach((item: any) => {
-          dailyLatestMap[item.date] = {
-            date: item.date,
-            score: item.score,
-          };
-        });
-
-        // 2. オブジェクトを配列に戻し、念のため日付順にソートしてStateへ
-        const uniqueData = Object.values(dailyLatestMap).sort((a, b) =>
-          a.date.localeCompare(b.date)
-        );
-
-        setHistory(uniqueData);
-      } catch (error) {
-        console.error('履歴の取得に失敗:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchHistory();
-  }, []);
+  // カスタムフックを呼ぶだけ。加工済みの history が手に入る。
+  const { history, isLoading } = usePhq9();
 
   if (isLoading) return <div className={styles.loading}>履歴を読み込み中...</div>;
 
@@ -62,8 +19,7 @@ const AssessmentHistoryPage = () => {
         </p>
       </header>
 
-      {history.length > 0 ? (
-        /* --- データがある場合の表示 --- */
+      {history && history.length > 0 ? (
         <>
           <section className={styles.chartSection}>
             <PHQ9HistoryChart data={history} />
@@ -90,7 +46,6 @@ const AssessmentHistoryPage = () => {
           </div>
         </>
       ) : (
-        /* --- データがない場合の表示 --- */
         <div className={styles.empty}>
           <p>履歴がありません。まずは診断を受けてみましょう。</p>
         </div>

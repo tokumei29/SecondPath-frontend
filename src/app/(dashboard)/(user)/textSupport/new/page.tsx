@@ -1,58 +1,42 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { getProfile } from '@/api/profile';
-import { createTextSupport, TextSupportPayload } from '@/api/textSupport';
+import { useState } from 'react';
+import { TextSupportPayload } from '@/api/textSupport';
 import { SuccessModal } from '@/features/components/home/SuccessModal';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
+import { useProfile } from '@/hooks/useProfile';
+import { useTextSupports } from '@/hooks/useTextSupport';
 import styles from './page.module.css';
 
 const SupportPage = () => {
-  const [name, setName] = useState(''); // 名前
-  const [email, setEmail] = useState(''); // メアド
+  const { profile, isLoading: isLoadingProfile } = useProfile();
+  const { create } = useTextSupports();
+
+  const [email, setEmail] = useState('');
   const [subject, setSubject] = useState('');
   const [content, setContent] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [isLoadingProfile, setIsLoadingProfile] = useState(true);
 
   useBodyScrollLock(showModal);
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const profileData = await getProfile();
-        if (profileData && profileData.name) {
-          setName(profileData.name);
-        } else {
-          setName('名称取得失敗。リロードしてください');
-        }
-      } catch (error) {
-        setName('名称取得失敗。リロードしてください');
-      } finally {
-        setIsLoadingProfile(false);
-      }
-    };
-    fetchProfile();
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!content.trim()) return alert('相談内容は必須です');
+    if (!profile?.name) return alert('ユーザー情報が読み込めていません');
 
     setIsSending(true);
     try {
-      // 型安全なペイロードを作成
       const payload: TextSupportPayload = {
         text_support: {
-          name: name, // 固定された名前
+          name: profile.name, // プロフィールフックから取得した名前を使用
           email: email,
           subject: subject,
           message: content,
         },
       };
 
-      await createTextSupport(payload);
+      await create(payload); // フック経由で送信（キャッシュも自動更新）
 
       setShowModal(true);
       setEmail('');
@@ -83,22 +67,12 @@ const SupportPage = () => {
             <label>お名前（自己分析設定のお名前が自動適用されます）</label>
             <input
               type="text"
-              value={isLoadingProfile ? '読み込み中...' : name}
+              value={isLoadingProfile ? '読み込み中...' : profile?.name || '名称取得失敗'}
               readOnly
               style={{ backgroundColor: '#f5f5f5', cursor: 'not-allowed' }}
-              onChange={(e) => setName(e.target.value)}
               placeholder="例：山田太郎"
             />
           </div>
-          {/* <div className={styles.field}>
-            <label>メールアドレス（記載は任意です）</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="example@mail.com"
-            />
-          </div> */}
         </div>
 
         <div className={styles.field}>
@@ -125,7 +99,7 @@ const SupportPage = () => {
           />
         </div>
 
-        <button type="submit" className={styles.submitBtn} disabled={isSending}>
+        <button type="submit" className={styles.submitBtn} disabled={isSending || isLoadingProfile}>
           {isSending ? '送信中...' : 'カウンセラーに送信する'}
         </button>
       </form>

@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createPhq9Assessment } from '@/api/assessments';
 import { calculatePHQ9 } from '@/features/types/assessment';
+import { usePhq9 } from '@/hooks/useAssessments';
 import styles from './PHQ9Assessment.module.css';
 
 const QUESTIONS = [
@@ -26,18 +26,16 @@ const OPTIONS = [
 ];
 
 export const PHQ9Assessment = () => {
+  const router = useRouter();
+  // SWRのカスタムフックを使用。create (mutateを含む) と isLoading を取得
+  const { create, isLoading: isInitialLoading } = usePhq9();
+
   const [answers, setAnswers] = useState<number[]>(new Array(9).fill(-1));
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const router = useRouter();
 
-  useEffect(() => {
-    // マウント時に読み込み完了とする
-    setIsLoading(false);
-  }, []);
-
-  if (isLoading) return <div>読み込み中...</div>;
+  // マウント時の useEffect も不要になりました
+  if (isInitialLoading) return <div className={styles.loading}>読み込み中...</div>;
 
   const handleSelect = (qIndex: number, value: number) => {
     const newAnswers = [...answers];
@@ -54,7 +52,6 @@ export const PHQ9Assessment = () => {
     const res = calculatePHQ9(answers);
 
     try {
-      // Railsに保存するためのデータ構造を作成
       const payload = {
         total_score: res.totalScore,
         q1: answers[0],
@@ -69,10 +66,11 @@ export const PHQ9Assessment = () => {
         suicidal_ideation: res.suicidalIdeation,
       };
 
-      await createPhq9Assessment(payload);
+      // 直接 API を叩くのではなく、フックの create を使う。
+      // これで、保存と同時に履歴キャッシュが最新に同期されます。
+      await create(payload);
       alert('診断結果を保存しました。');
 
-      // グラフがある履歴ページへ遷移
       router.push('/phq9/history');
     } catch (error) {
       console.error('保存失敗:', error);
@@ -93,7 +91,6 @@ export const PHQ9Assessment = () => {
       </header>
 
       <div className={styles.container}>
-        {/* PHQ-9の説明セクション */}
         <div className={styles.infoSection}>
           <button className={styles.infoToggleButton} onClick={() => setShowInfo(!showInfo)}>
             {showInfo ? '▲ 説明を閉じる' : '▼ PHQ-9診断とは？（必ずお読みください）'}
@@ -130,7 +127,6 @@ export const PHQ9Assessment = () => {
           )}
         </div>
 
-        {/* 質問リスト */}
         <div className={styles.questionList}>
           {QUESTIONS.map((q, i) => (
             <div key={i} className={styles.questionCard}>

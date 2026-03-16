@@ -1,58 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { getTextSupports } from '@/api/textSupport';
+import { useTextSupports } from '@/hooks/useTextSupport';
 import styles from './page.module.css';
 
-type TextSupport = {
-  id: number;
-  subject: string;
-  message: string;
-  status: 'waiting' | 'replied'; // Railsのenumと連動
-  created_at: string;
-  updated_at: string;
-};
-
 const TextSupportListPage = () => {
-  const [supports, setSupports] = useState<TextSupport[]>([]);
-  const [loading, setLoading] = useState(true);
+  // SWRフックを使用
+  const { supports, checkIsRead, isLoading } = useTextSupports();
 
-  useEffect(() => {
-    const fetchSupports = async () => {
-      try {
-        const data = await getTextSupports(); // 定義した関数を呼ぶ
-        setSupports(data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchSupports();
-  }, []);
-
-  // 既読判定ロジック
-  const checkIsRead = (support: TextSupport) => {
-    // 1. カウンセラーの回答がない（statusがwaiting）なら、未読バッジを出す必要すらない
-    if (support.status !== 'replied') return false;
-
-    const lastRead = localStorage.getItem(`read_support_${support.id}`);
-    if (!lastRead) return false; // 一度も読んでいないなら未読
-
-    const lastReadDate = new Date(lastRead);
-
-    // 2. 比較対象は「相談全体の最終更新日(updated_at)」
-    // カウンセラーが返信した時にRailsでtouch: trueしていれば、これが最新の返信時刻になる
-    const latestActivityDate = new Date(support.updated_at);
-
-    // 3. 【ここが修正ポイント】
-    // 「最後に読んだ時間」が「最新の更新時間」を追い越している時だけが既読
-    // 1秒でも updated_at が新しければ、それは「未読（新着）」
-    return lastReadDate.getTime() > latestActivityDate.getTime();
-  };
-
-  if (loading) return <div className={styles.loading}>読み込み中...</div>;
+  // デザイン維持のため isLoading の表示
+  if (isLoading) return <div className={styles.loading}>読み込み中...</div>;
 
   return (
     <div className={styles.container}>
@@ -72,8 +29,8 @@ const TextSupportListPage = () => {
             </Link>
           </div>
         ) : (
-          supports.map((support) => {
-            const isRead = checkIsRead(support); // ここで判定
+          supports.map((support: any) => {
+            const isRead = checkIsRead(support); // フックの関数で判定
 
             return (
               <Link href={`/textSupport/${support.id}`} key={support.id} className={styles.card}>
@@ -89,7 +46,7 @@ const TextSupportListPage = () => {
                       })}
                     </span>
 
-                    {/* バッジの出し分け */}
+                    {/* バッジの出し分け（ロジック維持） */}
                     {support.status === 'replied' ? (
                       isRead ? (
                         <span className={`${styles.badge} ${styles.read}`}>回答を確認済み</span>

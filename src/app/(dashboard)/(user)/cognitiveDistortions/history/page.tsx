@@ -1,34 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { getCognitiveDistortionHistory } from '@/api/assessments';
+// 不要な useEffect, useState は削除
 import { CognitiveDistortionChart } from '@/features/components/assessment/CognitiveDistortionChart';
+import { useCognitiveDistortion } from '@/hooks/useAssessments';
 import styles from './page.module.css';
 
 const CognitiveDistortionHistory = () => {
-  const [latestResult, setLatestResult] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  // SWRのカスタムフックを使用（Loading管理も任せる）
+  const { latestResult, isLoading } = useCognitiveDistortion();
 
-  useEffect(() => {
-    const fetchHistory = async () => {
-      try {
-        const data = await getCognitiveDistortionHistory();
-
-        if (data && data.length > 0) {
-          // 配列の最後（最新の診断）のみをセット
-          const latest = data[data.length - 1];
-          setLatestResult(latest);
-        }
-      } catch (error) {
-        console.error('データの取得に失敗しました', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchHistory();
-  }, []);
-
-  if (loading) return <div className={styles.loading}>読み込み中...</div>;
+  // デザイン維持のため、元の styles.loading を使用
+  if (isLoading) return <div className={styles.loading}>読み込み中...</div>;
 
   return (
     <div className={styles.container}>
@@ -44,6 +26,7 @@ const CognitiveDistortionHistory = () => {
       ) : (
         <div className={styles.latestView}>
           <div className={styles.metaInfo}>
+            {/* latestResult.date などのプロパティに直接アクセス */}
             <span className={styles.historyDate}>{latestResult?.date} の結果</span>
             <span className={styles.totalScoreLabel}>総合スコア: {latestResult?.total_score}</span>
           </div>

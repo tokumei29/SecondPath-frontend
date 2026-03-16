@@ -1,8 +1,8 @@
-import { ProfileResponse } from '@/features/types/profile';
+import { Profile } from '@/features/types/profile';
 import styles from './strengthSection.module.css';
 
 type StrengthSectionProps = {
-  profile: ProfileResponse | null;
+  profile: Profile | null;
 };
 
 export const StrengthSection = ({ profile }: StrengthSectionProps) => {

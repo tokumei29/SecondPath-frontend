@@ -10,11 +10,11 @@ import {
 } from 'recharts';
 import styles from './ResilienceResultChart.module.css';
 
-interface ResilienceData {
+type ResilienceData = {
   novelty_seeking: number;
   emotional_regulation: number;
   adaptive_coping: number;
-}
+};
 
 export const ResilienceResultChart = ({ data }: { data: ResilienceData }) => {
   const chartData = [

@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react'; // useEffect は削除
 import { usePathname, useRouter } from 'next/navigation';
-import { getTextSupports } from '@/api/textSupport';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
+import { useTextSupports } from '@/hooks/useTextSupport';
 import { createClient } from '@/lib/supabase/client';
 import { DeleteAccountModal } from './DeleteAccountModal';
 import styles from './sidebar.module.css';
@@ -13,41 +13,30 @@ export const Sidebar = () => {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
-  const [hasUnread, setHasUnread] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  // --- SWRによる未読チェック ---
+  // 5秒おきに裏でチェックしたい場合は { refreshInterval: 5000 } を足せます
+  const { supports } = useTextSupports();
+
+  const hasUnread =
+    supports?.some((support: any) => {
+      if (support.status !== 'replied') return false;
+      const lastRead = localStorage.getItem(`read_support_${support.id}`);
+      if (!lastRead) return true;
+      return new Date(lastRead).getTime() < new Date(support.updated_at).getTime();
+    }) ?? false;
+  // -------------------------
+
   useBodyScrollLock(isDeleteModalOpen);
 
-  // チャットの既読判定
-  useEffect(() => {
-    const checkUnreadStatus = async () => {
-      try {
-        const supports = await getTextSupports();
-        const unreadExists = supports.some((support: any) => {
-          if (support.status !== 'replied') return false;
-
-          const lastRead = localStorage.getItem(`read_support_${support.id}`);
-          if (!lastRead) return true; // 未読
-
-          return new Date(lastRead).getTime() < new Date(support.updated_at).getTime(); // 更新が新しいなら未読
-        });
-
-        setHasUnread(unreadExists);
-      } catch (error) {
-        console.error('未読チェック失敗', error);
-      }
-    };
-
-    checkUnreadStatus();
-  }, [pathname]);
-
+  // ログアウト処理
   const handleLogout = async () => {
     if (!window.confirm('ログアウトしますか？')) return;
     try {
       await supabase.auth.signOut();
       Object.keys(localStorage).forEach((key) => {
-        // 既読フラグ以外を消去する（sb- で始まるSupabase関連など）
         if (!key.startsWith('read_support_')) {
           localStorage.removeItem(key);
         }
@@ -59,32 +48,25 @@ export const Sidebar = () => {
     }
   };
 
+  // アカウント削除処理
   const confirmAccountDelete = async () => {
     if (isDeleting) return;
     setIsDeleting(true);
-
     try {
-      // 1. localStorage から Supabase の auth-token キーを自動検索
       const storageKey = Object.keys(localStorage).find(
         (key) => key.startsWith('sb-') && key.endsWith('-auth-token')
       );
-
       if (!storageKey) {
         alert('セッションが見つかりません。再ログインしてください。');
         return;
       }
-
       const rawData = localStorage.getItem(storageKey);
       if (!rawData) return;
-
       const { user, access_token } = JSON.parse(rawData);
-
       if (!user?.id || !access_token) {
         alert('認証情報の解析に失敗しました。');
         return;
       }
-
-      // 2. サーバーサイドAPIへリクエスト
       const response = await fetch('/api/delete-account', {
         method: 'POST',
         headers: {
@@ -93,15 +75,9 @@ export const Sidebar = () => {
         },
         body: JSON.stringify({ userId: user.id }),
       });
-
       const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || '削除に失敗しました。');
-      }
-
+      if (!response.ok) throw new Error(result.error || '削除に失敗しました。');
       localStorage.clear();
-
       alert('アカウントの削除が完了しました。');
       router.push('/');
       router.refresh();
@@ -119,9 +95,7 @@ export const Sidebar = () => {
   return (
     <aside className={styles.sidebar}>
       <div className={styles.sidebarTitle}>SecondPath</div>
-
       <nav className={styles.nav}>
-        {/* メインメニュー */}
         <div className={styles.navGroup}>
           <SidebarItem
             href={getPath('/home')}
@@ -171,7 +145,6 @@ export const Sidebar = () => {
             showBadge={hasUnread}
           />
         </div>
-
         <div className={styles.navGroup}>
           <div className={styles.navLabel}>記事一覧</div>
           <SidebarItem
@@ -181,8 +154,6 @@ export const Sidebar = () => {
             label="支援記事を読む（適時更新）"
           />
         </div>
-
-        {/* アセスメント（心理鑑定）グループ */}
         <div className={styles.navGroup}>
           <div className={styles.navLabel}>アセスメント(自分でできる自己分析)</div>
           <SidebarItem
@@ -197,8 +168,6 @@ export const Sidebar = () => {
             icon="📈"
             label="PHQ-9 回復の軌跡"
           />
-
-          {/* 追加：レジリエンス診断 */}
           <SidebarItem
             href={getPath('/resilience')}
             active={pathname.includes('/resilience') && !pathname.includes('history')}
@@ -211,8 +180,6 @@ export const Sidebar = () => {
             icon="📐"
             label="職業的レジリエンスの診断結果"
           />
-
-          {/* 認知の歪み診断（CDD） ★ */}
           <SidebarItem
             href={getPath('/cognitiveDistortions')}
             active={pathname.includes('/cognitiveDistortions') && !pathname.includes('history')}
@@ -226,17 +193,6 @@ export const Sidebar = () => {
             label="思考の癖の診断結果"
           />
         </div>
-
-        {/* その他 */}
-        {/* <div className={styles.navGroup}>
-          <SidebarItem
-            href={getPath('/community')}
-            active={pathname.includes('/community')}
-            icon="🌍"
-            label="匿名の広場"
-          />
-        </div> */}
-
         <div className={styles.footer}>
           <button type="button" onClick={handleLogout} className={styles.logoutButton}>
             🚪 ログアウト

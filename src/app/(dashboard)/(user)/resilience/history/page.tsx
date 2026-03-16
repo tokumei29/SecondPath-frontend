@@ -1,33 +1,17 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getResilienceHistory } from '@/api/assessments';
 import { ResilienceResultChart } from '@/features/components/assessment/ResilienceResultChart';
+import { useResilience } from '@/hooks/useAssessments';
 import styles from './page.module.css';
 
 const ResilienceResultPage = () => {
   const router = useRouter();
-  const [latestData, setLatestData] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchLatest = async () => {
-      try {
-        const history = await getResilienceHistory();
-        if (history && history.length > 0) {
-          // 配列の最後（最新）のデータを使用
-          setLatestData(history[history.length - 1]);
-        }
-      } catch (error) {
-        console.error('Failed to fetch resilience result', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchLatest();
-  }, []);
+  // SWRのカスタムフックを使用
+  const { latestData, isLoading } = useResilience();
 
+  // isLoading は SWR が管理する状態を使う
   if (isLoading) return <div className={styles.center}>読み込み中...</div>;
 
   return (
@@ -50,7 +34,7 @@ const ResilienceResultPage = () => {
         <>
           <ResilienceResultChart data={latestData} />
 
-          {/* --- 指標の解説セクション --- */}
+          {/* --- 指標の解説セクション（デザイン維持） --- */}
           <div className={styles.explanationSection}>
             <div className={styles.explainItem}>
               <h4 className={styles.explainTitle}>✨ 新奇性追求</h4>
