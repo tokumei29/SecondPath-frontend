@@ -15,6 +15,7 @@ export const useTextSupports = () => {
 
   const supports = data || [];
 
+  // 既読判定
   const checkIsRead = (support: any) => {
     if (support.status !== 'replied') return false;
     const lastRead = localStorage.getItem(`read_support_${support.id}`);
