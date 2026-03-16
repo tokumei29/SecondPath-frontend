@@ -12,7 +12,7 @@ const compat = new FlatCompat({
   recommendedConfig: js.configs.recommended,
 });
 
-export default [
+const eslintConfig = [
   // 1. Next.js の基本設定を互換モードで読み込む
   ...compat.extends("next/core-web-vitals", "prettier"),
 
@@ -51,3 +51,5 @@ export default [
     }
   }
 ];
+
+export default eslintConfig;
