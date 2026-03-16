@@ -41,7 +41,10 @@ export const useCreatePhq9 = () => {
 
 /** 【表示用】 */
 export const useResilienceHistory = () => {
-  const { data, error, isLoading, mutate } = useSWR('/resilience_assessments', getResilienceHistory);
+  const { data, error, isLoading, mutate } = useSWR(
+    '/resilience_assessments',
+    getResilienceHistory
+  );
   const latestData = data && data.length > 0 ? data[data.length - 1] : null;
 
   return { history: data, latestData, isLoading, isError: error, mutate };

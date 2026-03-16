@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { DiaryDetailModal } from '@/features/components/diaries/modal';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
-import { useDiaries, useDiary } from '@/services/useDiaries';
+import { useDiaries, useDiaryActions } from '@/services/useDiaries';
 import styles from './page.module.css';
 
 const HistoryPage = () => {
@@ -13,7 +13,7 @@ const HistoryPage = () => {
 
   // SWRフックからデータと機能を抽出
   const { diaries, isLoading } = useDiaries();
-  const { remove } = useDiary();
+  const { remove } = useDiaryActions();
 
   useBodyScrollLock(!!selectedDiary);
 

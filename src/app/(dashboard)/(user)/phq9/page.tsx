@@ -5,7 +5,6 @@ import { useCreatePhq9 } from '@/services/useAssessments';
 import styles from './page.module.css';
 
 const AssessmentPage = () => {
-
   const { create } = useCreatePhq9();
 
   return (

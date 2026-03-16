@@ -1,18 +1,20 @@
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr'; // useSWRConfig を追加
 import { getProfile, updateProfile } from '@/api/profile';
 import { Profile } from '@/features/types/profile';
 
+// --- ヘルパー: 配列を常に3要素にする (フックの外に配置) ---
+const ensureThreeFields = (arr: string[] | null | undefined) => {
+  const newArr = arr ? [...arr] : [];
+  while (newArr.length < 3) newArr.push('');
+  return newArr.slice(0, 3);
+};
+
+// ==========================================
+// 1. 閲覧用フック (Query: GET担当)
+// ==========================================
 export const useProfile = () => {
   const { data, error, mutate, isLoading } = useSWR<Profile>('/profile', getProfile);
 
-  // ヘルパー: 配列を常に3要素にする
-  const ensureThreeFields = (arr: string[] | null | undefined) => {
-    const newArr = arr ? [...arr] : [];
-    while (newArr.length < 3) newArr.push('');
-    return newArr.slice(0, 3);
-  };
-
-  // 加工済みプロフィールデータ
   const profile = data
     ? {
         ...data,
@@ -25,17 +27,27 @@ export const useProfile = () => {
       }
     : null;
 
-  const update = async (profileData: Profile) => {
-    const updated = await updateProfile(profileData);
-    // 更新後、キャッシュを即座に書き換え
-    await mutate(updated, true);
-    return updated;
-  };
-
   return {
     profile,
     isLoading,
     isError: error,
-    update,
+    mutate,
   };
+};
+
+// ==========================================
+// 2. 更新用フック (Command: PATCH/PUT担当)
+// ==========================================
+export const useUpdateProfile = () => {
+  const { mutate: globalMutate } = useSWRConfig();
+
+  const update = async (profileData: Profile) => {
+    const updated = await updateProfile(profileData);
+
+    // '/profile' キーを指定してキャッシュを更新
+    await globalMutate('/profile', updated, true);
+    return updated;
+  };
+
+  return { update };
 };

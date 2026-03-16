@@ -1,4 +1,4 @@
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr'; // mutateのために追加
 import {
   getTextSupports,
   getTextSupportDetail,
@@ -9,7 +9,6 @@ import {
 
 /**
  * 【一覧・表示用】GET担当
- * 相談一覧が必要なページ（履歴画面など）だけで使う
  */
 export const useTextSupports = () => {
   const { data, error, mutate, isLoading } = useSWR('/text_supports', getTextSupports);
@@ -32,48 +31,54 @@ export const useTextSupports = () => {
   };
 };
 
-/**
- * 【作成・送信用】POST担当
- * お問い合わせフォームなど、送るだけのページで使う
- * useSWR を使わないので、ページを開いても GET は 1 回も走りません
- */
 export const useCreateTextSupport = () => {
-  const create = async (payload: TextSupportPayload) => {
-    // APIを叩くだけ。余計な revalidation（304）も発生しない
-    return await createTextSupport(payload);
-  };
-
+  const create = async (payload: TextSupportPayload) => await createTextSupport(payload);
   return { create };
 };
 
-// --- ユーザー用：相談詳細・チャットやり取り ---
+// ==========================================
+// 1. 詳細閲覧用フック (Query: GET担当)
+// ==========================================
+/**
+ * 相談詳細（チャット画面）を表示するためだけのフック。
+ * メッセージ送信ロジックを持たないため、入力中の再描画による通信を抑制できます。
+ */
 export const useTextSupportDetail = (id?: string | number) => {
   const { data, error, mutate, isLoading } = useSWR(id ? `/text_supports/${id}` : null, () =>
     getTextSupportDetail(id!)
   );
 
-  // Rails の show レスポンスがそのままオブジェクトなら data、
-  // data: { ... } で包まれているなら data.data を使う
   const detail = data?.data || data;
-
-  const addMessage = async (content: string) => {
-    if (!id) return;
-    const result = await postSupportMessage(id, content);
-
-    // 送信後、この詳細データのキャッシュを再取得して画面を更新
-    await mutate();
-
-    // 必要であれば相談一覧（/text_supports）のキャッシュも更新
-    // mutate('/text_supports');
-
-    return result;
-  };
 
   return {
     detail,
     isLoading,
     isError: error,
-    addMessage,
-    mutate, // 手動更新用
+    mutate, // 手動リロード用
   };
+};
+
+// ==========================================
+// 2. メッセージ操作用フック (Command: POST担当)
+// ==========================================
+/**
+ * 返信メッセージを送るためだけのフック。
+ * useSWR を内包していないので、タイピング中に GET リクエストが走ることはありません。
+ */
+export const useTextSupportActions = () => {
+  const { mutate: globalMutate } = useSWRConfig();
+
+  const addMessage = async (id: string | number, content: string) => {
+    const result = await postSupportMessage(id, content);
+
+    // 送信成功後、このチャット詳細のキャッシュを更新して画面に反映
+    await globalMutate(`/text_supports/${id}`);
+
+    // 一覧画面のステータス（「相談中」など）も更新される可能性があるため、一覧も更新
+    await globalMutate('/text_supports');
+
+    return result;
+  };
+
+  return { addMessage };
 };

@@ -5,7 +5,6 @@ import { useTextSupports } from '@/services/useTextSupport';
 import styles from './page.module.css';
 
 const TextSupportListPage = () => {
-  // SWRフックを使用
   const { supports, checkIsRead, isLoading } = useTextSupports();
 
   // デザイン維持のため isLoading の表示

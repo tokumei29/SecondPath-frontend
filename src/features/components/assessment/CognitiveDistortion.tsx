@@ -138,7 +138,7 @@ type Props = {
   onSubmit: (scores: Record<string, number>) => Promise<any>;
 };
 
-export const CognitiveDistortionForm = ({onSubmit}: Props) => {
+export const CognitiveDistortionForm = ({ onSubmit }: Props) => {
   const router = useRouter();
 
   const [answers, setAnswers] = useState<Record<number, number>>({});

@@ -1,12 +1,10 @@
 'use client';
 
-// 不要な useEffect, useState は削除
 import { CognitiveDistortionChart } from '@/features/components/assessment/CognitiveDistortionChart';
 import { useCognitiveDistortionHistory } from '@/services/useAssessments';
 import styles from './page.module.css';
 
 const CognitiveDistortionHistory = () => {
-  // SWRのカスタムフックを使用（Loading管理も任せる）
   const { latestResult, isLoading } = useCognitiveDistortionHistory();
 
   // デザイン維持のため、元の styles.loading を使用

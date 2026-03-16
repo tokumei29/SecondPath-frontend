@@ -1,4 +1,4 @@
-import useSWR, { useSWRConfig } from 'swr'; // useSWRConfig を追加
+import useSWR, { useSWRConfig } from 'swr';
 import {
   getDiaries,
   getDiary,
@@ -8,68 +8,64 @@ import {
   DiaryPayload,
 } from '@/api/diaries';
 
-// --- 一覧用フック ---
+// ==========================================
+// 1. 閲覧用フック (GET担当)
+// ==========================================
+
+/** 【一覧用】日報リストを取得 */
 export const useDiaries = () => {
   const { data, error, mutate, isLoading } = useSWR('/diaries', getDiaries);
-
-  const diaries = data?.data || [];
-
-  const create = async (payload: DiaryPayload) => {
-    const result = await createDiary(payload);
-    await mutate();
-    return result;
-  };
-
   return {
-    diaries,
+    diaries: data?.data || [],
     isLoading,
     isError: error,
-    create,
-    mutate,
+    mutate, // 一覧を再取得したい時に使用
   };
 };
 
-// --- 詳細・操作用フック ---
-export const useDiary = (diaryId?: string) => {
-  const { mutate: globalMutate } = useSWRConfig();
+/** 【詳細用】特定の日報を取得 */
+export const useDiaryDetail = (diaryId?: string) => {
   const { data, error, mutate, isLoading } = useSWR(diaryId ? `/diaries/${diaryId}` : null, () =>
     getDiary(diaryId!)
   );
-
-  // 更新処理（基本は詳細ページ用）
-  const update = async (payload: DiaryPayload) => {
-    if (!diaryId) return;
-    const result = await updateDiary(diaryId, payload);
-    await mutate();
-    globalMutate('/diaries');
-    return result;
-  };
-
-  // ★ 削除処理を「引数対応」にアップグレード
-  const remove = async (targetId?: string) => {
-    // 引数で ID が渡されればそれを、なければフック初期化時の ID を使う
-    const id = targetId || diaryId;
-    if (!id) {
-      console.error('削除するIDが指定されていません');
-      return;
-    }
-
-    await deleteDiary(id);
-
-    // 削除したので一覧キャッシュを更新
-    globalMutate('/diaries');
-
-    // もし詳細ページで自分自身を消したなら、自身のキャッシュもクリアする
-    if (id === diaryId) {
-      mutate(null);
-    }
-  };
-
   return {
     diary: data?.data || data,
     isLoading,
     isError: error,
-    update,
-    remove, // これで remove("123") のように呼べるようになります
+    mutate,
   };
+};
+
+// ==========================================
+// 2. 操作用フック (POST/PATCH/DELETE担当)
+// ==========================================
+
+/** 【操作用】作成・更新・削除を実行 */
+export const useDiaryActions = () => {
+  const { mutate: globalMutate } = useSWRConfig();
+
+  // 作成
+  const create = async (payload: DiaryPayload) => {
+    const result = await createDiary(payload);
+    await globalMutate('/diaries'); // 一覧キャッシュを更新
+    return result;
+  };
+
+  // 更新
+  const update = async (id: string, payload: DiaryPayload) => {
+    const result = await updateDiary(id, payload);
+    await globalMutate(`/diaries/${id}`); // 詳細キャッシュを更新
+    await globalMutate('/diaries'); // 一覧キャッシュを更新
+    return result;
+  };
+
+  // 削除
+  const remove = async (id: string) => {
+    await deleteDiary(id);
+    await globalMutate('/diaries'); // 一覧キャッシュを更新
+    // 詳細のキャッシュも消しておく
+    await globalMutate(`/diaries/${id}`, null, false);
+  };
+
+  return { create, update, remove };
 };

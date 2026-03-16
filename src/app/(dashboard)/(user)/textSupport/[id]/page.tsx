@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
-import { useTextSupportDetail } from '@/services/useTextSupport';
+import { useTextSupportActions, useTextSupportDetail } from '@/services/useTextSupport';
 import styles from './page.module.css';
 
 const TextSupportDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
@@ -10,8 +10,11 @@ const TextSupportDetailPage = ({ params }: { params: Promise<{ id: string }> }) 
   const router = useRouter();
   const scrollEndRef = useRef<HTMLDivElement>(null);
 
-  // SWRフックを使用
-  const { detail, addMessage, isLoading } = useTextSupportDetail(id);
+  // 1. 【詳細取得用】画面表示に必要なデータを保持。入力してもここからGETは飛ばない。
+  const { detail, isLoading } = useTextSupportDetail(id);
+
+  // 2. 【送信用】メッセージ送信ロジックのみを保持。SWRを内包していない。
+  const { addMessage } = useTextSupportActions();
   const [replyText, setReplyText] = useState('');
   const [isSending, setIsSending] = useState(false);
 
@@ -33,7 +36,7 @@ const TextSupportDetailPage = ({ params }: { params: Promise<{ id: string }> }) 
 
     setIsSending(true);
     try {
-      await addMessage(replyText); // フックの関数を呼ぶだけで自動リロードされる
+      await addMessage(id, replyText); // フックの関数を呼ぶだけで自動リロードされる
       setReplyText('');
     } catch (error) {
       alert('送信に失敗しました');

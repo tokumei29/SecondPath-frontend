@@ -5,12 +5,12 @@ import { type DiaryPayload } from '@/api/diaries';
 import { DiaryField } from '@/features/components/diaries/diaryField';
 import { SuccessModal } from '@/features/components/home/SuccessModal';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
-import { useDiaries } from '@/services/useDiaries';
+import { useDiaryActions } from '@/services/useDiaries';
 import styles from './page.module.css';
 
 const DiaryPage = () => {
   // SWRフックから作成用関数を取得
-  const { create } = useDiaries();
+  const { create } = useDiaryActions();
 
   const [formData, setFormData] = useState({
     content: '',

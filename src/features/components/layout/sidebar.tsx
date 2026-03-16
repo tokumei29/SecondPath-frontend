@@ -16,8 +16,6 @@ export const Sidebar = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // --- SWRによる未読チェック ---
-  // 5秒おきに裏でチェックしたい場合は { refreshInterval: 5000 } を足せます
   const { supports } = useTextSupports();
 
   const hasUnread =
@@ -27,7 +25,6 @@ export const Sidebar = () => {
       if (!lastRead) return true;
       return new Date(lastRead).getTime() < new Date(support.updated_at).getTime();
     }) ?? false;
-  // -------------------------
 
   useBodyScrollLock(isDeleteModalOpen);
 

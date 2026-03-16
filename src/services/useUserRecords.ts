@@ -1,4 +1,4 @@
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 import {
   getMyRecords,
   getMyRecord,
@@ -9,14 +9,17 @@ import {
   CounselingRecord,
 } from '@/api/userRecords';
 
-// --- ユーザー用：自分の記録一覧 ---
+// ==========================================
+// 1. 閲覧用フック (Query: GET担当)
+// ==========================================
+
+/** 【ユーザー用】自分の記録一覧 */
 export const useMyRecords = () => {
   const { data, error, mutate, isLoading } = useSWR<CounselingRecord[]>(
     '/user_records',
     getMyRecords
   );
 
-  // ダッシュボードでも使った「今日のアドバイスがあるか」の判定
   const hasTodayAdvice =
     data && data.length > 0
       ? (() => {
@@ -35,51 +38,60 @@ export const useMyRecords = () => {
   };
 };
 
-// --- ユーザー用：特定の記録詳細 ---
+/** 【ユーザー用】特定の記録詳細 */
 export const useMyRecordDetail = (id?: string) => {
   const { data, error, mutate, isLoading } = useSWR(id ? `/user_records/${id}` : null, () =>
     getMyRecord(id!)
   );
+  return { record: data, isLoading, isError: error, mutate };
+};
 
+/** 【管理者用】特定ユーザーのカルテ一覧 */
+export const useAdminUserRecords = (userId?: string) => {
+  const { data, error, mutate, isLoading } = useSWR(
+    userId ? `/admin/users/${userId}/user_records` : null,
+    () => getUserRecords(userId!)
+  );
   return {
-    record: data,
+    records: data?.data || data,
     isLoading,
     isError: error,
     mutate,
   };
 };
 
-// --- 管理者用：特定ユーザーのカルテ操作 ---
-export const useAdminUserRecords = (userId?: string) => {
-  const { data, error, mutate, isLoading } = useSWR(
-    userId ? `/admin/users/${userId}/user_records` : null,
-    () => getUserRecords(userId!)
-  );
+// ==========================================
+// 2. 操作用フック (Command: POST/PATCH/DELETE担当)
+// ==========================================
 
-  const create = async (date: string, content: string) => {
-    if (!userId) return;
+/** 【管理者用】カルテの作成・更新・削除アクション */
+export const useAdminRecordActions = () => {
+  const { mutate: globalMutate } = useSWRConfig();
+
+  // 作成
+  const create = async (userId: string, date: string, content: string) => {
     const result = await createUserRecord(userId, date, content);
-    await mutate(); // 保存後に一覧を更新
+    // 管理者側の特定ユーザーの一覧キャッシュを更新
+    await globalMutate(`/admin/users/${userId}/user_records`);
+    // ユーザー側の自分の記録一覧も古くなるので更新を促す
+    await globalMutate('/user_records');
     return result;
   };
 
-  const update = async (recordId: string, content: string) => {
+  // 更新
+  const update = async (userId: string, recordId: string, content: string) => {
     const result = await updateUserRecord(recordId, content);
-    await mutate();
+    await globalMutate(`/admin/users/${userId}/user_records`);
+    await globalMutate(`/user_records/${recordId}`);
     return result;
   };
 
-  const remove = async (recordId: string) => {
+  // 削除
+  const remove = async (userId: string, recordId: string) => {
     await deleteUserRecord(recordId);
-    await mutate();
+    await globalMutate(`/admin/users/${userId}/user_records`);
+    await globalMutate('/user_records');
   };
 
-  return {
-    records: data?.data || data, // APIのレスポンス形式に合わせて調整
-    isLoading,
-    isError: error,
-    create,
-    update,
-    remove,
-  };
+  return { create, update, remove };
 };

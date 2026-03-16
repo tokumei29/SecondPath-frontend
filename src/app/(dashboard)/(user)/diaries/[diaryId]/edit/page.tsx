@@ -6,15 +6,18 @@ import axios from 'axios';
 import { type DiaryPayload } from '@/api/diaries';
 import styles from '@/app/(dashboard)/(user)/diaries/page.module.css';
 import { DiaryField } from '@/features/components/diaries/diaryField';
-import { useDiary } from '@/services/useDiaries';
+import { useDiaryDetail, useDiaryActions } from '@/services/useDiaries';
 
 const DiaryEditPage = () => {
   const router = useRouter();
   const params = useParams();
   const diaryId = params?.diaryId as string;
 
-  // SWRフックを使用
-  const { diary: serverDiary, isLoading, update } = useDiary(diaryId);
+  // 1. 【取得】初期データ取得専用。再レンダリングの「防波堤」になります。
+  const { diary: serverDiary, isLoading } = useDiaryDetail(diaryId);
+
+  // 2. 【操作】更新ロジック専用。useSWRを内包していないので304は発生しません。
+  const { update } = useDiaryActions();
 
   const [formData, setFormData] = useState({
     content: '',
@@ -51,8 +54,7 @@ const DiaryEditPage = () => {
         diary: formData,
       };
 
-      // フック経由で更新（内部で mutate が走り、キャッシュが最新になります）
-      await update(payload);
+      await update(diaryId, payload);
 
       alert('更新しました！');
       router.push('/diaries/history');
