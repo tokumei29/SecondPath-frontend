@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { DiaryDetailModal } from '@/features/components/diaries/modal';
-import { useBodyScrollLock } from '@/services/useBodyScrollLock';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import { useDiaries, useDiary } from '@/services/useDiaries';
 import styles from './page.module.css';
 

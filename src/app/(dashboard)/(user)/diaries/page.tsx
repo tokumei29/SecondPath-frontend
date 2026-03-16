@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { type DiaryPayload } from '@/api/diaries';
 import { DiaryField } from '@/features/components/diaries/diaryField';
 import { SuccessModal } from '@/features/components/home/SuccessModal';
-import { useBodyScrollLock } from '@/services/useBodyScrollLock';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import { useDiaries } from '@/services/useDiaries';
 import styles from './page.module.css';
 

@@ -9,7 +9,7 @@ import {
 } from '@/api/userRecords';
 import { CreateRecordModal } from '@/features/components/medicalRecord/CreateRecordModal';
 import { RecordDetailModal } from '@/features/components/medicalRecord/RecordDetailModal';
-import { useBodyScrollLock } from '@/services/useBodyScrollLock';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import styles from './page.module.css';
 
 const UserRecordsPage = ({ params }: { params: Promise<{ id: string }> }) => {

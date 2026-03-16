@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { signIn, signUp } from '@/api/auth';
 import { Modal } from '@/features/components/common/modal';
 import { SignupSuccessMessage } from '@/features/components/signup/signupSuccessMessage';
-import { useBodyScrollLock } from '@/services/useBodyScrollLock';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import styles from './authForm.module.css';
 
 type AuthMode = 'signin' | 'signup';

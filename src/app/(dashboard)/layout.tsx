@@ -6,7 +6,7 @@ import { getCurrentUser } from '@/api/auth';
 import { getProfile } from '@/api/profile'; // getDiaries は削除
 import { WelcomeGuideModal } from '@/features/components/home/WelcomeGuideModal';
 import { Sidebar } from '@/features/components/layout/sidebar';
-import { useBodyScrollLock } from '@/services/useBodyScrollLock';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import styles from './layout.module.css';
 
 const UserLayout = ({ children }: { children: React.ReactNode }) => {

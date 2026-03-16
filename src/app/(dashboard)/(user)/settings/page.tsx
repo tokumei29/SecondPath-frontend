@@ -5,7 +5,7 @@ import axios from 'axios';
 import { SuccessModal } from '@/features/components/home/SuccessModal';
 import { InputGroup } from '@/features/components/inputGroup/inputGroup';
 import { Profile, ProfileArrayKeys } from '@/features/types/profile';
-import { useBodyScrollLock } from '@/services/useBodyScrollLock';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import { useProfile } from '@/services/useProfile';
 import styles from './page.module.css';
 
