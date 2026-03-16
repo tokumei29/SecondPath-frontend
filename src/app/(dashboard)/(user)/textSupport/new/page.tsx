@@ -5,12 +5,12 @@ import { TextSupportPayload } from '@/api/textSupport';
 import { SuccessModal } from '@/features/components/home/SuccessModal';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import { useProfile } from '@/services/useProfile';
-import { useTextSupports } from '@/services/useTextSupport';
+import { useCreateTextSupport } from '@/services/useTextSupport';
 import styles from './page.module.css';
 
 const SupportPage = () => {
   const { profile, isLoading: isLoadingProfile } = useProfile();
-  const { create } = useTextSupports();
+  const { create } = useCreateTextSupport();
 
   const [email, setEmail] = useState('');
   const [subject, setSubject] = useState('');

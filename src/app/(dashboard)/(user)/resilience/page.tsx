@@ -1,11 +1,11 @@
 'use client';
 
 import { ResilienceAssessmentForm } from '@/features/components/assessment/ResilienceAssessment';
-import { useResilience } from '@/services/useAssessments';
+import { useCreateResilience } from '@/services/useAssessments';
 import styles from './page.module.css';
 
 const ResiliencePage = () => {
-  const { create } = useResilience();
+  const { create } = useCreateResilience();
 
   return (
     <main style={{ backgroundColor: '#f7fafc', minHeight: '100vh' }}>

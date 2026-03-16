@@ -2,14 +2,14 @@
 
 import { useRouter } from 'next/navigation';
 import { ResilienceResultChart } from '@/features/components/assessment/ResilienceResultChart';
-import { useResilience } from '@/services/useAssessments';
+import { useResilienceHistory } from '@/services/useAssessments';
 import styles from './page.module.css';
 
 const ResilienceResultPage = () => {
   const router = useRouter();
 
   // SWRのカスタムフックを使用
-  const { latestData, isLoading } = useResilience();
+  const { latestData, isLoading } = useResilienceHistory();
 
   // isLoading は SWR が管理する状態を使う
   if (isLoading) return <div className={styles.center}>読み込み中...</div>;

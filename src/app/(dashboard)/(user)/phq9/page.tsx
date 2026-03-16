@@ -1,12 +1,12 @@
 'use client';
 
 import { PHQ9Assessment } from '@/features/components/assessment/PHQ9Assessment';
-import { usePhq9 } from '@/services/useAssessments';
+import { useCreatePhq9 } from '@/services/useAssessments';
 import styles from './page.module.css';
 
 const AssessmentPage = () => {
 
-  const { create } = usePhq9();
+  const { create } = useCreatePhq9();
 
   return (
     <main className={styles.mainContainer}>

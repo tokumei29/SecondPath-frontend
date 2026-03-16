@@ -1,12 +1,12 @@
 'use client';
 
 import { PHQ9HistoryChart } from '@/features/components/assessment/PHQ9HistoryChart';
-import { usePhq9 } from '@/services/useAssessments';
+import { usePhq9History } from '@/services/useAssessments';
 import styles from './page.module.css';
 
 const AssessmentHistoryPage = () => {
   // カスタムフックを呼ぶだけ。加工済みの history が手に入る。
-  const { history, isLoading } = usePhq9();
+  const { history, isLoading } = usePhq9History();
 
   if (isLoading) return <div className={styles.loading}>履歴を読み込み中...</div>;
 

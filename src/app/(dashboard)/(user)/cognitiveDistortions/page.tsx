@@ -1,11 +1,11 @@
 'use client';
 
 import { CognitiveDistortionForm } from '@/features/components/assessment/CognitiveDistortion';
-import { useCognitiveDistortion } from '@/services/useAssessments';
+import { useCreateCognitiveDistortion } from '@/services/useAssessments';
 import styles from './page.module.css';
 
 const CognitiveDistortionPage = () => {
-  const { create } = useCognitiveDistortion();
+  const { create } = useCreateCognitiveDistortion();
 
   return (
     <main className={styles.container}>

@@ -7,13 +7,15 @@ import {
   TextSupportPayload,
 } from '@/api/textSupport';
 
-// --- ユーザー用：相談一覧 ---
+/**
+ * 【一覧・表示用】GET担当
+ * 相談一覧が必要なページ（履歴画面など）だけで使う
+ */
 export const useTextSupports = () => {
   const { data, error, mutate, isLoading } = useSWR('/text_supports', getTextSupports);
 
   const supports = data || [];
 
-  // 既読判定ロジックをフックに内包
   const checkIsRead = (support: any) => {
     if (support.status !== 'replied') return false;
     const lastRead = localStorage.getItem(`read_support_${support.id}`);
@@ -21,18 +23,27 @@ export const useTextSupports = () => {
     return new Date(lastRead).getTime() > new Date(support.updated_at).getTime();
   };
 
-  const create = async (payload: TextSupportPayload) => {
-    const result = await createTextSupport(payload);
-    return result;
-  };
-
   return {
     supports,
-    checkIsRead, // 判定関数も返す
+    checkIsRead,
     isLoading,
     isError: error,
-    create,
+    mutate,
   };
+};
+
+/**
+ * 【作成・送信用】POST担当
+ * お問い合わせフォームなど、送るだけのページで使う
+ * useSWR を使わないので、ページを開いても GET は 1 回も走りません
+ */
+export const useCreateTextSupport = () => {
+  const create = async (payload: TextSupportPayload) => {
+    // APIを叩くだけ。余計な revalidation（304）も発生しない
+    return await createTextSupport(payload);
+  };
+
+  return { create };
 };
 
 // --- ユーザー用：相談詳細・チャットやり取り ---

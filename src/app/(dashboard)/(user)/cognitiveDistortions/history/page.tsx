@@ -2,12 +2,12 @@
 
 // 不要な useEffect, useState は削除
 import { CognitiveDistortionChart } from '@/features/components/assessment/CognitiveDistortionChart';
-import { useCognitiveDistortion } from '@/services/useAssessments';
+import { useCognitiveDistortionHistory } from '@/services/useAssessments';
 import styles from './page.module.css';
 
 const CognitiveDistortionHistory = () => {
   // SWRのカスタムフックを使用（Loading管理も任せる）
-  const { latestResult, isLoading } = useCognitiveDistortion();
+  const { latestResult, isLoading } = useCognitiveDistortionHistory();
 
   // デザイン維持のため、元の styles.loading を使用
   if (isLoading) return <div className={styles.loading}>読み込み中...</div>;
