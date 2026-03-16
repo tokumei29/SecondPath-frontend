@@ -49,12 +49,12 @@ export const ProfileForm = ({ localProfile, onNameChange, onArrayChange }: Profi
         onFieldChange={(i, v) => onArrayChange('hobbies', i, v)}
       />
       <InputGroup
-        title="直近の短期目標"
+        title="短期目標"
         values={localProfile.short_term_goals}
         onFieldChange={(i, v) => onArrayChange('short_term_goals', i, v)}
       />
       <InputGroup
-        title="長期の成し遂げたいこと"
+        title="長期目標"
         values={localProfile.long_term_goals}
         onFieldChange={(i, v) => onArrayChange('long_term_goals', i, v)}
       />

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePosts } from '@/services/usePosts';
 import styles from './page.module.css';
 
-export default function PostsIndexPage() {
+const PostsIndexPage = () => {
   const { posts, isLoading } = usePosts();
 
   if (isLoading) return <div className={styles.loading}>読み込み中...</div>;
@@ -21,7 +21,7 @@ export default function PostsIndexPage() {
       <div className={styles.grid}>
         {posts && posts.length > 0 ? (
           posts.map((post: any) => (
-            <Link href={`/posts/${post.id}`} key={post.id} className={styles.card}>
+            <Link href={`/posts/${post.id}`} prefetch={false} key={post.id} className={styles.card}>
               <h2 className={styles.postTitle}>{post.title}</h2>
               <div className={styles.postFooter}>
                 <span className={styles.more}>続きを読む →</span>
@@ -35,3 +35,5 @@ export default function PostsIndexPage() {
     </div>
   );
 }
+
+export default PostsIndexPage
