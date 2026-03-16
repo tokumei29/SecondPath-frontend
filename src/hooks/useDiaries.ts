@@ -46,7 +46,7 @@ export const useDiary = (diaryId?: string) => {
   };
 
   // ★ 削除処理を「引数対応」にアップグレード
-  const remove = async (targetId?: number) => {
+  const remove = async (targetId?: string) => {
     // 引数で ID が渡されればそれを、なければフック初期化時の ID を使う
     const id = targetId || diaryId;
     if (!id) {

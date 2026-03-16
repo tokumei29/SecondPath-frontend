@@ -17,7 +17,7 @@ const HistoryPage = () => {
 
   useBodyScrollLock(!!selectedDiary);
 
-  const handleDelete = async (diaryId: number) => {
+  const handleDelete = async (diaryId: string) => {
     if (!window.confirm('この記録を削除してもよろしいですか？\n削除したデータは元に戻せません。')) {
       return;
     }
