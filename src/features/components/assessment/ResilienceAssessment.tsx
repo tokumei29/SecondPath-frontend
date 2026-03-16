@@ -25,10 +25,12 @@ const OPTIONS = [
   { label: '非常によくあてはまる', value: 3 },
 ];
 
-export const ResilienceAssessmentForm = () => {
+type Props = {
+  onSubmit: (payload: any) => Promise<any>;
+};
+
+export const ResilienceAssessmentForm = ({ onSubmit }: Props) => {
   const router = useRouter();
-  // SWRのカスタムフックから保存関数(create)を取得
-  const { create } = useResilience();
 
   const [answers, setAnswers] = useState<number[]>(new Array(9).fill(-1));
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -47,9 +49,7 @@ export const ResilienceAssessmentForm = () => {
 
     setIsSubmitting(true);
     try {
-      // フックの create を使用
-      // 内部で mutate() が呼ばれるため、遷移後の history 画面で最新の結果が表示されます
-      await create({
+      await onSubmit({
         q1: answers[0],
         q2: answers[1],
         q3: answers[2],

@@ -25,17 +25,16 @@ const OPTIONS = [
   { label: 'ほとんど毎日', value: 3 },
 ];
 
-export const PHQ9Assessment = () => {
+type Props = {
+  onSubmit: (payload: any) => Promise<any>;
+};
+
+export const PHQ9Assessment = ({ onSubmit }: Props) => {
   const router = useRouter();
-  // SWRのカスタムフックを使用。create (mutateを含む) と isLoading を取得
-  const { create, isLoading: isInitialLoading } = usePhq9();
 
   const [answers, setAnswers] = useState<number[]>(new Array(9).fill(-1));
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
-
-  // マウント時の useEffect も不要になりました
-  if (isInitialLoading) return <div className={styles.loading}>読み込み中...</div>;
 
   const handleSelect = (qIndex: number, value: number) => {
     const newAnswers = [...answers];
@@ -66,10 +65,7 @@ export const PHQ9Assessment = () => {
         suicidal_ideation: res.suicidalIdeation,
       };
 
-      // 直接 API を叩くのではなく、フックの create を使う。
-      // これで、保存と同時に履歴キャッシュが最新に同期されます。
-      await create(payload);
-      alert('診断結果を保存しました。');
+      await onSubmit(payload);
 
       router.push('/phq9/history');
     } catch (error) {

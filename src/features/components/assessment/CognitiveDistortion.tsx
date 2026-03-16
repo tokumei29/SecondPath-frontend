@@ -135,10 +135,12 @@ const OPTIONS = [
   { label: 'いつも', value: 4 },
 ];
 
-export const CognitiveDistortionForm = () => {
+type Props = {
+  onSubmit: (scores: Record<string, number>) => Promise<any>;
+};
+
+export const CognitiveDistortionForm = ({onSubmit}: Props) => {
   const router = useRouter();
-  // SWR のカスタムフックから create (mutateを含む) を取り出す
-  const { create } = useCognitiveDistortion();
 
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [showInfo, setShowInfo] = useState(false);
@@ -164,9 +166,7 @@ export const CognitiveDistortionForm = () => {
         scoresByFactor[q.factor] = (scoresByFactor[q.factor] || 0) + score;
       });
 
-      // 直接 API を叩くのではなく、フックの create を使う
-      // この内部で mutate() が走るので、キャッシュが自動更新されます
-      await create(scoresByFactor);
+      await onSubmit(scoresByFactor);
 
       router.push('/cognitiveDistortions/history');
     } catch (error) {

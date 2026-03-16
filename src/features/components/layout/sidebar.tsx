@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react'; // useEffect は削除
+import { useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import { createClient } from '@/lib/supabase/client';
