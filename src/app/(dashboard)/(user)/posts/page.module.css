@@ -24,6 +24,9 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1.5rem;
+
+  /* 親要素のガタつきを防ぐために align-items を指定 */
+  align-items: start;
 }
 
 .card {
@@ -36,38 +39,55 @@
   background-color: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: 12px;
+
+  /* 初期状態で透明な影を設定しておくと transition が綺麗になります */
+  box-shadow: 0 0 0 rgb(0 0 0 / 0%);
   transition:
     transform 0.2s ease,
-    box-shadow 0.2s ease;
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+
+  /* アニメーションの最適化 */
+  will-change: transform;
 }
 
-.card:hover {
+/* ホバー時とフォーカス時（キーボード操作）の両方をカバー */
+.card:hover,
+.card:focus-visible {
   border-color: var(--primary-color);
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 10%);
+  outline: none;
+  box-shadow: 0 10px 20px -5px rgb(0 0 0 / 10%);
   transform: translateY(-4px);
 }
 
+/* 意図しない「フォーカス」を防ぐため、クリック直後のフォーカスリングを抑制 */
+.card:focus:not(:focus-visible) {
+  outline: none;
+}
+
 .postTitle {
-  margin-bottom: 1.5rem;
-  font-size: 1.2rem;
+  margin: 0 0 1.5rem; /* マージンをリセット */
+  font-size: 1.15rem;
   font-weight: bold;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 .postFooter {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: auto; /* 下部に固定 */
   font-size: 0.85rem;
-}
-
-.date {
-  color: var(--muted-color);
 }
 
 .more {
   font-weight: 600;
   color: var(--primary-color);
+  transition: opacity 0.2s ease;
+}
+
+.card:hover .more {
+  opacity: 0.8;
 }
 
 .loading,

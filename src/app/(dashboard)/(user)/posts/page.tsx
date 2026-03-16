@@ -1,27 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { getPublicPosts, Post } from '@/api/posts';
+import { usePosts } from '@/hooks/usePosts';
 import styles from './page.module.css';
 
 export default function PostsIndexPage() {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const data = await getPublicPosts();
-        setPosts(data);
-      } catch (error) {
-        console.error('記事の取得に失敗しました', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchPosts();
-  }, []);
+  const { posts, isLoading } = usePosts();
 
   if (isLoading) return <div className={styles.loading}>読み込み中...</div>;
 
@@ -35,8 +19,8 @@ export default function PostsIndexPage() {
       </header>
 
       <div className={styles.grid}>
-        {posts.length > 0 ? (
-          posts.map((post) => (
+        {posts && posts.length > 0 ? (
+          posts.map((post: any) => (
             <Link href={`/posts/${post.id}`} key={post.id} className={styles.card}>
               <h2 className={styles.postTitle}>{post.title}</h2>
               <div className={styles.postFooter}>

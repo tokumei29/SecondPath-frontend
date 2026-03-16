@@ -48,3 +48,12 @@ export const getPublicPosts = async () => {
   const response = await apiClient.get('/posts');
   return response.data;
 };
+
+/**
+ * 一般ユーザー：特定の記事詳細を取得する
+ * GET /api/v1/posts/:id
+ */
+export const getPublicPost = async (id: number) => {
+  const response = await apiClient.get(`/posts/${id}`);
+  return response.data;
+};
