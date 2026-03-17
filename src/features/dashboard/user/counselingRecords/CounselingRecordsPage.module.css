@@ -1,0 +1,151 @@
+.container {
+  max-width: 1100px;
+  min-height: 100vh;
+  padding: 3rem 2rem;
+  margin: 0 auto;
+  background-color: #fcfcfd;
+}
+
+.header {
+  margin-bottom: 3rem;
+  text-align: left;
+}
+
+.title {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  font-size: 1.875rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.subtitle {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #64748b;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover {
+  border-color: #3b82f6;
+  box-shadow:
+    0 20px 25px -5px rgb(0 0 0 / 5%),
+    0 10px 10px -5px rgb(0 0 0 / 2%);
+  transform: translateY(-8px);
+}
+
+.cardHeader {
+  margin-bottom: 1.25rem;
+}
+
+.dateBadge {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #2563eb;
+  letter-spacing: 0.025em;
+  background-color: #eff6ff;
+  border-radius: 9999px;
+}
+
+.cardBody {
+  flex: 1;
+}
+
+.excerpt {
+  display: -webkit-box;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  font-size: 0.9375rem;
+  line-height: 1.8;
+  color: #475569;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+}
+
+.moreLink {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #3b82f6;
+  transition: color 0.2s;
+}
+
+.card:hover .moreLink {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+.loading {
+  padding: 5rem;
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: #94a3b8;
+  text-align: center;
+  animation: pulse 2s infinite;
+}
+
+.emptyContainer {
+  grid-column: 1 / -1;
+  padding: 6rem 2rem;
+  text-align: center;
+  background: #fff;
+  border: 2px dashed #e2e8f0;
+  border-radius: 2rem;
+}
+
+.emptyMessage {
+  font-size: 1.125rem;
+  color: #94a3b8;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@media (width <= 640px) {
+  .container {
+    padding: 2rem 1rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+}

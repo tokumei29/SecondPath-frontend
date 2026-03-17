@@ -1,0 +1,132 @@
+.container {
+  max-width: 900px;
+  padding: 2rem;
+  margin: 0 auto;
+}
+
+.header {
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.subtitle {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.cardList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  text-decoration: none;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 5%);
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 10%);
+  transform: translateY(-3px);
+}
+
+.cardHeader {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.date {
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.badge {
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 9999px;
+}
+
+.replied {
+  color: #ef4444;
+  background-color: #fee2e2;
+  border: 1px solid #fecaca;
+}
+
+.waiting {
+  color: #6b7280;
+  background-color: #f3f4f6;
+}
+
+.textPreview {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #4b5563;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.arrowIcon {
+  margin-left: 1rem;
+  font-size: 1.2rem;
+  color: #d1d5db;
+}
+
+.emptyState {
+  padding: 4rem 2rem;
+  color: #6b7280;
+  text-align: center;
+  background: #f9fafb;
+  border-radius: 16px;
+}
+
+.newButton {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  margin-top: 1rem;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+  background-color: #3b82f6;
+  border-radius: 8px;
+}
+
+.badge.read {
+  color: #64748b;
+  background-color: #f1f5f9;
+  border: 1px solid #cbd5e1;
+}
+
+.badge.replied {
+  font-weight: bold;
+  color: #ea580c;
+  background-color: #ffedd5;
+  border: 1px solid #fdba74;
+}
+
+.loading {
+  padding: 2rem;
+  text-align: center;
+}

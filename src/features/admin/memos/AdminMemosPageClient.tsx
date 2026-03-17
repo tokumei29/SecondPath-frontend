@@ -7,8 +7,8 @@ import {
   getAdminMemos,
   type MemoResponse,
   updateAdminMemo,
-} from '@/api/memos';
-import MemoModal from '@/features/components/admin/MemoModal';
+} from '@/features/admin/memos/api/memosClient';
+import MemoModal from '@/features/admin/memos/components/MemoModal';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import styles from './AdminMemosPage.module.css';
 

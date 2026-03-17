@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { createAdminPost } from '@/api/posts';
+import { createAdminPost } from '@/features/admin/posts/api/postsClient';
 import styles from './AdminPostsPage.module.css';
 
 export function AdminPostsPage() {

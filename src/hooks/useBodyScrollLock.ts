@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect } from 'react';
 
 // モーダルやガイド表示時に背景のスクロールをロックするカスタムフック

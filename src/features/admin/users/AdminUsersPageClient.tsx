@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
-import { getAllUsers } from '@/api/users';
+import { getAllUsers } from '@/features/admin/users/api/usersClient';
 import styles from './AdminUsersPage.module.css';
 import type { AdminUserListItem } from './api/getAdminUsersServer';
 

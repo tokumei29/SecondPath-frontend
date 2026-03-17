@@ -1,5 +1,5 @@
 import { cache } from 'react';
-import { cookies } from 'next/headers';
+import apiClient from '@/api/client';
 
 export type AdminInquiryMessage = {
   id: string | number;
@@ -22,29 +22,10 @@ export type AdminInquiryDetail = {
   messages: AdminInquiryMessage[];
 };
 
-const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-
 export const getAdminInquiryDetail = cache(
   async (id: string | number): Promise<AdminInquiryDetail> => {
-    if (!baseUrl) throw new Error('NEXT_PUBLIC_API_URL is not set');
-
-    const cookieStore = await cookies();
-    const uuid = cookieStore.get('user_uuid')?.value;
-
-    const res = await fetch(`${baseUrl}/admin/text_supports/${id}`, {
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(uuid ? { 'X-User-Id': uuid } : {}),
-      },
-      next: { revalidate: 30 },
-    });
-
-    if (!res.ok) {
-      throw new Error(`Failed to fetch admin inquiry detail: ${res.status}`);
-    }
-
-    const json = await res.json();
+    const response = await apiClient.get(`/admin/text_supports/${id}`);
+    const json = response.data;
     // API が { data: { support, messages } } 形式を返す場合にも対応
     if (json && json.support && Array.isArray(json.messages)) return json;
     if (json && json.data) return json.data;

@@ -2,7 +2,10 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getInquiryDetail, postReply } from '@/api/textSupport';
+import {
+  getInquiryDetail,
+  postReply,
+} from '@/features/admin/inquiryDetail/api/textSupportAdminClient';
 import styles from './AdminInquiryDetail.module.css';
 import type { AdminInquiryDetail } from '../api/getAdminInquiryDetail';
 

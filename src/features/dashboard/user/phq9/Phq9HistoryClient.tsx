@@ -1,0 +1,64 @@
+'use client';
+
+import { useMemo, useState } from 'react';
+import { PHQ9HistoryChart } from '@/features/dashboard/user/assessments/components/PHQ9HistoryChart';
+import styles from './Phq9HistoryPage.module.css';
+
+type Props = {
+  initialRawHistory: any[];
+};
+
+export function Phq9HistoryPageClient({ initialRawHistory }: Props) {
+  const [rawHistory] = useState<any[]>(initialRawHistory ?? []);
+
+  const history = useMemo(() => {
+    const dailyLatestMap: Record<string, { date: string; score: number }> = {};
+    rawHistory.forEach((item: any) => {
+      dailyLatestMap[item.date] = { date: item.date, score: item.score };
+    });
+    return Object.values(dailyLatestMap).sort((a, b) => a.date.localeCompare(b.date));
+  }, [rawHistory]);
+
+  return (
+    <main className={styles.container}>
+      <header className={styles.header}>
+        <h1 className={styles.title}>PHQ-9：診断履歴</h1>
+        <p className={styles.subtitle}>
+          これまでのアセスメント結果の推移です。点数の変化はあなたの状態を示す客観的な指標になります。
+        </p>
+      </header>
+
+      {history && history.length > 0 ? (
+        <>
+          <section className={styles.chartSection}>
+            <PHQ9HistoryChart data={history} />
+          </section>
+
+          <div className={styles.infoBox}>
+            <h3>グラフの読み方</h3>
+            <ul>
+              <li>
+                <strong>0-4点:</strong> 安定した状態。今の習慣を続けていきましょう。
+              </li>
+              <li>
+                <strong>5-9点:</strong> 軽微な負荷。セルフケアを少し厚めにする時期です。
+              </li>
+              <li>
+                <strong>10-14点:</strong>{' '}
+                調整が必要。一人で抱え込まず、外部の視点を取り入れる検討を。
+              </li>
+              <li>
+                <strong>15点以上:</strong>{' '}
+                強い負荷。今は無理をせず、状態を優先して共有・相談してください。
+              </li>
+            </ul>
+          </div>
+        </>
+      ) : (
+        <div className={styles.empty}>
+          <p>履歴がありません。まずは診断を受けてみましょう。</p>
+        </div>
+      )}
+    </main>
+  );
+}

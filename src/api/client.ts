@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getUserUuidForHeader } from '@/api/userUuid';
 
 const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -33,9 +34,10 @@ apiClient.interceptors.response.use(
 );
 
 // X-User-Id を送るリクエストインターセプター
-apiClient.interceptors.request.use((config) => {
-  const uuid = typeof window !== 'undefined' ? localStorage.getItem('user_uuid') : null;
+apiClient.interceptors.request.use(async (config) => {
+  const uuid = await getUserUuidForHeader();
   if (uuid) {
+    config.headers = config.headers ?? {};
     config.headers['X-User-Id'] = uuid;
   }
   return config;

@@ -1,11 +1,11 @@
 export type PHQ9Severity = 'none' | 'mild' | 'moderate' | 'moderately_severe' | 'severe';
 
-export interface PHQ9Result {
+export type PHQ9Result = {
   totalScore: number;
   severity: PHQ9Severity;
   suicidalIdeation: boolean; // 第9項目（死にたいと思う等）のチェック
   recommendation: string;
-}
+};
 
 // 評価ロジック
 export const calculatePHQ9 = (scores: number[]): PHQ9Result => {
