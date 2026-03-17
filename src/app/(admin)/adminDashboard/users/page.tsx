@@ -14,7 +14,7 @@ const AdminUsersPage = () => {
   const fetchUsers = useCallback(async (query?: string) => {
     setLoading(true);
     try {
-      const res = await getAllUsers(query); 
+      const res = await getAllUsers(query);
       setUsers(res.data || []);
     } catch (err) {
       console.error('ユーザー取得失敗:', err);

@@ -4,7 +4,7 @@ import apiClient from './client';
 export const getAllUsers = async (query?: string) => {
   // queryが存在する場合、/admin/users?q=xxx という形式で送る
   const response = await apiClient.get('/admin/users', {
-    params: { q: query }
+    params: { q: query },
   });
   return response.data;
 };
