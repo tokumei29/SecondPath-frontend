@@ -1,8 +1,11 @@
 import apiClient from './client';
 
 // 全ユーザー一覧の取得
-export const getAllUsers = async () => {
-  const response = await apiClient.get('/admin/users');
+export const getAllUsers = async (query?: string) => {
+  // queryが存在する場合、/admin/users?q=xxx という形式で送る
+  const response = await apiClient.get('/admin/users', {
+    params: { q: query }
+  });
   return response.data;
 };
 

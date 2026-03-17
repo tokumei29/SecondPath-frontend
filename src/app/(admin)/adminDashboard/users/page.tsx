@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react'; // useCallbackを追加
 import Link from 'next/link';
 import { getAllUsers } from '@/api/users';
 import styles from './page.module.css';
@@ -8,22 +8,29 @@ import styles from './page.module.css';
 const AdminUsersPage = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState(''); // 1. 検索クエリの状態追加
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const res = await getAllUsers();
-        setUsers(res.data || []);
-      } catch (err) {
-        console.error('ユーザー取得失敗:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchUsers();
+  // 2. 検索実行ロジックを関数化
+  const fetchUsers = useCallback(async (query?: string) => {
+    setLoading(true);
+    try {
+      const res = await getAllUsers(query); 
+      setUsers(res.data || []);
+    } catch (err) {
+      console.error('ユーザー取得失敗:', err);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  if (loading) return <div className={styles.loading}>読み込み中...</div>;
+  // 3. デバウンス処理（1秒待ってから検索）
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchUsers(searchQuery);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery, fetchUsers]);
 
   return (
     <div className={styles.container}>
@@ -31,6 +38,20 @@ const AdminUsersPage = () => {
         <h1>👥 ユーザー一覧</h1>
         <p>全ユーザーの活動状況を確認できます</p>
       </header>
+
+      {/* 4. 検索入力エリアの追加（Memosから移植） */}
+      <div className={styles.searchSection}>
+        <div className={styles.searchWrapper}>
+          <span className={styles.searchIcon}>🔍</span>
+          <input
+            type="text"
+            placeholder="ユーザー名で検索..."
+            className={styles.searchInput}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+      </div>
 
       <div className={styles.tableWrapper}>
         <table className={styles.table}>
@@ -70,6 +91,10 @@ const AdminUsersPage = () => {
             ))}
           </tbody>
         </table>
+        {/* 検索結果ゼロの表示 */}
+        {!loading && users.length === 0 && (
+          <div className={styles.emptyMessage}>一致するユーザーはいません。</div>
+        )}
       </div>
     </div>
   );
