@@ -44,6 +44,10 @@ export const getAdminInquiryDetail = cache(
       throw new Error(`Failed to fetch admin inquiry detail: ${res.status}`);
     }
 
-    return await res.json();
+    const json = await res.json();
+    // API が { data: { support, messages } } 形式を返す場合にも対応
+    if (json && json.support && Array.isArray(json.messages)) return json;
+    if (json && json.data) return json.data;
+    return json;
   }
 );

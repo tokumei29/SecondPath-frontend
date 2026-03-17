@@ -5,6 +5,8 @@ import styles from './AdminInquiryList.module.css';
 import type { AdminTextSupportListItem } from '../api/getAdminTextSupports';
 
 export function AdminInquiryListClient({ supports }: { supports: AdminTextSupportListItem[] }) {
+  const safeSupports = Array.isArray(supports) ? supports : [];
+
   return (
     <div className={styles.pageContainer}>
       <header className={styles.header}>
@@ -13,7 +15,7 @@ export function AdminInquiryListClient({ supports }: { supports: AdminTextSuppor
       </header>
 
       <div className={styles.grid}>
-        {supports.map((s) => (
+        {safeSupports.map((s) => (
           <Link href={`/adminDashboard/${s.id}`} key={s.id} className={styles.cardLink}>
             <div
               className={`${styles.card} ${s.status === 'waiting' ? styles.unread : styles.read}`}

@@ -23,5 +23,9 @@ export const getAdminMemosServer = cache(async (): Promise<MemoResponse[]> => {
     throw new Error(`Failed to fetch admin memos: ${res.status}`);
   }
 
-  return await res.json();
+  const json = await res.json();
+  if (Array.isArray(json)) return json;
+  if (json && Array.isArray(json.data)) return json.data;
+  if (json && Array.isArray(json.memos)) return json.memos;
+  return [];
 });

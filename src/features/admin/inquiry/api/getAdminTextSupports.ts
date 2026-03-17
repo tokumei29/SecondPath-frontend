@@ -39,5 +39,11 @@ export const getAdminTextSupports = cache(async (): Promise<AdminTextSupportList
     throw new Error(`Failed to fetch admin text supports: ${res.status}`);
   }
 
-  return await res.json();
+  const json = await res.json();
+
+  // API が { data: [...] } 形式を返す場合にも対応
+  if (Array.isArray(json)) return json;
+  if (json && Array.isArray(json.data)) return json.data;
+  if (json && Array.isArray(json.supports)) return json.supports;
+  return [];
 });
