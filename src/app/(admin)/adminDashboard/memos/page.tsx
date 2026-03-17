@@ -45,7 +45,7 @@ const Memos = () => {
     // 1文字打つたびにAPIを叩くと重いので、入力が止まってから500ms後に実行する
     const timer = setTimeout(() => {
       fetchMemos(searchQuery);
-    }, 1000);
+    }, 500);
 
     return () => clearTimeout(timer); // 次の文字が打たれたらタイマーをリセット
   }, [searchQuery, fetchMemos]);

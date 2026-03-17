@@ -23,11 +23,11 @@ const AdminUsersPage = () => {
     }
   }, []);
 
-  // 3. デバウンス処理（1秒待ってから検索）
+  // 3. デバウンス処理（0.5秒待ってから検索）
   useEffect(() => {
     const timer = setTimeout(() => {
       fetchUsers(searchQuery);
-    }, 1000);
+    }, 500);
 
     return () => clearTimeout(timer);
   }, [searchQuery, fetchUsers]);
