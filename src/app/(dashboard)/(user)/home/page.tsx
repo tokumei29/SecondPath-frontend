@@ -34,38 +34,44 @@ const HomePage = () => {
     const fetchAll = async () => {
       setIsLoading(true);
       try {
+        // 1. プロフィール取得
         const profileData = await getProfile();
-        const normalizedProfile = profileData
-          ? {
-              ...profileData,
-              strengths: ensureThreeFields(profileData.strengths),
-              weaknesses: ensureThreeFields(profileData.weaknesses),
-              likes: ensureThreeFields(profileData.likes),
-              hobbies: ensureThreeFields(profileData.hobbies),
-              short_term_goals: ensureThreeFields(profileData.short_term_goals),
-              long_term_goals: ensureThreeFields(profileData.long_term_goals),
-            }
-          : null;
-        setProfile(normalizedProfile);
+        if (profileData) {
+          setProfile({
+            ...profileData,
+            strengths: ensureThreeFields(profileData.strengths),
+            weaknesses: ensureThreeFields(profileData.weaknesses),
+            likes: ensureThreeFields(profileData.likes),
+            hobbies: ensureThreeFields(profileData.hobbies),
+            short_term_goals: ensureThreeFields(profileData.short_term_goals),
+            long_term_goals: ensureThreeFields(profileData.long_term_goals),
+          });
+        }
 
+        // 2. 日記取得
         const diariesRes = await getDiaries();
         setDiaries(diariesRes?.data || diariesRes || []);
 
+        // 3. テキスト相談取得
         const supportsRes = await getTextSupports();
         setSupports(supportsRes?.data || supportsRes || []);
 
+        // 4. カウンセラーのアドバイス取得（ここが重要！）
+        // 4. カウンセラーのアドバイス取得
         const records = await getMyRecords();
-        const todayAdvice =
-          Array.isArray(records) && records.length > 0
-            ? (() => {
-                const latestAdvice = records[0];
-                const todayStr = new Date().toLocaleDateString('sv-SE');
-                return latestAdvice.date.includes(todayStr);
-              })()
-            : false;
-        setHasTodayAdvice(todayAdvice);
+
+        // 今日の日付を YYYY-MM-DD 形式で取得
+        const todayStr = new Date().toLocaleDateString('sv-SE');
+
+        if (Array.isArray(records)) {
+          // データの中に今日の日付が含まれるレコードが1つでもあるか判定
+          const hasToday = records.some((record) => record.date && record.date.includes(todayStr));
+
+          // 判定結果をStateにセット
+          setHasTodayAdvice(hasToday);
+        }
       } catch (e) {
-        console.error(e);
+        console.error('データ取得エラー:', e);
       } finally {
         setIsLoading(false);
       }
