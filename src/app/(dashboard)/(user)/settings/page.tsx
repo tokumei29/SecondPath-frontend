@@ -1,22 +1,56 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { getProfile, updateProfile } from '@/api/profile';
 import { SuccessModal } from '@/features/components/home/SuccessModal';
 import { ProfileForm } from '@/features/components/settings/profileForm';
 import { Profile, ProfileArrayKeys } from '@/features/types/profile';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
-import { useProfile, useUpdateProfile } from '@/services/useProfile';
 import styles from './page.module.css';
 
+const ensureThreeFields = (arr: string[] | null | undefined) => {
+  const newArr = arr ? [...arr] : [];
+  while (newArr.length < 3) newArr.push('');
+  return newArr.slice(0, 3);
+};
+
 const SettingsPage = () => {
-  const { profile: serverProfile, isLoading } = useProfile();
-  const { update } = useUpdateProfile();
+  const [serverProfile, setServerProfile] = useState<Profile | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [isSaving, setIsSaving] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [localProfile, setLocalProfile] = useState<Profile | null>(null);
 
   useBodyScrollLock(showSuccessModal);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      setIsLoading(true);
+      try {
+        const res = await getProfile();
+        const normalized = res
+          ? {
+              ...res,
+              strengths: ensureThreeFields(res.strengths),
+              weaknesses: ensureThreeFields(res.weaknesses),
+              likes: ensureThreeFields(res.likes),
+              hobbies: ensureThreeFields(res.hobbies),
+              short_term_goals: ensureThreeFields(res.short_term_goals),
+              long_term_goals: ensureThreeFields(res.long_term_goals),
+            }
+          : null;
+        setServerProfile(normalized);
+      } catch (e) {
+        console.error(e);
+        setServerProfile(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, []);
 
   useEffect(() => {
     if (serverProfile && !localProfile) setLocalProfile(serverProfile);
@@ -40,7 +74,20 @@ const SettingsPage = () => {
     if (!localProfile) return;
     try {
       setIsSaving(true);
-      await update(localProfile);
+      const updated = await updateProfile(localProfile);
+      const normalized = updated
+        ? {
+            ...updated,
+            strengths: ensureThreeFields(updated.strengths),
+            weaknesses: ensureThreeFields(updated.weaknesses),
+            likes: ensureThreeFields(updated.likes),
+            hobbies: ensureThreeFields(updated.hobbies),
+            short_term_goals: ensureThreeFields(updated.short_term_goals),
+            long_term_goals: ensureThreeFields(updated.long_term_goals),
+          }
+        : null;
+      setServerProfile(normalized);
+      setLocalProfile(normalized);
       setShowSuccessModal(true);
     } catch (error) {
       alert('保存に失敗しました。');

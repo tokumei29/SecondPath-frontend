@@ -1,12 +1,38 @@
 'use client';
 
+import { useEffect, useMemo, useState } from 'react';
+import { getPhq9Assessments } from '@/api/assessments';
 import { PHQ9HistoryChart } from '@/features/components/assessment/PHQ9HistoryChart';
-import { usePhq9History } from '@/services/useAssessments';
 import styles from './page.module.css';
 
 const AssessmentHistoryPage = () => {
-  // カスタムフックを呼ぶだけ。加工済みの history が手に入る。
-  const { history, isLoading } = usePhq9History();
+  const [rawHistory, setRawHistory] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchHistory = async () => {
+      setIsLoading(true);
+      try {
+        const res = await getPhq9Assessments();
+        setRawHistory(res?.data || res || []);
+      } catch (e) {
+        console.error(e);
+        setRawHistory([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchHistory();
+  }, []);
+
+  // services/useAssessments の加工ロジックと同等（日別の最新のみ）
+  const history = useMemo(() => {
+    const dailyLatestMap: Record<string, { date: string; score: number }> = {};
+    rawHistory.forEach((item: any) => {
+      dailyLatestMap[item.date] = { date: item.date, score: item.score };
+    });
+    return Object.values(dailyLatestMap).sort((a, b) => a.date.localeCompare(b.date));
+  }, [rawHistory]);
 
   if (isLoading) return <div className={styles.loading}>履歴を読み込み中...</div>;
 

@@ -1,16 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { getProfile } from '@/api/profile';
 import { TextSupportPayload } from '@/api/textSupport';
+import { createTextSupport } from '@/api/textSupport';
 import { SuccessModal } from '@/features/components/home/SuccessModal';
+import { Profile } from '@/features/types/profile';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
-import { useProfile } from '@/services/useProfile';
-import { useCreateTextSupport } from '@/services/useTextSupport';
 import styles from './page.module.css';
 
 const SupportPage = () => {
-  const { profile, isLoading: isLoadingProfile } = useProfile();
-  const { create } = useCreateTextSupport();
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [isLoadingProfile, setIsLoadingProfile] = useState(true);
 
   const [email, setEmail] = useState('');
   const [subject, setSubject] = useState('');
@@ -19,6 +20,22 @@ const SupportPage = () => {
   const [showModal, setShowModal] = useState(false);
 
   useBodyScrollLock(showModal);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      setIsLoadingProfile(true);
+      try {
+        const res = await getProfile();
+        setProfile(res || null);
+      } catch (e) {
+        console.error(e);
+        setProfile(null);
+      } finally {
+        setIsLoadingProfile(false);
+      }
+    };
+    fetchProfile();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +53,7 @@ const SupportPage = () => {
         },
       };
 
-      await create(payload); // フック経由で送信（キャッシュも自動更新）
+      await createTextSupport(payload);
 
       setShowModal(true);
       setEmail('');

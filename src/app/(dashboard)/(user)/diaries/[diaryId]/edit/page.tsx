@@ -3,21 +3,17 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import axios from 'axios';
-import { type DiaryPayload } from '@/api/diaries';
+import { getDiary, updateDiary, type DiaryPayload } from '@/api/diaries';
 import styles from '@/app/(dashboard)/(user)/diaries/page.module.css';
 import { DiaryField } from '@/features/components/diaries/diaryField';
-import { useDiaryDetail, useDiaryActions } from '@/services/useDiaries';
 
 const DiaryEditPage = () => {
   const router = useRouter();
   const params = useParams();
   const diaryId = params?.diaryId as string;
 
-  // 1. 【取得】初期データ取得専用。再レンダリングの「防波堤」になります。
-  const { diary: serverDiary, isLoading } = useDiaryDetail(diaryId);
-
-  // 2. 【操作】更新ロジック専用。useSWRを内包していないので304は発生しません。
-  const { update } = useDiaryActions();
+  const [serverDiary, setServerDiary] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [formData, setFormData] = useState({
     content: '',
@@ -27,6 +23,23 @@ const DiaryEditPage = () => {
   });
 
   const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    const fetchDiary = async () => {
+      if (!diaryId) return;
+      setIsLoading(true);
+      try {
+        const res = await getDiary(diaryId);
+        setServerDiary(res?.data || res || null);
+      } catch (e) {
+        console.error(e);
+        setServerDiary(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchDiary();
+  }, [diaryId]);
 
   // サーバーからデータが届いたら、フォームの初期値としてセット
   useEffect(() => {
@@ -54,7 +67,7 @@ const DiaryEditPage = () => {
         diary: formData,
       };
 
-      await update(diaryId, payload);
+      await updateDiary(diaryId, payload);
 
       alert('更新しました！');
       router.push('/diaries/history');

@@ -1,11 +1,38 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useTextSupports } from '@/services/useTextSupport';
+import { getTextSupports } from '@/api/textSupport';
 import styles from './page.module.css';
 
 const TextSupportListPage = () => {
-  const { supports, checkIsRead, isLoading } = useTextSupports();
+  const [supports, setSupports] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // 既読判定（services/useTextSupport と同等）
+  const checkIsRead = (support: any) => {
+    if (support.status !== 'replied') return false;
+    const lastRead = localStorage.getItem(`read_support_${support.id}`);
+    if (!lastRead) return false;
+    return new Date(lastRead).getTime() > new Date(support.updated_at).getTime();
+  };
+
+  useEffect(() => {
+    const fetchSupports = async () => {
+      setIsLoading(true);
+      try {
+        const res = await getTextSupports();
+        setSupports(res?.data || res || []);
+      } catch (e) {
+        console.error(e);
+        setSupports([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchSupports();
+  }, []);
 
   // デザイン維持のため isLoading の表示
   if (isLoading) return <div className={styles.loading}>読み込み中...</div>;

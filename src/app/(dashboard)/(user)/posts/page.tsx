@@ -1,11 +1,29 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { usePosts } from '@/services/usePosts';
+import { getPublicPosts } from '@/api/posts';
 import styles from './page.module.css';
 
 const PostsIndexPage = () => {
-  const { posts, isLoading } = usePosts();
+  const [posts, setPosts] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      setIsLoading(true);
+      try {
+        const res = await getPublicPosts();
+        setPosts(res?.data || res || []);
+      } catch (e) {
+        console.error(e);
+        setPosts([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchPosts();
+  }, []);
 
   if (isLoading) return <div className={styles.loading}>読み込み中...</div>;
 

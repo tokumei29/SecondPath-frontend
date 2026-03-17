@@ -1,11 +1,31 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { getCognitiveDistortionHistory } from '@/api/assessments';
 import { CognitiveDistortionChart } from '@/features/components/assessment/CognitiveDistortionChart';
-import { useCognitiveDistortionHistory } from '@/services/useAssessments';
 import styles from './page.module.css';
 
 const CognitiveDistortionHistory = () => {
-  const { latestResult, isLoading } = useCognitiveDistortionHistory();
+  const [latestResult, setLatestResult] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchHistory = async () => {
+      setIsLoading(true);
+      try {
+        const res = await getCognitiveDistortionHistory();
+        const list = res?.data || res || [];
+        setLatestResult(Array.isArray(list) && list.length > 0 ? list[list.length - 1] : null);
+      } catch (e) {
+        console.error(e);
+        setLatestResult(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchHistory();
+  }, []);
 
   // デザイン維持のため、元の styles.loading を使用
   if (isLoading) return <div className={styles.loading}>読み込み中...</div>;

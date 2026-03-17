@@ -1,26 +1,78 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { getDiaries } from '@/api/diaries';
+import { getProfile } from '@/api/profile';
+import { getTextSupports } from '@/api/textSupport';
+import { getMyRecords } from '@/api/userRecords';
 import { DiaryDetailModal } from '@/features/components/diaries/modal';
 import { GoalSection } from '@/features/components/home/goalSection';
 import { StrengthSection } from '@/features/components/home/strengthSection';
+import { Profile } from '@/features/types/profile';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
-import { useDiaries } from '@/services/useDiaries';
-import { useProfile } from '@/services/useProfile';
-import { useTextSupports } from '@/services/useTextSupport';
-import { useMyRecords } from '@/services/useUserRecords';
 import styles from './page.module.css';
+
+// --- ヘルパー: 配列を常に3要素にする（services/useProfile と同等） ---
+const ensureThreeFields = (arr: string[] | null | undefined) => {
+  const newArr = arr ? [...arr] : [];
+  while (newArr.length < 3) newArr.push('');
+  return newArr.slice(0, 3);
+};
 
 const HomePage = () => {
   const [selectedDiary, setSelectedDiary] = useState<any>(null);
   useBodyScrollLock(!!selectedDiary);
 
-  // --- SWRフックでデータを取得 ---
-  const { profile, isLoading: isProfileLoading } = useProfile();
-  const { diaries, isLoading: isDiariesLoading } = useDiaries();
-  const { supports, isLoading: isSupportsLoading } = useTextSupports();
-  const { hasTodayAdvice, isLoading: isRecordsLoading } = useMyRecords();
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [diaries, setDiaries] = useState<any[]>([]);
+  const [supports, setSupports] = useState<any[]>([]);
+  const [hasTodayAdvice, setHasTodayAdvice] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAll = async () => {
+      setIsLoading(true);
+      try {
+        const profileData = await getProfile();
+        const normalizedProfile = profileData
+          ? {
+              ...profileData,
+              strengths: ensureThreeFields(profileData.strengths),
+              weaknesses: ensureThreeFields(profileData.weaknesses),
+              likes: ensureThreeFields(profileData.likes),
+              hobbies: ensureThreeFields(profileData.hobbies),
+              short_term_goals: ensureThreeFields(profileData.short_term_goals),
+              long_term_goals: ensureThreeFields(profileData.long_term_goals),
+            }
+          : null;
+        setProfile(normalizedProfile);
+
+        const diariesRes = await getDiaries();
+        setDiaries(diariesRes?.data || diariesRes || []);
+
+        const supportsRes = await getTextSupports();
+        setSupports(supportsRes?.data || supportsRes || []);
+
+        const records = await getMyRecords();
+        const todayAdvice =
+          Array.isArray(records) && records.length > 0
+            ? (() => {
+                const latestAdvice = records[0];
+                const todayStr = new Date().toLocaleDateString('sv-SE');
+                return latestAdvice.date.includes(todayStr);
+              })()
+            : false;
+        setHasTodayAdvice(todayAdvice);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAll();
+  }, []);
 
   // 未読チャットの判定ロジック（メモ化せずともSWRの再レンダリングで最適に動作します）
   const hasUnreadChat =
@@ -34,9 +86,6 @@ const HomePage = () => {
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('ja-JP');
   };
-
-  // すべてのローディング状態を統合
-  const isLoading = isProfileLoading || isDiariesLoading || isSupportsLoading || isRecordsLoading;
 
   if (isLoading) return <div className={styles.loading}>読み込み中...</div>;
 

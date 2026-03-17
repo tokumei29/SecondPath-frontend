@@ -1,21 +1,38 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { deleteDiary, getDiaries } from '@/api/diaries';
 import { DiaryDetailModal } from '@/features/components/diaries/modal';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
-import { useDiaries, useDiaryActions } from '@/services/useDiaries';
 import styles from './page.module.css';
 
 const HistoryPage = () => {
   const router = useRouter();
   const [selectedDiary, setSelectedDiary] = useState<any>(null);
 
-  // SWRフックからデータと機能を抽出
-  const { diaries, isLoading } = useDiaries();
-  const { remove } = useDiaryActions();
+  const [diaries, setDiaries] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useBodyScrollLock(!!selectedDiary);
+
+  const fetchDiaries = async () => {
+    setIsLoading(true);
+    try {
+      const res = await getDiaries();
+      setDiaries(res?.data || res || []);
+    } catch (e) {
+      console.error(e);
+      setDiaries([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDiaries();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleDelete = async (diaryId: string) => {
     if (!window.confirm('この記録を削除してもよろしいですか？\n削除したデータは元に戻せません。')) {
@@ -23,9 +40,8 @@ const HistoryPage = () => {
     }
 
     try {
-      // 改造した remove 関数に ID を渡すだけ！
-      // 内部で globalMutate が走るので、自動的に一覧から消えます
-      await remove(diaryId);
+      await deleteDiary(diaryId);
+      await fetchDiaries();
       alert('削除しました。');
     } catch (error) {
       console.error('削除失敗:', error);

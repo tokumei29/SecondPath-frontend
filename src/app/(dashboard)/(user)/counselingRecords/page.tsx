@@ -1,19 +1,35 @@
 'use client';
 
-import { useState } from 'react';
-import { CounselingRecord } from '@/api/userRecords';
+import { useEffect, useState } from 'react';
+import { CounselingRecord, getMyRecords } from '@/api/userRecords';
 import RecordDetailModal from '@/features/components/counselingRecords/RecordDetailModal';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
-import { useMyRecords } from '@/services/useUserRecords';
 import styles from './page.module.css';
 
 const CounselingRecordsPage = () => {
-  const { records, isLoading } = useMyRecords();
+  const [records, setRecords] = useState<CounselingRecord[] | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [selectedRecord, setSelectedRecord] = useState<CounselingRecord | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useBodyScrollLock(isModalOpen);
+
+  useEffect(() => {
+    const fetchRecords = async () => {
+      setIsLoading(true);
+      try {
+        const res = await getMyRecords();
+        setRecords(res || []);
+      } catch (e) {
+        console.error(e);
+        setRecords([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchRecords();
+  }, []);
 
   const formatDate = (dateString: string) => {
     try {

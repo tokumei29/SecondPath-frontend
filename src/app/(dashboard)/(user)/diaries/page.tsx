@@ -1,17 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { type DiaryPayload } from '@/api/diaries';
+import { createDiary, type DiaryPayload } from '@/api/diaries';
 import { DiaryField } from '@/features/components/diaries/diaryField';
 import { SuccessModal } from '@/features/components/home/SuccessModal';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
-import { useDiaryActions } from '@/services/useDiaries';
 import styles from './page.module.css';
 
 const DiaryPage = () => {
-  // SWRフックから作成用関数を取得
-  const { create } = useDiaryActions();
-
   const [formData, setFormData] = useState({
     content: '',
     good_thing: '',
@@ -43,8 +39,7 @@ const DiaryPage = () => {
         },
       };
 
-      // フック経由で保存（内部で mutate が走り、キャッシュが更新される）
-      await create(payload);
+      await createDiary(payload);
 
       setShowSuccessModal(true);
       setFormData({ content: '', good_thing: '', improvement: '', tomorrow_goal: '' });

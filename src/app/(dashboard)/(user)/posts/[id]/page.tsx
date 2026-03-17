@@ -1,15 +1,42 @@
 'use client';
 
-import { use } from 'react';
+import { use, useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { usePost } from '@/services/usePosts';
+import { getPublicPost } from '@/api/posts';
 import styles from './page.module.css';
 
 const PostDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = use(params);
 
-  // SWRフックを使用（内部で number に変換される）
-  const { post, isLoading, isError } = usePost(id);
+  const [post, setPost] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+
+  useEffect(() => {
+    const fetchPost = async () => {
+      const numericId = id ? Number(id) : undefined;
+      if (!numericId || Number.isNaN(numericId)) {
+        setIsError(true);
+        setIsLoading(false);
+        return;
+      }
+
+      setIsLoading(true);
+      setIsError(false);
+      try {
+        const res = await getPublicPost(numericId);
+        setPost(res?.data || res || null);
+      } catch (e) {
+        console.error(e);
+        setIsError(true);
+        setPost(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPost();
+  }, [id]);
 
   if (isLoading) return <div className={styles.loading}>記事を読み込み中...</div>;
   if (isError || !post) return <div className={styles.error}>記事が見つかりませんでした。</div>;

@@ -1,15 +1,37 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { getResilienceHistory } from '@/api/assessments';
 import { ResilienceResultChart } from '@/features/components/assessment/ResilienceResultChart';
-import { useResilienceHistory } from '@/services/useAssessments';
 import styles from './page.module.css';
 
 const ResilienceResultPage = () => {
   const router = useRouter();
 
-  // SWRのカスタムフックを使用
-  const { latestData, isLoading } = useResilienceHistory();
+  const [history, setHistory] = useState<any[]>([]);
+  const [latestData, setLatestData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchHistory = async () => {
+      setIsLoading(true);
+      try {
+        const res = await getResilienceHistory();
+        const list = res?.data || res || [];
+        setHistory(list);
+        setLatestData(Array.isArray(list) && list.length > 0 ? list[list.length - 1] : null);
+      } catch (e) {
+        console.error(e);
+        setHistory([]);
+        setLatestData(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchHistory();
+  }, []);
 
   // isLoading は SWR が管理する状態を使う
   if (isLoading) return <div className={styles.center}>読み込み中...</div>;

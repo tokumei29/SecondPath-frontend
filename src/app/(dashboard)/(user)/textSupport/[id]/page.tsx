@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useRef, useEffect, use } from 'react';
+import { useState, useRef, useEffect, use, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { useTextSupportActions, useTextSupportDetail } from '@/services/useTextSupport';
+import { getTextSupportDetail, postSupportMessage } from '@/api/textSupport';
 import styles from './page.module.css';
 
 const TextSupportDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
@@ -10,13 +10,28 @@ const TextSupportDetailPage = ({ params }: { params: Promise<{ id: string }> }) 
   const router = useRouter();
   const scrollEndRef = useRef<HTMLDivElement>(null);
 
-  // 1. 【詳細取得用】画面表示に必要なデータを保持。入力してもここからGETは飛ばない。
-  const { detail, isLoading } = useTextSupportDetail(id);
-
-  // 2. 【送信用】メッセージ送信ロジックのみを保持。SWRを内包していない。
-  const { addMessage } = useTextSupportActions();
+  const [detail, setDetail] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [replyText, setReplyText] = useState('');
   const [isSending, setIsSending] = useState(false);
+
+  const fetchDetail = useCallback(async () => {
+    if (!id) return;
+    setIsLoading(true);
+    try {
+      const res = await getTextSupportDetail(id);
+      setDetail(res?.data || res || null);
+    } catch (e) {
+      console.error(e);
+      setDetail(null);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    fetchDetail();
+  }, [fetchDetail]);
 
   // 既読処理（コンポーネント読み込み時に実行）
   useEffect(() => {
@@ -36,7 +51,8 @@ const TextSupportDetailPage = ({ params }: { params: Promise<{ id: string }> }) 
 
     setIsSending(true);
     try {
-      await addMessage(id, replyText); // フックの関数を呼ぶだけで自動リロードされる
+      await postSupportMessage(id, replyText);
+      await fetchDetail();
       setReplyText('');
     } catch (error) {
       alert('送信に失敗しました');
