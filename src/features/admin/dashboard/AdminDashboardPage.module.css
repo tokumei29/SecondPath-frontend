@@ -53,7 +53,6 @@
   color: #1e293b;
 }
 
-/* 未対応がある場合は少し強調する */
 .alert {
   border-left: 6px solid #ef4444;
 }

@@ -58,11 +58,6 @@
   color: #1e293b;
 }
 
-.userEmail {
-  font-size: 12px;
-  color: #64748b;
-}
-
 .uuidCell code {
   padding: 4px 8px;
   font-family: monospace;
@@ -101,31 +96,27 @@
   color: #64748b;
 }
 
-/* 検索セクション全体の余白 */
 .searchSection {
-  max-width: 500px; /* 必要に応じて調整してください */
+  max-width: 500px;
   margin-bottom: 24px;
 }
 
-/* アイコンを重ねるための親要素 */
 .searchWrapper {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-/* 虫眼鏡アイコンの配置 */
 .searchIcon {
   position: absolute;
   left: 14px;
   font-size: 18px;
-  pointer-events: none; /* アイコンをクリックしてもinputに反応するように */
+  pointer-events: none;
 }
 
-/* 入力フォーム本体 */
 .searchInput {
   width: 100%;
-  padding: 12px 12px 12px 42px; /* 左側にアイコン分の余白を空ける */
+  padding: 12px 12px 12px 42px;
   font-size: 15px;
   background-color: #fff;
   border: 1px solid #e0e0e0;
@@ -137,11 +128,10 @@
 }
 
 .searchInput:focus {
-  border-color: #0070f3; /* サービスの色に合わせて変更してください */
+  border-color: #0070f3;
   box-shadow: 0 0 0 2px rgb(0 112 243 / 10%);
 }
 
-/* 検索結果が0件の時のメッセージ（追加分） */
 .emptyMessage {
   padding: 40px;
   margin-top: 20px;
@@ -150,4 +140,8 @@
   text-align: center;
   background: #f8f9fa;
   border-radius: 12px;
+}
+
+.uuidCell {
+  white-space: nowrap;
 }

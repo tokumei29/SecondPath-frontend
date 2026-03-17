@@ -49,6 +49,26 @@
   font-size: 12px;
 }
 
+.statusTag {
+  font-weight: 700;
+}
+
+.date {
+  color: #64748b;
+}
+
+.infoRow {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.contentSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .userSection {
   padding: 12px;
   background: #f8fafc;
