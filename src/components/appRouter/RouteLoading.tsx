@@ -1,3 +1,9 @@
+import styles from './RouteLoading.module.css';
+
 export const RouteLoading = () => {
-  return <div>読み込み中...</div>;
+  return (
+    <div className={styles.backdrop}>
+      <div className={styles.spinner} />
+    </div>
+  );
 };

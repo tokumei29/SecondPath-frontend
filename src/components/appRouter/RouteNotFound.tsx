@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import styles from './RouteNotFound.module.css';
 
 type Props = {
   title?: string;
@@ -14,10 +15,12 @@ export const RouteNotFound = ({
   linkLabel = 'トップへ戻る',
 }: Props) => {
   return (
-    <main style={{ maxWidth: 720, margin: '64px auto', padding: 24 }}>
-      <h1 style={{ marginBottom: 12 }}>{title}</h1>
-      <p style={{ marginBottom: 24, color: '#64748b' }}>{description}</p>
-      <Link href={href}>{linkLabel}</Link>
+    <main className={styles.container}>
+      <h1 className={styles.title}>{title}</h1>
+      <p className={styles.description}>{description}</p>
+      <Link href={href} className={styles.link}>
+        {linkLabel}
+      </Link>
     </main>
   );
 };
