@@ -26,7 +26,7 @@ export const WelcomeGuideModal = ({ isOpen, onClose }: Props) => {
           <p>
             SecondPathへようこそ。
             <br />
-            このアプリは、自分を客観視することから始まります。まずはあなたの「目標」や「強み」などを設定しましょう。
+            アプリの利用を始める前に自己分析の設定をお願いしています。
           </p>
 
           <div className={styles.infoBox}>
@@ -38,9 +38,6 @@ export const WelcomeGuideModal = ({ isOpen, onClose }: Props) => {
               <li>自分だけの「再起動の指針」を可視化するため</li>
             </ul>
           </div>
-          <p className={styles.mustNote}>
-            ※ アプリの利用を始める前に自己分析の設定をお願いしています。
-          </p>
           <div className={styles.mustNote}>
             ※ ご利用にあたり、まずは設定内の<strong>名前</strong>のみ初期設定で必須としています。
           </div>

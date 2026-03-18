@@ -51,6 +51,7 @@ export const Sidebar = () => {
           localStorage.removeItem(key);
         }
       });
+      document.cookie = 'user_uuid=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC; SameSite=Lax';
       router.push('/login');
       router.refresh();
     } catch {
@@ -87,6 +88,7 @@ export const Sidebar = () => {
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || '削除に失敗しました。');
       localStorage.clear();
+      document.cookie = 'user_uuid=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC; SameSite=Lax';
       alert('アカウントの削除が完了しました。');
       router.push('/');
       router.refresh();

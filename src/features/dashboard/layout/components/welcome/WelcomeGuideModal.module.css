@@ -12,9 +12,11 @@
 }
 
 .modal {
+  display: flex;
+  flex-direction: column;
   width: 90%;
   max-width: 480px;
-  max-height: 90vh;
+  max-height: 95vh;
   padding: 1.5rem 2rem;
   color: #111;
   background: #fff;
@@ -30,6 +32,14 @@
   text-align: center;
   letter-spacing: 0.1em;
   border-bottom: 1px solid #333;
+}
+
+.content {
+  flex: 1;
+  margin-bottom: 1rem;
+
+  /* 追加: 中身が長すぎる場合に、このエリアだけをスクロールさせる */
+  overflow-y: auto;
 }
 
 .content p {
