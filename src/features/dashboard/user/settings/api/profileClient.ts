@@ -6,7 +6,7 @@ export const getProfile = async () => {
   return response.data;
 };
 
-export const updateProfile = async (profile: Profile) => {
+export const updateProfile = async (profile: Partial<Profile>) => {
   const response = await apiClient.patch('/profile', {
     profile,
   });

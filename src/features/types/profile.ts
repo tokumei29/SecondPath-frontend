@@ -8,6 +8,7 @@ export type ProfileArrayKeys =
 
 export type Profile = {
   name: string;
+  has_seen_guide?: boolean;
 } & Record<ProfileArrayKeys, string[]>;
 
 export type ProfileResponse = Profile & {

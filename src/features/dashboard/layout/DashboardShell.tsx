@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { getCurrentUser } from '@/api/auth';
-import { getProfile } from '@/features/dashboard/user/settings/api/profileClient';
+import { getProfile, updateProfile } from '@/features/dashboard/user/settings/api/profileClient';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
+import { createClient } from '@/lib/supabase/client';
 import { Sidebar } from './components/sidebar/Sidebar';
 import { WelcomeGuideModal } from './components/welcome/WelcomeGuideModal';
 import styles from './DashboardShell.module.css';
@@ -17,6 +18,24 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
   useBodyScrollLock(showGuide);
 
+  const supabase = createClient();
+
+  useEffect(() => {
+    // 1. 認証状態の変化を監視
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
+        // ユーザーが切り替わったら、古いキャッシュやStateを捨てるためにリロード
+        // これで「Aのアカウントの画面でBのデータを送る」隙をなくす
+        router.refresh();
+      }
+    });
+
+    // クリーンアップ
+    return () => subscription.unsubscribe();
+  }, [router, supabase]);
+
   useEffect(() => {
     if (pathname === '/login') {
       setIsChecking(false);
@@ -24,8 +43,6 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     }
 
     const checkUserStatus = async () => {
-      const hasSeenGuide = localStorage.getItem('has_seen_welcome_guide');
-
       try {
         const user = await getCurrentUser();
         if (!user) {
@@ -33,14 +50,14 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           return;
         }
 
-        if (pathname === '/settings' || hasSeenGuide === 'true') {
+        const profileData = await getProfile();
+
+        if (pathname === '/settings' || profileData?.has_seen_guide) {
           setIsChecking(false);
           return;
         }
 
-        const profileData = await getProfile();
-
-        if (!profileData || !profileData.name || profileData.name.trim() === '') {
+        if (!profileData.name || profileData.name.trim() === '') {
           setShowGuide(true);
         } else {
           localStorage.setItem('has_seen_welcome_guide', 'true');
@@ -55,7 +72,15 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     checkUserStatus();
   }, [pathname, router]);
 
-  const handleCloseGuide = () => setShowGuide(false);
+  const handleCloseGuide = async () => {
+    setShowGuide(false);
+    try {
+      // ガイドを閉じたらBEに保存。localStorageは一切使わない。
+      await updateProfile({ has_seen_guide: true });
+    } catch (e) {
+      console.error('Failed to save guide status', e);
+    }
+  };
 
   if (pathname === '/login') return <>{children}</>;
   if (isChecking) return <div className={styles.loading}>loading...</div>;
