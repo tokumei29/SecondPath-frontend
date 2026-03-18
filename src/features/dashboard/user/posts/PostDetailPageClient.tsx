@@ -13,9 +13,9 @@ export function PostDetailPageClient({ params, initialPost }: Props) {
   const { id } = use(params);
 
   const [post] = useState<any>(initialPost);
-  const [isError] = useState(!initialPost);
-
-  if (isError || !post) return <div className={styles.error}>記事が見つかりませんでした。</div>;
+  if (!initialPost) {
+    return <div className={styles.error}>記事が見つかりませんでした。 (ID: {id})</div>;
+  }
 
   return (
     <div className={styles.container}>
