@@ -1,5 +1,6 @@
 import { RouteLoading } from '@/components/appRouter/RouteLoading';
 
-export default function RootLoading() {
+export default function AdminLoading() {
   return <RouteLoading />;
 }
+
