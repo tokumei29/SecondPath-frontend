@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { getCurrentUser } from '@/api/auth';
+import { RouteLoading } from '@/components/appRouter/RouteLoading';
 import { getProfile, updateProfile } from '@/features/dashboard/user/settings/api/profileClient';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import { createClient } from '@/lib/supabase/client';
-import { RouteLoading } from '@/components/appRouter/RouteLoading';
 import { Sidebar } from './components/sidebar/Sidebar';
 import { WelcomeGuideModal } from './components/welcome/WelcomeGuideModal';
 import styles from './DashboardShell.module.css';
@@ -14,6 +14,7 @@ import styles from './DashboardShell.module.css';
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const [showGuide, setShowGuide] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
+  const [isRoutePending, setIsRoutePending] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -73,6 +74,28 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     checkUserStatus();
   }, [pathname, router]);
 
+  // ルート間遷移時にも、短時間だけローディングスピナを出す
+  const prevPathRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (prevPathRef.current === null) {
+      prevPathRef.current = pathname;
+      return;
+    }
+    if (prevPathRef.current !== pathname) {
+      prevPathRef.current = pathname;
+      setIsRoutePending(true);
+    }
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!isRoutePending) return;
+    const timer = setTimeout(() => {
+      setIsRoutePending(false);
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [isRoutePending]);
+
   const handleCloseGuide = async () => {
     setShowGuide(false);
     try {
@@ -84,7 +107,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   };
 
   if (pathname === '/login') return <>{children}</>;
-  if (isChecking) return <RouteLoading />;
+  if (isChecking || isRoutePending) return <RouteLoading />;
 
   return (
     <div className={styles.container}>
