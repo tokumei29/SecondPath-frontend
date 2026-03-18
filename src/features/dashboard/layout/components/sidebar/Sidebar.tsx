@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import { supabase } from '@/api/auth';
 import { getTextSupports } from '@/features/dashboard/user/textSupport/api/textSupportClient';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
-import { createClient } from '@/lib/supabase/client';
 import { DeleteAccountModal } from './DeleteAccountModal';
 import styles from './Sidebar.module.css';
 import { SidebarItem } from './SidebarItem';
@@ -12,7 +12,6 @@ import { SidebarItem } from './SidebarItem';
 export const Sidebar = () => {
   const pathname = usePathname();
   const router = useRouter();
-  const supabase = createClient();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { getCurrentUser } from '@/api/auth';
 import { getProfile, updateProfile } from '@/features/dashboard/user/settings/api/profileClient';
@@ -13,12 +13,13 @@ import styles from './DashboardShell.module.css';
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const [showGuide, setShowGuide] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
   useBodyScrollLock(showGuide);
 
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
 
   useEffect(() => {
     // 1. 認証状態の変化を監視
