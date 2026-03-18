@@ -6,12 +6,14 @@ import { getCurrentUser } from '@/api/auth';
 import { getProfile, updateProfile } from '@/features/dashboard/user/settings/api/profileClient';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import { createClient } from '@/lib/supabase/client';
+import { RouteLoading } from '@/components/appRouter/RouteLoading';
 import { Sidebar } from './components/sidebar/Sidebar';
 import { WelcomeGuideModal } from './components/welcome/WelcomeGuideModal';
 import styles from './DashboardShell.module.css';
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const [showGuide, setShowGuide] = useState(false);
+  const [isChecking, setIsChecking] = useState(true);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -37,10 +39,12 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (pathname === '/login') {
+      setIsChecking(false);
       return;
     }
 
     const checkUserStatus = async () => {
+      setIsChecking(true);
       try {
         const user = await getCurrentUser();
         if (!user) {
@@ -62,7 +66,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       } catch (e) {
         console.error('Status check failed', e);
       } finally {
-        // 処理があれば書く
+        setIsChecking(false);
       }
     };
 
@@ -80,6 +84,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   };
 
   if (pathname === '/login') return <>{children}</>;
+  if (isChecking) return <RouteLoading />;
 
   return (
     <div className={styles.container}>
