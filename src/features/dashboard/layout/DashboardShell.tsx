@@ -44,6 +44,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     }
 
     const checkUserStatus = async () => {
+      // 認証・プロフィール確認中は常にローディングスピナを表示
       setIsChecking(true);
       try {
         const user = await getCurrentUser();
