@@ -75,7 +75,17 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       try {
         const { data } = await supabase.auth.getSession();
         if (!mounted) return;
-        setIsAuthed(isValidSession(data.session));
+        const session = data.session;
+        const ok = isValidSession(session);
+        setIsAuthed(ok);
+        // Supabase セッションが有効なら cookie(user_uuid) を毎回更新しておく
+        if (ok && session?.user?.id) {
+          document.cookie = `user_uuid=${session.user.id}; path=/; max-age=31536000; SameSite=Lax`;
+        } else {
+          // セッションが無効なら cookie を消す
+          document.cookie =
+            'user_uuid=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax';
+        }
       } catch (e) {
         console.error('Failed to read session', e);
         if (!mounted) return;
@@ -88,7 +98,15 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
       if (!mounted) return;
-      setIsAuthed(isValidSession(session));
+      const ok = isValidSession(session);
+      setIsAuthed(ok);
+      if (ok && session?.user?.id) {
+        // ログイン状態が更新されるたびに cookie も延長
+        document.cookie = `user_uuid=${session.user.id}; path=/; max-age=31536000; SameSite=Lax`;
+      } else {
+        document.cookie =
+          'user_uuid=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax';
+      }
 
       // ユーザーが切り替わったら、古いキャッシュやStateを捨てるためにリロード
       // これで「Aのアカウントの画面でBのデータを送る」隙をなくす
