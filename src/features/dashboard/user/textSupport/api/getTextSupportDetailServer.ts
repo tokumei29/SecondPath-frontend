@@ -1,11 +1,7 @@
 import { cache } from 'react';
-import apiClient from '@/api/client';
-import { getUserUuidForHeader } from '@/api/userUuid';
+import apiClient from '@/api/client'
 
 export const getTextSupportDetailServer = cache(async (id: string) => {
-  const uuid = await getUserUuidForHeader();
-  if (!uuid) return null;
-
   try {
     const response = await apiClient.get(`/text_supports/${id}`);
     const json = response.data;
