@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getCurrentUser, signIn, signUp } from '@/api/auth';
+import { signIn, signUp } from '@/api/auth';
 import { Modal } from '@/components/ui/Modal/Modal';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
+import { createClient } from '@/lib/supabase/client';
 import styles from './AuthForm.module.css';
 import { SignupSuccessMessage } from './SignupSuccessMessage';
 
@@ -17,6 +18,7 @@ export const AuthForm = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const router = useRouter();
+  const supabase = useMemo(() => createClient(), []);
 
   useBodyScrollLock(isModalOpen);
 
@@ -24,15 +26,21 @@ export const AuthForm = () => {
     // localStorage の user_uuid だけでログイン判定すると、
     // セッション切れ時に /login <-> /home のループになるので Supabase のセッションで判定する
     const run = async () => {
-      const user = await getCurrentUser();
-      if (!user) return;
-      localStorage.setItem('user_uuid', user.id);
-      document.cookie = `user_uuid=${user.id}; path=/; max-age=31536000; SameSite=Lax`;
+      const { data } = await supabase.auth.getSession();
+      const session = data.session;
+      const expiresAtMs =
+        typeof session?.expires_at === 'number' ? session.expires_at * 1000 : 0;
+      const isValid =
+        !!session?.user && !!session?.access_token && (expiresAtMs === 0 || expiresAtMs > Date.now());
+      if (!isValid) return;
+
+      localStorage.setItem('user_uuid', session.user.id);
+      document.cookie = `user_uuid=${session.user.id}; path=/; max-age=31536000; SameSite=Lax`;
       router.replace('/home');
       router.refresh();
     };
     run().catch(() => undefined);
-  }, [router]);
+  }, [router, supabase]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { getCurrentUser } from '@/api/auth';
 import { RouteLoading } from '@/components/appRouter/RouteLoading';
 import { getProfile, updateProfile } from '@/features/dashboard/user/settings/api/profileClient';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
@@ -22,6 +21,14 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
   const supabase = useMemo(() => createClient(), []);
 
+  const isValidSession = (session: any) => {
+    if (!session?.user) return false;
+    if (!session?.access_token) return false;
+    const expiresAtMs =
+      typeof session.expires_at === 'number' ? session.expires_at * 1000 : 0;
+    return expiresAtMs === 0 ? true : expiresAtMs > Date.now();
+  };
+
   useEffect(() => {
     // 1. 初回に一度だけセッションを取得し、その後は auth state を購読
     let mounted = true;
@@ -30,7 +37,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       try {
         const { data } = await supabase.auth.getSession();
         if (!mounted) return;
-        setIsAuthed(!!data.session?.user);
+        setIsAuthed(isValidSession(data.session));
       } catch (e) {
         console.error('Failed to read session', e);
         if (!mounted) return;
@@ -43,7 +50,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
       if (!mounted) return;
-      setIsAuthed(!!session?.user);
+      setIsAuthed(isValidSession(session));
 
       // ユーザーが切り替わったら、古いキャッシュやStateを捨てるためにリロード
       // これで「Aのアカウントの画面でBのデータを送る」隙をなくす
