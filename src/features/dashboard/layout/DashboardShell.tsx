@@ -12,8 +12,6 @@ import styles from './DashboardShell.module.css';
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const [showGuide, setShowGuide] = useState(false);
-  const [isChecking, setIsChecking] = useState(true);
-  const [isMounted, setIsMounted] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -39,7 +37,6 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (pathname === '/login') {
-      setIsChecking(false);
       return;
     }
 
@@ -54,7 +51,6 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         const profileData = await getProfile();
 
         if (pathname === '/settings' || profileData?.has_seen_guide) {
-          setIsChecking(false);
           return;
         }
 
@@ -66,7 +62,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       } catch (e) {
         console.error('Status check failed', e);
       } finally {
-        setIsChecking(false);
+        // 処理があれば書く
       }
     };
 
@@ -84,7 +80,6 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   };
 
   if (pathname === '/login') return <>{children}</>;
-  if (isChecking) return <div className={styles.loading}>loading...</div>;
 
   return (
     <div className={styles.container}>
