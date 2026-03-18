@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import { supabase } from '@/api/auth';
 import { RouteLoading } from '@/components/appRouter/RouteLoading';
 import { getProfile, updateProfile } from '@/features/dashboard/user/settings/api/profileClient';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
-import { createClient } from '@/lib/supabase/client';
 import { Sidebar } from './components/sidebar/Sidebar';
 import { WelcomeGuideModal } from './components/welcome/WelcomeGuideModal';
 import styles from './DashboardShell.module.css';
@@ -19,14 +19,11 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
   useBodyScrollLock(showGuide);
 
-  const supabase = useMemo(() => createClient(), []);
+  // NOTE: 認証状態は api/auth.ts の supabase と統一する
 
   const isValidSession = (session: any) => {
-    if (!session?.user) return false;
-    if (!session?.access_token) return false;
-    const expiresAtMs =
-      typeof session.expires_at === 'number' ? session.expires_at * 1000 : 0;
-    return expiresAtMs === 0 ? true : expiresAtMs > Date.now();
+    // セッションの有効期限は見ず、「ユーザーとアクセストークンが存在するか」だけで判定する
+    return !!session?.user && !!session?.access_token;
   };
 
   useEffect(() => {
@@ -62,7 +59,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, [router, supabase]);
+  }, [router]);
 
   // ルート遷移時、未ログインなら /login へ飛ばす
   useEffect(() => {

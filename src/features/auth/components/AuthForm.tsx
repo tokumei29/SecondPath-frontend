@@ -1,11 +1,10 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { signIn, signUp } from '@/api/auth';
+import { signIn, signUp, supabase } from '@/api/auth';
 import { Modal } from '@/components/ui/Modal/Modal';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
-import { createClient } from '@/lib/supabase/client';
 import styles from './AuthForm.module.css';
 import { SignupSuccessMessage } from './SignupSuccessMessage';
 
@@ -18,7 +17,6 @@ export const AuthForm = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const router = useRouter();
-  const supabase = useMemo(() => createClient(), []);
 
   useBodyScrollLock(isModalOpen);
 
@@ -28,10 +26,8 @@ export const AuthForm = () => {
     const run = async () => {
       const { data } = await supabase.auth.getSession();
       const session = data.session;
-      const expiresAtMs =
-        typeof session?.expires_at === 'number' ? session.expires_at * 1000 : 0;
-      const isValid =
-        !!session?.user && !!session?.access_token && (expiresAtMs === 0 || expiresAtMs > Date.now());
+      // セッションの有効期限は見ず、「ユーザーとアクセストークンが存在するか」だけで判定する
+      const isValid = !!session?.user && !!session?.access_token;
       if (!isValid) return;
 
       localStorage.setItem('user_uuid', session.user.id);
@@ -40,7 +36,7 @@ export const AuthForm = () => {
       router.refresh();
     };
     run().catch(() => undefined);
-  }, [router, supabase]);
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
