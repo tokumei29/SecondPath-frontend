@@ -15,6 +15,7 @@ export const AuthForm = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [isAuthChecking, setIsAuthChecking] = useState<boolean>(true);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const router = useRouter();
 
@@ -24,22 +25,27 @@ export const AuthForm = () => {
     // localStorage の user_uuid だけでログイン判定すると、
     // セッション切れ時に /login <-> /home のループになるので Supabase のセッションで判定する
     const run = async () => {
-      const { data } = await supabase.auth.getSession();
-      const session = data.session;
-      // セッションの有効期限は見ず、「ユーザーとアクセストークンが存在するか」だけで判定する
-      const isValid = !!session?.user && !!session?.access_token;
-      if (!isValid) return;
+      try {
+        const { data } = await supabase.auth.getSession();
+        const session = data.session;
+        // セッションの有効期限は見ず、「ユーザーとアクセストークンが存在するか」だけで判定する
+        const isValid = !!session?.user && !!session?.access_token;
+        if (!isValid) return;
 
-      localStorage.setItem('user_uuid', session.user.id);
-      document.cookie = `user_uuid=${session.user.id}; path=/; max-age=31536000; SameSite=Lax`;
-      router.replace('/home');
-      router.refresh();
+        localStorage.setItem('user_uuid', session.user.id);
+        document.cookie = `user_uuid=${session.user.id}; path=/; max-age=31536000; SameSite=Lax`;
+        router.replace('/home');
+        router.refresh();
+      } finally {
+        setIsAuthChecking(false);
+      }
     };
-    run().catch(() => undefined);
+    run().catch(() => setIsAuthChecking(false));
   }, [router]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (loading || isAuthChecking) return;
     setLoading(true);
 
     try {
@@ -85,6 +91,7 @@ export const AuthForm = () => {
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
           className={styles.input}
           required
+          disabled={loading || isAuthChecking}
         />
         <input
           type="password"
@@ -93,9 +100,16 @@ export const AuthForm = () => {
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
           className={styles.input}
           required
+          disabled={loading || isAuthChecking}
         />
-        <button type="submit" disabled={loading} className={styles.button}>
-          {loading ? '処理中...' : mode === 'signin' ? 'ログイン' : '登録する'}
+        <button type="submit" disabled={loading || isAuthChecking} className={styles.button}>
+          {isAuthChecking
+            ? '確認中...'
+            : loading
+              ? '処理中...'
+              : mode === 'signin'
+                ? 'ログイン'
+                : '登録する'}
         </button>
       </form>
 
@@ -103,6 +117,7 @@ export const AuthForm = () => {
         type="button"
         onClick={() => setMode(mode === 'signin' ? 'signup' : 'signin')}
         className={styles.switchButton}
+        disabled={loading || isAuthChecking}
       >
         {mode === 'signin'
           ? 'アカウントをお持ちでない方はこちら（サインアップへ）'
@@ -112,6 +127,7 @@ export const AuthForm = () => {
         type="button"
         onClick={() => router.push('/resetPassword')}
         className={styles.switchButton}
+        disabled={loading || isAuthChecking}
       >
         パスワードをお忘れの場合
       </button>
