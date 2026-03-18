@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { supabase } from '@/api/auth';
 import { RouteLoading } from '@/components/appRouter/RouteLoading';
@@ -28,7 +28,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   };
 
   // クライアント側でのマウント完了までは常にローディングを出す
-  useEffect(() => {
+  useLayoutEffect(() => {
     setHasHydrated(true);
   }, []);
 
