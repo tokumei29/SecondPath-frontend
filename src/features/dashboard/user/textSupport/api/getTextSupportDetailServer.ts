@@ -3,7 +3,7 @@ import { serverFetchJson } from '@/api/serverFetch';
 
 export const getTextSupportDetailServer = cache(async (id: string) => {
   try {
-    const json = await serverFetchJson<any>(`/text_supports/${id}`, { revalidateSeconds: 300 });
+    const json = await serverFetchJson<any>(`/text_supports/${id}`);
     if (!json) return null;
     return json.data || json;
   } catch (error) {

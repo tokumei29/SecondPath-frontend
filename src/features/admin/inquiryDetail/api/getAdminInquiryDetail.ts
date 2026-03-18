@@ -24,9 +24,7 @@ export type AdminInquiryDetail = {
 
 export const getAdminInquiryDetail = cache(
   async (id: string | number): Promise<AdminInquiryDetail> => {
-    const json = await serverFetchJson<any>(`/admin/text_supports/${id}`, {
-      revalidateSeconds: 300,
-    });
+    const json = await serverFetchJson<any>(`/admin/text_supports/${id}`);
     // API が { data: { support, messages } } 形式を返す場合にも対応
     if (json && json.support && Array.isArray(json.messages)) return json;
     if (json && json.data) return json.data;

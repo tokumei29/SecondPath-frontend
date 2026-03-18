@@ -8,7 +8,7 @@ export type AdminUserListItem = {
 };
 
 export const getAdminUsersServer = cache(async (): Promise<AdminUserListItem[]> => {
-  const json = await serverFetchJson<any>('/admin/users', { revalidateSeconds: 900 });
+  const json = await serverFetchJson<any>('/admin/users');
   if (Array.isArray(json)) return json;
   if (json && Array.isArray(json.data)) return json.data;
   if (json && Array.isArray(json.users)) return json.users;

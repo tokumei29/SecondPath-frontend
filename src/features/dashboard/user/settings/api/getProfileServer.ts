@@ -9,7 +9,7 @@ const ensureThreeFields = (arr: string[] | null | undefined) => {
 };
 
 export const getProfileServer = cache(async (): Promise<Profile | null> => {
-  const res = await serverFetchJson<any>('/profile', { revalidateSeconds: 600 });
+  const res = await serverFetchJson<any>('/profile');
   if (!res) return null;
   return {
     ...res,

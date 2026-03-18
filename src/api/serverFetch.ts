@@ -8,16 +8,13 @@ if (!API_BASE_URL) {
   console.warn('NEXT_PUBLIC_API_URL is not set. serverFetchJson will fail for absolute URLs.');
 }
 
-type ServerFetchOptions = RequestInit & {
-  revalidateSeconds?: number;
-};
+type ServerFetchOptions = RequestInit;
 
 export async function serverFetchJson<T>(
   path: string,
   options: ServerFetchOptions = {}
 ): Promise<T> {
-  const { revalidateSeconds, ...init } = options;
-
+  const init = options;
   const cookieStore = await cookies();
   const uuid = cookieStore.get('user_uuid')?.value;
 
@@ -37,8 +34,8 @@ export async function serverFetchJson<T>(
   const res = await fetch(url, {
     ...init,
     headers,
-    cache: revalidateSeconds ? 'force-cache' : 'no-store',
-    next: revalidateSeconds ? { revalidate: revalidateSeconds } : undefined,
+    // 初期フェッチ時は常に最新を取りにいく
+    cache: 'no-store',
   });
 
   if (!res.ok) {

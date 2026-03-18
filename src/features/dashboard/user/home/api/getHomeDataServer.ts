@@ -10,10 +10,10 @@ const ensureThreeFields = (arr: string[] | null | undefined) => {
 export const getHomeDataServer = cache(async () => {
   try {
     const [profileJson, diariesJson, supportsJson, recordsJson] = await Promise.all([
-      serverFetchJson<any>('/profile', { revalidateSeconds: 300 }),
-      serverFetchJson<any>('/diaries', { revalidateSeconds: 60 }),
-      serverFetchJson<any>('/text_supports', { revalidateSeconds: 30 }),
-      serverFetchJson<any>('/user_records', { revalidateSeconds: 30 }),
+      serverFetchJson<any>('/profile'),
+      serverFetchJson<any>('/diaries'),
+      serverFetchJson<any>('/text_supports'),
+      serverFetchJson<any>('/user_records'),
     ]);
 
     const profile = profileJson

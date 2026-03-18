@@ -7,7 +7,5 @@ export type AdminInquiryStats = {
 };
 
 export const getAdminInquiryStats = cache(async (): Promise<AdminInquiryStats> => {
-  return await serverFetchJson<AdminInquiryStats>('/admin/text_supports/stats', {
-    revalidateSeconds: 120,
-  });
+  return await serverFetchJson<AdminInquiryStats>('/admin/text_supports/stats');
 });

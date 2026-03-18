@@ -13,7 +13,7 @@ export type AdminTextSupportListItem = {
 };
 
 export const getAdminTextSupports = cache(async (): Promise<AdminTextSupportListItem[]> => {
-  const json = await serverFetchJson<any>('/admin/text_supports', { revalidateSeconds: 900 });
+  const json = await serverFetchJson<any>('/admin/text_supports');
   // API が { data: [...] } 形式を返す場合にも対応
   if (Array.isArray(json)) return json;
   if (json && Array.isArray(json.data)) return json.data;

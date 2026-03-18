@@ -4,7 +4,7 @@ import type { CounselingRecord } from '@/features/dashboard/user/counselingRecor
 
 export const getMyRecordsServer = cache(async (): Promise<CounselingRecord[]> => {
   try {
-    const json = await serverFetchJson<any>('/user_records', { revalidateSeconds: 30 });
+    const json = await serverFetchJson<any>('/user_records');
     if (Array.isArray(json)) return json;
     if (json && Array.isArray(json.data)) return json.data;
     return [];
