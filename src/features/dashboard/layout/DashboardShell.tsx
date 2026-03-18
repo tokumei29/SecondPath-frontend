@@ -15,6 +15,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const [isChecking, setIsChecking] = useState(true);
   const [isAuthed, setIsAuthed] = useState<boolean | null>(null); // null: unknown
   const [hasHydrated, setHasHydrated] = useState(false);
+  const [isRoutePending, setIsRoutePending] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -31,6 +32,40 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   useLayoutEffect(() => {
     setHasHydrated(true);
   }, []);
+
+  // クライアント遷移（Linkクリック）中もスピナーを回す
+  useEffect(() => {
+    setIsRoutePending(false);
+  }, [pathname]);
+
+  const handleClickCapture = (e: React.MouseEvent) => {
+    if (isChecking) return;
+    if (isRoutePending) return;
+
+    const target = e.target as Element | null;
+    const anchor = target?.closest?.('a') as HTMLAnchorElement | null;
+    if (!anchor) return;
+
+    // 修飾キーや新規タブは除外
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    if (anchor.target && anchor.target !== '_self') return;
+    if (anchor.hasAttribute('download')) return;
+
+    const href = anchor.getAttribute('href');
+    if (!href) return;
+    if (href.startsWith('#')) return;
+    if (href.startsWith('mailto:') || href.startsWith('tel:')) return;
+
+    try {
+      const url = new URL(anchor.href, window.location.href);
+      if (url.origin !== window.location.origin) return;
+      if (url.pathname === window.location.pathname && url.search === window.location.search)
+        return;
+      setIsRoutePending(true);
+    } catch {
+      // ignore invalid URLs
+    }
+  };
 
   useEffect(() => {
     // 1. 初回に一度だけセッションを取得し、その後は auth state を購読
@@ -135,10 +170,10 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   };
 
   if (pathname === '/login') return <>{children}</>;
-  if (!hasHydrated || isChecking) return <RouteLoading />;
+  if (!hasHydrated || isChecking || isRoutePending) return <RouteLoading />;
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} onClickCapture={handleClickCapture}>
       <Sidebar />
       <main className={styles.mainContent}>{children}</main>
       <WelcomeGuideModal isOpen={showGuide} onClose={handleCloseGuide} />
