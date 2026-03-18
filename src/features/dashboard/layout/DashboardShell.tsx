@@ -14,6 +14,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const [showGuide, setShowGuide] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
   const [isAuthed, setIsAuthed] = useState<boolean | null>(null); // null: unknown
+  const [hasHydrated, setHasHydrated] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -25,6 +26,11 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     // セッションの有効期限は見ず、「ユーザーとアクセストークンが存在するか」だけで判定する
     return !!session?.user && !!session?.access_token;
   };
+
+  // クライアント側でのマウント完了までは常にローディングを出す
+  useEffect(() => {
+    setHasHydrated(true);
+  }, []);
 
   useEffect(() => {
     // 1. 初回に一度だけセッションを取得し、その後は auth state を購読
@@ -129,7 +135,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   };
 
   if (pathname === '/login') return <>{children}</>;
-  if (isChecking) return <RouteLoading />;
+  if (!hasHydrated || isChecking) return <RouteLoading />;
 
   return (
     <div className={styles.container}>
