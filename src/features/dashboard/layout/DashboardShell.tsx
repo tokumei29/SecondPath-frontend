@@ -92,7 +92,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     if (!isRoutePending) return;
     const timer = setTimeout(() => {
       setIsRoutePending(false);
-    }, 600);
+    }, 1000);
     return () => clearTimeout(timer);
   }, [isRoutePending]);
 
