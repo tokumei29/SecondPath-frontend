@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { getCurrentUser } from '@/api/auth';
 import { RouteLoading } from '@/components/appRouter/RouteLoading';
@@ -14,6 +14,7 @@ import styles from './DashboardShell.module.css';
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const [showGuide, setShowGuide] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
+  const [isAuthed, setIsAuthed] = useState<boolean | null>(null); // null: unknown
   const pathname = usePathname();
   const router = useRouter();
 
@@ -22,57 +23,96 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const supabase = useMemo(() => createClient(), []);
 
   useEffect(() => {
-    // 1. 認証状態の変化を監視
+    // 1. 初回に一度だけセッションを取得し、その後は auth state を購読
+    let mounted = true;
+
+    (async () => {
+      try {
+        const { data } = await supabase.auth.getSession();
+        if (!mounted) return;
+        setIsAuthed(!!data.session?.user);
+      } catch (e) {
+        console.error('Failed to read session', e);
+        if (!mounted) return;
+        setIsAuthed(false);
+      }
+    })();
+
+    // 2. 認証状態の変化を監視
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
-        // ユーザーが切り替わったら、古いキャッシュやStateを捨てるためにリロード
-        // これで「Aのアカウントの画面でBのデータを送る」隙をなくす
-        router.refresh();
-      }
+      if (!mounted) return;
+      setIsAuthed(!!session?.user);
+
+      // ユーザーが切り替わったら、古いキャッシュやStateを捨てるためにリロード
+      // これで「Aのアカウントの画面でBのデータを送る」隙をなくす
+      if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') router.refresh();
     });
 
     // クリーンアップ
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, [router, supabase]);
 
+  // ルート遷移時、未ログインなら /login へ飛ばす
+  useEffect(() => {
+    if (pathname === '/login') return;
+    if (isAuthed === false) {
+      router.replace('/login');
+    }
+  }, [isAuthed, pathname, router]);
+
+  // 初期ロードおよびログイン状態が確定するまでスピナー表示
   useEffect(() => {
     if (pathname === '/login') {
       setIsChecking(false);
       return;
     }
-
-    const checkUserStatus = async () => {
-      // 認証・プロフィール確認中は常にローディングスピナを表示
+    if (isAuthed === null) {
       setIsChecking(true);
+      return;
+    }
+    // 未ログインは redirect させるのでスピナー継続（瞬間的な画面露出を避ける）
+    if (isAuthed === false) {
+      setIsChecking(true);
+      return;
+    }
+    // ログイン済み
+    setIsChecking(false);
+  }, [isAuthed, pathname]);
+
+  // Welcome guide 用にプロフィールをチェック（ログイン済み時のみ）
+  const hasCheckedGuideRef = useRef(false);
+  useEffect(() => {
+    if (pathname === '/login') return;
+    if (isAuthed !== true) return;
+    if (pathname === '/settings') return;
+    if (hasCheckedGuideRef.current) return;
+
+    const run = async () => {
       try {
-        const user = await getCurrentUser();
-        if (!user) {
-          router.replace('/login');
-          return;
-        }
-
         const profileData = await getProfile();
-
-        if (pathname === '/settings' || profileData?.has_seen_guide) {
-          return;
-        }
-
-        if (!profileData.name || profileData.name.trim() === '') {
+        if (profileData?.has_seen_guide) return;
+        if (!profileData?.name || profileData.name.trim() === '') {
           setShowGuide(true);
-        } else {
-          localStorage.setItem('has_seen_welcome_guide', 'true');
         }
       } catch (e) {
         console.error('Status check failed', e);
       } finally {
-        setIsChecking(false);
+        hasCheckedGuideRef.current = true;
       }
     };
 
-    checkUserStatus();
-  }, [pathname, router]);
+    run();
+  }, [isAuthed, pathname]);
+
+  useEffect(() => {
+    // ログインユーザーが変わったら guide 判定をやり直す
+    hasCheckedGuideRef.current = false;
+  }, [isAuthed]);
 
   const handleCloseGuide = async () => {
     setShowGuide(false);
