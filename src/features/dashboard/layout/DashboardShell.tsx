@@ -3,10 +3,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { getCurrentUser } from '@/api/auth';
+import { RouteLoading } from '@/components/appRouter/RouteLoading';
 import { getProfile, updateProfile } from '@/features/dashboard/user/settings/api/profileClient';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import { createClient } from '@/lib/supabase/client';
-import { RouteLoading } from '@/components/appRouter/RouteLoading';
 import { Sidebar } from './components/sidebar/Sidebar';
 import { WelcomeGuideModal } from './components/welcome/WelcomeGuideModal';
 import styles from './DashboardShell.module.css';
