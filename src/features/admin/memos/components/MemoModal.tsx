@@ -1,6 +1,7 @@
 'use client';
 
 import type { MemoResponse } from '@/features/admin/memos/api/memosClient';
+import { formatDateForInput } from '@/lib/utils';
 import styles from './MemoModal.module.css';
 
 type MemoModalProps = {
@@ -49,7 +50,7 @@ export default function MemoModal({
               type="date"
               className={styles.input}
               readOnly={isReadOnly}
-              value={currentMemo?.date || ''}
+              value={formatDateForInput(currentMemo?.date)}
               onChange={(e) => setCurrentMemo({ ...currentMemo!, date: e.target.value })}
             />
           </div>

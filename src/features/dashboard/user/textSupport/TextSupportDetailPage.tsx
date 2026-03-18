@@ -6,6 +6,11 @@ type Props = {
 };
 
 export async function TextSupportDetailPage({ params }: Props) {
-  const detail = await getTextSupportDetailServer(params.id);
-  return <TextSupportDetailPageClient params={Promise.resolve(params)} initialDetail={detail} />;
+  // IDを await で取得
+  const { id } = await params;
+
+  // 正しいIDでデータを取得
+  const detail = await getTextSupportDetailServer(id);
+
+  return <TextSupportDetailPageClient params={Promise.resolve({ id })} initialDetail={detail} />;
 }
