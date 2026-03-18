@@ -47,12 +47,35 @@ export function TextSupportDetailPageClient({ params, initialDetail }: Props) {
     e.preventDefault();
     if (!replyText.trim() || isSending) return;
 
+    const prevDetail = detail;
+    const messageToSend = replyText;
+
+    // 楽観的にメッセージを追加
+    const tempId = `temp-${Date.now()}`;
+    const optimisticMessage = {
+      id: tempId,
+      sender_type: 'user',
+      message: messageToSend,
+      created_at: new Date().toISOString(),
+    };
+    setDetail((prev: any) =>
+      prev
+        ? {
+            ...prev,
+            support_messages: [...(prev.support_messages ?? []), optimisticMessage],
+          }
+        : prev
+    );
+    setReplyText('');
+
     setIsSending(true);
     try {
-      await postSupportMessage(id, replyText);
+      await postSupportMessage(id, messageToSend);
       await fetchDetail();
-      setReplyText('');
     } catch {
+      // 失敗したら元の状態にロールバック
+      setDetail(prevDetail);
+      setReplyText(messageToSend);
       alert('送信に失敗しました');
     } finally {
       setIsSending(false);

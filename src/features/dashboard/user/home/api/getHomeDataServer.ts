@@ -1,5 +1,5 @@
 import { cache } from 'react';
-import apiClient from '@/api/client';
+import { serverFetchJson } from '@/api/serverFetch';
 
 const ensureThreeFields = (arr: string[] | null | undefined) => {
   const newArr = arr ? [...arr] : [];
@@ -9,17 +9,12 @@ const ensureThreeFields = (arr: string[] | null | undefined) => {
 
 export const getHomeDataServer = cache(async () => {
   try {
-    const [profileRes, diariesRes, supportsRes, recordsRes] = await Promise.all([
-      apiClient.get('/profile'),
-      apiClient.get('/diaries'),
-      apiClient.get('/text_supports'),
-      apiClient.get('/user_records'),
+    const [profileJson, diariesJson, supportsJson, recordsJson] = await Promise.all([
+      serverFetchJson<any>('/profile', { revalidateSeconds: 300 }),
+      serverFetchJson<any>('/diaries', { revalidateSeconds: 60 }),
+      serverFetchJson<any>('/text_supports', { revalidateSeconds: 30 }),
+      serverFetchJson<any>('/user_records', { revalidateSeconds: 30 }),
     ]);
-
-    const profileJson = profileRes.data;
-    const diariesJson = diariesRes.data;
-    const supportsJson = supportsRes.data;
-    const recordsJson = recordsRes.data;
 
     const profile = profileJson
       ? {

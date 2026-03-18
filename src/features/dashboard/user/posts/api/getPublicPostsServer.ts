@@ -1,9 +1,8 @@
 import { cache } from 'react';
-import apiClient from '@/api/client';
+import { serverFetchJson } from '@/api/serverFetch';
 
 export const getPublicPostsServer = cache(async () => {
-  const response = await apiClient.get('/posts');
-  const json = response.data;
+  const json = await serverFetchJson<any>('/posts', { revalidateSeconds: 300 });
   if (Array.isArray(json)) return json;
   if (json && Array.isArray(json.data)) return json.data;
   if (json && Array.isArray(json.posts)) return json.posts;

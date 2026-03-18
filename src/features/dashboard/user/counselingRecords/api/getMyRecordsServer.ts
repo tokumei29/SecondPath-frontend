@@ -1,11 +1,10 @@
 import { cache } from 'react';
-import apiClient from '@/api/client';
+import { serverFetchJson } from '@/api/serverFetch';
 import type { CounselingRecord } from '@/features/dashboard/user/counselingRecords/api/userRecordsClient';
 
 export const getMyRecordsServer = cache(async (): Promise<CounselingRecord[]> => {
   try {
-    const response = await apiClient.get('/user_records');
-    const json = response.data;
+    const json = await serverFetchJson<any>('/user_records', { revalidateSeconds: 30 });
     if (Array.isArray(json)) return json;
     if (json && Array.isArray(json.data)) return json.data;
     return [];

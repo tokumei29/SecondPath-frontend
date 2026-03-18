@@ -1,7 +1,8 @@
 import { cache } from 'react';
-import apiClient from '@/api/client';
+import { serverFetchJson } from '@/api/serverFetch';
 
 export const getAdminUserActivityServer = cache(async (userId: string) => {
-  const response = await apiClient.get(`/admin/users/${userId}/activity`);
-  return response.data;
+  return await serverFetchJson<any>(`/admin/users/${userId}/activity`, {
+    revalidateSeconds: 300,
+  });
 });

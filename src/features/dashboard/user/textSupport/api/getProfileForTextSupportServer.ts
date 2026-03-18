@@ -1,10 +1,9 @@
 import { cache } from 'react';
-import apiClient from '@/api/client';
+import { serverFetchJson } from '@/api/serverFetch';
 import { Profile } from '@/features/types/profile';
 
 export const getProfileForTextSupportServer = cache(async (): Promise<Profile | null> => {
-  const response = await apiClient.get('/profile');
-  const res = response.data;
+  const res = await serverFetchJson<Profile | null>('/profile', { revalidateSeconds: 600 });
   if (!res) return null;
-  return res as Profile;
+  return res;
 });

@@ -1,5 +1,5 @@
 import { cache } from 'react';
-import apiClient from '@/api/client';
+import { serverFetchJson } from '@/api/serverFetch';
 import { Profile } from '@/features/types/profile';
 
 const ensureThreeFields = (arr: string[] | null | undefined) => {
@@ -9,8 +9,7 @@ const ensureThreeFields = (arr: string[] | null | undefined) => {
 };
 
 export const getProfileServer = cache(async (): Promise<Profile | null> => {
-  const response = await apiClient.get('/profile');
-  const res = response.data;
+  const res = await serverFetchJson<any>('/profile', { revalidateSeconds: 600 });
   if (!res) return null;
   return {
     ...res,

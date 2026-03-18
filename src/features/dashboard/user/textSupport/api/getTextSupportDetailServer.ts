@@ -1,14 +1,9 @@
 import { cache } from 'react';
-import apiClient from '@/api/client';
+import { serverFetchJson } from '@/api/serverFetch';
 
 export const getTextSupportDetailServer = cache(async (id: string) => {
   try {
-    const response = await apiClient.get(`/text_supports/${id}`);
-    const json = response.data;
-
-    // Railsが show で render json: @text_support と直接返しているなら
-    // そのまま json を返せばOK。
-    // json.data が undefined の場合に備えて安全に書く。
+    const json = await serverFetchJson<any>(`/text_supports/${id}`, { revalidateSeconds: 300 });
     if (!json) return null;
     return json.data || json;
   } catch (error) {

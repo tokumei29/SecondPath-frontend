@@ -1,5 +1,5 @@
 import { cache } from 'react';
-import apiClient from '@/api/client';
+import { serverFetchJson } from '@/api/serverFetch';
 
 export type AdminInquiryStats = {
   unresolved: number;
@@ -7,6 +7,7 @@ export type AdminInquiryStats = {
 };
 
 export const getAdminInquiryStats = cache(async (): Promise<AdminInquiryStats> => {
-  const response = await apiClient.get('/admin/text_supports/stats');
-  return response.data as AdminInquiryStats;
+  return await serverFetchJson<AdminInquiryStats>('/admin/text_supports/stats', {
+    revalidateSeconds: 120,
+  });
 });

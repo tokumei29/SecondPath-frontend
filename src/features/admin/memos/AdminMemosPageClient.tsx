@@ -70,27 +70,52 @@ export function AdminMemosPageClient({ initialMemos }: { initialMemos: MemoRespo
         content: currentMemo.content,
       },
     };
+    const prevMemos = memos;
     try {
       if (isEditing && currentMemo.id) {
+        // 楽観的にローカル一覧を更新
+        setMemos((prev) =>
+          prev.map((m) => (m.id === currentMemo.id ? { ...m, ...payload.memo } : m))
+        );
         await updateAdminMemo(currentMemo.id, payload);
       } else {
-        await createAdminMemo(payload);
+        // 一時IDを付けて楽観的に追加
+        const tempId = `temp-${Date.now()}`;
+        const optimistic = {
+          id: tempId,
+          created_at: currentMemo.date,
+          updated_at: currentMemo.date,
+          ...payload.memo,
+        } as MemoResponse;
+        setMemos((prev) => [optimistic, ...prev]);
+
+        const created = await createAdminMemo(payload);
+        // 実IDで置き換え
+        setMemos((prev) => prev.map((m) => (m.id === tempId ? created : m)));
       }
       setIsModalOpen(false);
+      // 裏で最新を同期（失敗しても UI は保ったまま）
       fetchMemos(searchQuery);
     } catch (error) {
       alert('保存に失敗しました。');
+      setMemos(prevMemos);
     }
   };
 
   const handleDelete = async (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
     if (!confirm('削除しますか？')) return;
+    const prevMemos = memos;
     try {
+      // 楽観的に削除
+      setMemos((prev) => prev.filter((m) => m.id !== id));
       await deleteAdminMemo(id);
+      // 裏で同期
       fetchMemos(searchQuery);
     } catch (error) {
       alert('失敗しました。');
+      // 元に戻す
+      setMemos(prevMemos);
     }
   };
 

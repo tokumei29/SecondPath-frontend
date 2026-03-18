@@ -1,5 +1,5 @@
 import { cache } from 'react';
-import apiClient from '@/api/client';
+import { serverFetchJson } from '@/api/serverFetch';
 
 export type AdminInquiryMessage = {
   id: string | number;
@@ -24,8 +24,9 @@ export type AdminInquiryDetail = {
 
 export const getAdminInquiryDetail = cache(
   async (id: string | number): Promise<AdminInquiryDetail> => {
-    const response = await apiClient.get(`/admin/text_supports/${id}`);
-    const json = response.data;
+    const json = await serverFetchJson<any>(`/admin/text_supports/${id}`, {
+      revalidateSeconds: 300,
+    });
     // API が { data: { support, messages } } 形式を返す場合にも対応
     if (json && json.support && Array.isArray(json.messages)) return json;
     if (json && json.data) return json.data;
