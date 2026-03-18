@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { signIn, signUp } from '@/api/auth';
+import { getCurrentUser, signIn, signUp } from '@/api/auth';
 import { Modal } from '@/components/ui/Modal/Modal';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import styles from './AuthForm.module.css';
@@ -21,10 +21,17 @@ export const AuthForm = () => {
   useBodyScrollLock(isModalOpen);
 
   useEffect(() => {
-    const userId = localStorage.getItem('user_uuid');
-    if (userId) {
+    // localStorage の user_uuid だけでログイン判定すると、
+    // セッション切れ時に /login <-> /home のループになるので Supabase のセッションで判定する
+    const run = async () => {
+      const user = await getCurrentUser();
+      if (!user) return;
+      localStorage.setItem('user_uuid', user.id);
+      document.cookie = `user_uuid=${user.id}; path=/; max-age=31536000; SameSite=Lax`;
       router.replace('/home');
-    }
+      router.refresh();
+    };
+    run().catch(() => undefined);
   }, [router]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
