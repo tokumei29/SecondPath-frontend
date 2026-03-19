@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { use, useCallback, useEffect, useState } from 'react';
 import {
   createUserRecord,
   deleteUserRecord,
@@ -13,11 +13,12 @@ import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import styles from './AdminUserRecordsPage.module.css';
 
 type Props = {
-  userId: string;
+  params: Promise<{ id: string }>;
   initialData: any;
 };
 
-export const AdminUserRecordsClient = ({ userId, initialData }: Props) => {
+export const AdminUserRecordsClient = ({ params, initialData }: Props) => {
+  const { id: userId } = use(params);
   const [data, setData] = useState<any>(initialData);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState<any>(null);
