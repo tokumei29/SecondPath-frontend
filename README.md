@@ -17,6 +17,7 @@
   - **Server (RSC)**: `fetch` ラッパー（`src/api/serverFetch.ts`）
 - **Styling**: CSS Modules（`*.module.css`）
 - **品質管理**: ESLint / Prettier / Stylelint
+- **テスト**: Vitest（単体） / Playwright（結合・E2E）
 
 ### アーキテクチャ（このリポジトリで意識していること）
 
@@ -77,7 +78,27 @@ docker compose up
 
 - **アクセス**: `http://localhost:3001`
 
+#### テスト
 
+- **単体（Vitest）**: 日報作成画面の入力・保存を例に `src/**/*.test.tsx` で検証
+
+```bash
+npm run test
+```
+
+- **結合（Playwright）**: ブラウザで `/diaries` の認証ガードと、任意でログイン後フローを検証
+
+初回のみ Chromium を `node_modules` 配下に取得（`PLAYWRIGHT_BROWSERS_PATH=0` でパスを固定）:
+
+```bash
+npm run playwright:install
+```
+
+```bash
+npm run test:e2e
+```
+
+ログインまで含む E2E は、リポジトリ直下の **`.env.e2e`** に `E2E_USER_EMAIL` / `E2E_USER_PASSWORD` を書いて実行します（`.env*` は git 対象外）。未設定のときはログイン込みテストは skip されます。雛形は `.env.e2e.example` を参照してください。
 
 ### 設計判断（なぜこうしているか）
 

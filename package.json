@@ -11,7 +11,12 @@
     "lint:style": "stylelint 'src/**/*.css' --fix",
     "format": "prettier --write 'src/**/*.{ts,tsx,css,md}'",
     "fix": "npm run lint:eslint && npm run lint:style && npm run format",
-    "check": "npm run lint && npm run lint:style && npm run format -- --check"
+    "check": "npm run lint && npm run lint:style && npm run format -- --check",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "playwright:install": "PLAYWRIGHT_BROWSERS_PATH=0 playwright install chromium",
+    "test:e2e": "PLAYWRIGHT_BROWSERS_PATH=0 playwright test",
+    "test:e2e:ui": "PLAYWRIGHT_BROWSERS_PATH=0 playwright test --ui"
   },
   "dependencies": {
     "@supabase/ssr": "^0.9.0",
@@ -26,15 +31,22 @@
     "swr": "^2.4.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
     "@tailwindcss/postcss": "^4",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^4.7.0",
+    "dotenv": "^16.6.1",
     "eslint": "^8.57.1",
     "eslint-config-next": "14.2.15",
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-typescript": "^3.6.3",
     "eslint-plugin-import": "^2.32.0",
+    "jsdom": "^26.1.0",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.8",
     "stylelint": "^16.10.0",
@@ -42,6 +54,7 @@
     "stylelint-config-standard": "^36.0.1",
     "stylelint-order": "^6.0.4",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3.2.4"
   }
 }
