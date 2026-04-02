@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SecondPath Frontend
 
-## Getting Started
+**Next.js 16 (App Router) × React 19 × TypeScript** で構築したフロントエンドです。  
+ユーザー向けダッシュボードと管理者向けダッシュボードを持ち、API サーバーと連携して動作します。
 
-First, run the development server:
+## 概要
+
+- **ユーザー向け機能（Dashboard）**: ホーム、設定、記事、テキスト相談、日報、各種アセスメント（PHQ-9 / レジリエンス / 思考の癖）など
+- **管理者向け機能（Admin）**: ユーザー一覧・詳細、カルテ（記録）管理、問い合わせ（テキスト相談）管理、メモ管理、投稿管理など
+
+## 技術スタック
+
+- **Frontend**: Next.js `16.1.6`（App Router）, React `19.2.3`, TypeScript
+- **Auth**: Supabase（`@supabase/supabase-js`, `@supabase/ssr`）
+- **API 通信**:
+  - **Client**: Axios（`src/api/client.ts`）
+  - **Server (RSC)**: `fetch` ラッパー（`src/api/serverFetch.ts`）
+- **Styling**: CSS Modules（`*.module.css`）
+- **品質管理**: ESLint / Prettier / Stylelint
+
+## アーキテクチャ（このリポジトリで意識していること）
+
+- **Feature ベース構成**: 画面・API・コンポーネントを `src/features/**` に集約
+- **Server / Client 分離**:
+  - 初期表示データは **Server Component** で `await` して取得
+  - インタラクションは **Client Component** で扱う（フォーム送信、モーダル、楽観的更新など）
+- **UX（体感速度）**:
+  - ルート遷移・RSC 待ちで **全画面スピナ**（`RouteLoading` / `loading.tsx`）を表示
+  - 一部操作は **Optimistic UI**（例: 管理メモ、テキスト相談送信）
+- **ユーザー識別**:
+  - Supabase セッションに連動して `user_uuid` Cookie を更新し、Server 側の API でもユーザー特定できるようにしています
+
+## ディレクトリ構成（抜粋）
+
+```txt
+src/
+  app/                       # Next.js App Router（route wrapper）
+  features/                  # feature 単位の実装（Page / Client / api / components）
+  api/                       # 共通 API（axios client / server fetch）
+  components/                # 共有 UI（RouteLoading/Error/NotFound 等）
+```
+
+## 開発手順
+
+### 前提
+
+- Node.js（推奨: Node 20+）
+
+### インストール
+
+```bash
+npm install
+```
+
+### 開発サーバー起動
+
+このプロジェクトは **`3001`** で起動します。
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### ビルド
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+## リンク
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Live Demo**: 
+ユーザー画面：https://secondpath-app.jp/
+管理画面：https://secondpath-app.jp/adminLogin
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
