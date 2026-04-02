@@ -4,6 +4,7 @@ services:
       context: .
       args:
         # Macにある環境変数を、Dockerビルドの中に流し込む設定
+        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
         - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
         - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
     ports:

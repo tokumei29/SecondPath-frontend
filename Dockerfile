@@ -11,8 +11,10 @@ RUN npm ci
 # 3. 全てのソースコードをコピー
 COPY . .
 
+ARG NEXT_PUBLIC_API_URL
 ARG NEXT_PUBLIC_SUPABASE_URL
 ARG NEXT_PUBLIC_SUPABASE_ANON_KEY
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL
 ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY
 
@@ -28,5 +30,5 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/public ./public
 
-EXPOSE 3000
+EXPOSE 3001
 CMD ["npm", "start"]
