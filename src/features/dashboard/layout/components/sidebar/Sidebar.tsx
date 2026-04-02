@@ -145,7 +145,8 @@ export const Sidebar = () => {
             href={getPath('/textSupport/new')}
             active={pathname.includes('/textSupport/new')}
             icon="💬"
-            label="カウンセラーにテキストで相談する（サービス期間中無制限無料）"
+            // label="カウンセラーにテキストで相談する（サービス期間中無制限無料）"
+            label="カウンセラーにテキストで相談する"
           />
           <SidebarItem
             href={getPath('/textSupport')}

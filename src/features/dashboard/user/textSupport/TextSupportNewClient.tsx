@@ -59,7 +59,7 @@ export function TextSupportNewPageClient({ initialProfile }: Props) {
     <div className={styles.container}>
       <header>
         <h1>💬 カウンセラー相談</h1>
-        <p>サービス期間中は、テキストでの相談が無料・無制限でご利用いただけます。</p>
+        {/* <p>サービス期間中は、テキストでの相談が無料・無制限でご利用いただけます。</p> */}
         <p>悩みや困っていることだけでなくサービス内容のお問い合わせもこちらで承っております。</p>
         <br />
         <p>
