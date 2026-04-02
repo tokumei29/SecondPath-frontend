@@ -1,4 +1,4 @@
-# --- 共通の土台 (base) ---
+# --- 共通の土台 ---
 FROM node:20-slim AS base
 WORKDIR /app
 
@@ -11,13 +11,12 @@ RUN npm ci
 # 3. 全てのソースコードをコピー
 COPY . .
 
-# ★ 解決の鍵：ビルド前に環境変数をセット
 ARG NEXT_PUBLIC_SUPABASE_URL
 ARG NEXT_PUBLIC_SUPABASE_ANON_KEY
 ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL
 ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-# 4. ここでビルド（これで "next: not found" は出ません！）
+# 4. ここでビルド
 RUN npm run build
 
 # --- 本番実行用ステージ (runner) ---

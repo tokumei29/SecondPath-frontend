@@ -3,7 +3,7 @@ export type PHQ9Severity = 'none' | 'mild' | 'moderate' | 'moderately_severe' | 
 export type PHQ9Result = {
   totalScore: number;
   severity: PHQ9Severity;
-  suicidalIdeation: boolean; // 第9項目（死にたいと思う等）のチェック
+  suicidalIdeation: boolean; // 第9項目のチェック
   recommendation: string;
 };
 
