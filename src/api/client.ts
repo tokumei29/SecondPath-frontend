@@ -3,33 +3,36 @@ import { getUserUuidForHeader } from '@/api/userUuid';
 
 const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
-  timeout: 5000,
+  timeout: 10000, // 5s -> 10s
 });
 
-// リトライの設定
-const MAX_RETRIES = 3;
-const RETRY_DELAY = 1000;
+// GETのみ・ネットワーク系/5xxのみリトライ
+const MAX_RETRIES = 1; // 3 -> 1
+const BASE_DELAY = 500;
 
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const { config } = error;
+    const config = error?.config;
+    if (!config) return Promise.reject(error);
 
-    // もし config がない場合や、すでに最大リトライ数に達している場合はエラーを返す
-    if (!config || config._retryCount >= MAX_RETRIES) {
+    config._retryCount = config._retryCount ?? 0;
+
+    const method = (config.method || 'get').toLowerCase();
+    const status = error?.response?.status;
+    const isNetworkError = !error.response; // timeout, DNS, reset, etc.
+    const isRetriableStatus = status >= 500 || status === 429;
+    const shouldRetry = method === 'get' && (isNetworkError || isRetriableStatus);
+
+    if (!shouldRetry || config._retryCount >= MAX_RETRIES) {
       return Promise.reject(error);
     }
 
-    // リトライ回数をカウント（独自プロパティ）
-    config._retryCount = config._retryCount || 0;
     config._retryCount += 1;
+    const delay = BASE_DELAY * Math.pow(2, config._retryCount - 1); // 500ms, 1000ms...
 
-    console.warn(`再試行中... (${config._retryCount}/${MAX_RETRIES}): ${config.url}`);
-
-    // 少し待機してから再実行
-    await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY));
-
-    return apiClient(config); // 同じ設定で再度リクエストを投げる
+    await new Promise((resolve) => setTimeout(resolve, delay));
+    return apiClient(config);
   }
 );
 
