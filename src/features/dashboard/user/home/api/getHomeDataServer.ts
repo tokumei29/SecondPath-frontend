@@ -46,7 +46,8 @@ export const getHomeDataServer = cache(async () => {
         ? recordsJson.data
         : [];
 
-    const todayStr = new Date().toLocaleDateString('sv-SE');
+    // 日本時間（JST）の「今日」の日付（YYYY-MM-DD）で当日判定する
+    const todayStr = new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Tokyo' });
     const hasTodayAdvice = records.some(
       (record: any) => record.date && record.date.includes(todayStr)
     );
