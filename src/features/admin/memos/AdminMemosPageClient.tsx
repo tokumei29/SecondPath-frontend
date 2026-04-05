@@ -10,6 +10,7 @@ import {
 } from '@/features/admin/memos/api/memosClient';
 import MemoModal from '@/features/admin/memos/components/MemoModal';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
+import { toJapanCalendarDateString } from '@/lib/utils';
 import styles from './AdminMemosPage.module.css';
 
 export function AdminMemosPageClient({ initialMemos }: { initialMemos: MemoResponse[] }) {
@@ -52,7 +53,11 @@ export function AdminMemosPageClient({ initialMemos }: { initialMemos: MemoRespo
     mode: 'edit' | 'view' | 'create' = 'view'
   ) => {
     setCurrentMemo(
-      memo || { user_name: '', date: new Date().toISOString().split('T')[0], content: '' }
+      memo || {
+        user_name: '',
+        date: toJapanCalendarDateString(new Date().toISOString()),
+        content: '',
+      }
     );
     setIsEditing(mode === 'edit');
     setIsReadOnly(mode === 'view' && memo !== null);
@@ -163,7 +168,7 @@ export function AdminMemosPageClient({ initialMemos }: { initialMemos: MemoRespo
           <tbody>
             {memos.map((memo) => (
               <tr key={memo.id} className={styles.tr} onClick={() => handleOpenModal(memo, 'view')}>
-                <td className={styles.td}>{memo.date}</td>
+                <td className={styles.td}>{toJapanCalendarDateString(memo.date)}</td>
                 <td className={`${styles.td} ${styles.userName}`}>{memo.user_name}</td>
                 <td className={`${styles.td} ${styles.contentSummary}`}>{memo.content}</td>
                 <td className={`${styles.td} ${styles.actions}`}>
