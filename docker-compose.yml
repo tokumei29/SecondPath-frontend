@@ -11,6 +11,6 @@ services:
       - "3001:3001"
     # 実行時にも必要なので env_file を指定
     env_file:
-      - .env.local
+      - .env
     environment:
       - HOST=0.0.0.0

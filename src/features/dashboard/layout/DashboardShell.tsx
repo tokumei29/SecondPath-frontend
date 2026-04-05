@@ -2,7 +2,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { supabase } from '@/api/auth';
+import { getSupabase } from '@/api/auth';
 import { RouteLoading } from '@/components/appRouter/RouteLoading';
 import { getProfile, updateProfile } from '@/features/dashboard/user/settings/api/profileClient';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
@@ -21,7 +21,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
   useBodyScrollLock(showGuide);
 
-  // NOTE: 認証状態は api/auth.ts の supabase と統一する
+  // NOTE: 認証状態は api/auth.ts の getSupabase() と統一する
 
   const isValidSession = (session: any) => {
     // セッションの有効期限は見ず、「ユーザーとアクセストークンが存在するか」だけで判定する
@@ -73,7 +73,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
     (async () => {
       try {
-        const { data } = await supabase.auth.getSession();
+        const { data } = await getSupabase().auth.getSession();
         if (!mounted) return;
         const session = data.session;
         const ok = isValidSession(session);
@@ -96,7 +96,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     // 2. 認証状態の変化を監視
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
+    } = getSupabase().auth.onAuthStateChange((event, session) => {
       if (!mounted) return;
       const ok = isValidSession(session);
       setIsAuthed(ok);

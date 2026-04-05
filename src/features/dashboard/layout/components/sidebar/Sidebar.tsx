@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { supabase } from '@/api/auth';
+import { getSupabase } from '@/api/auth';
 import { getTextSupports } from '@/features/dashboard/user/textSupport/api/textSupportClient';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import { DeleteAccountModal } from './DeleteAccountModal';
@@ -44,7 +44,7 @@ export const Sidebar = () => {
   const handleLogout = async () => {
     if (!window.confirm('ログアウトしますか？')) return;
     try {
-      await supabase.auth.signOut();
+      await getSupabase().auth.signOut();
       Object.keys(localStorage).forEach((key) => {
         if (!key.startsWith('read_support_')) {
           localStorage.removeItem(key);

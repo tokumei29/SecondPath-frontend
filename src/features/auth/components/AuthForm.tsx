@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { signIn, signUp, supabase } from '@/api/auth';
+import { getSupabase, signIn, signUp } from '@/api/auth';
 import { Modal } from '@/components/ui/Modal/Modal';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import styles from './AuthForm.module.css';
@@ -26,7 +26,7 @@ export const AuthForm = () => {
     // セッション切れ時に /login <-> /home のループになるので Supabase のセッションで判定する
     const run = async () => {
       try {
-        const { data } = await supabase.auth.getSession();
+        const { data } = await getSupabase().auth.getSession();
         const session = data.session;
         // セッションの有効期限は見ず、「ユーザーとアクセストークンが存在するか」だけで判定する
         const isValid = !!session?.user && !!session?.access_token;
