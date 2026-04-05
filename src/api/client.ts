@@ -1,8 +1,12 @@
 import axios from 'axios';
 import { getUserUuidForHeader } from '@/api/userUuid';
+import { apiBaseUrlFromHost } from '@/lib/apiBaseUrl';
 
 const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL:
+    typeof window !== 'undefined'
+      ? apiBaseUrlFromHost(window.location.hostname)
+      : (process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') ?? ''),
   timeout: 10000, // 5s -> 10s
 });
 
@@ -36,8 +40,11 @@ apiClient.interceptors.response.use(
   }
 );
 
-// X-User-Id を送るリクエストインターセプター
+// X-User-Id を送るリクエストインターセプター（ブラウザではホストに応じた baseURL を毎回反映）
 apiClient.interceptors.request.use(async (config) => {
+  if (typeof window !== 'undefined') {
+    config.baseURL = apiBaseUrlFromHost(window.location.hostname);
+  }
   const uuid = await getUserUuidForHeader();
   if (uuid) {
     config.headers = config.headers ?? {};

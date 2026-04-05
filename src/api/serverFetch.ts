@@ -1,12 +1,5 @@
-import { cookies } from 'next/headers';
-
-// axios クライアントと同じベースURLを利用する
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-
-if (!API_BASE_URL) {
-  // eslint-disable-next-line no-console
-  console.warn('NEXT_PUBLIC_API_URL is not set. serverFetchJson will fail for absolute URLs.');
-}
+import { cookies, headers } from 'next/headers';
+import { apiBaseUrlFromHost } from '@/lib/apiBaseUrl';
 
 type ServerFetchOptions = RequestInit;
 
@@ -18,14 +11,16 @@ export async function serverFetchJson<T>(
   const cookieStore = await cookies();
   const uuid = cookieStore.get('user_uuid')?.value;
 
-  const base = API_BASE_URL;
+  const headerList = await headers();
+  const host = headerList.get('x-forwarded-host') ?? headerList.get('host');
+  const base = apiBaseUrlFromHost(host);
   if (!base) {
-    throw new Error('API base URL (NEXT_PUBLIC_API_URL) is not configured.');
+    throw new Error('API base URL could not be resolved from request host.');
   }
 
   const url = `${base}${path}`;
 
-  const headers: HeadersInit = {
+  const requestHeaders: HeadersInit = {
     'Content-Type': 'application/json',
     ...(init.headers || {}),
     ...(uuid ? { 'X-User-Id': uuid } : {}),
@@ -33,7 +28,7 @@ export async function serverFetchJson<T>(
 
   const res = await fetch(url, {
     ...init,
-    headers,
+    headers: requestHeaders,
     // 初期フェッチ時は常に最新を取りにいく
     cache: 'no-store',
   });
