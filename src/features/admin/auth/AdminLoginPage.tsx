@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { shouldUseDemoAdminPassword } from '@/lib/adminLoginHost';
 import styles from './AdminLoginPage.module.css';
 
 export function AdminLoginPage() {
@@ -11,7 +12,12 @@ export function AdminLoginPage() {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD) {
+    const useDemo = shouldUseDemoAdminPassword(window.location.hostname);
+    const expectedPassword = useDemo
+      ? process.env.NEXT_PUBLIC_ADMIN_PASSWORD_DEMO
+      : process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
+
+    if (password === expectedPassword) {
       const session = {
         authenticated: true,
         expiresAt: Date.now() + 1000 * 60 * 60 * 12,
