@@ -4,7 +4,6 @@ import { useState } from 'react';
 import type { CounselingRecord } from '@/features/dashboard/user/counselingRecords/api/userRecordsClient';
 import RecordDetailModal from '@/features/dashboard/user/counselingRecords/components/RecordDetailModal';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
-import { formatJapanLocaleDate } from '@/lib/utils';
 import styles from './CounselingRecordsPage.module.css';
 
 type Props = {
@@ -19,6 +18,20 @@ export function CounselingRecordsClient({ initialRecords }: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useBodyScrollLock(isModalOpen);
+
+  const formatDate = (dateString: string) => {
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return dateString;
+      return date.toLocaleDateString('ja-JP', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      });
+    } catch {
+      return dateString;
+    }
+  };
 
   const handleOpenModal = (record: CounselingRecord) => {
     setSelectedRecord(record);
@@ -41,7 +54,7 @@ export function CounselingRecordsClient({ initialRecords }: Props) {
           {records?.map((record) => (
             <div key={record.id} className={styles.card} onClick={() => handleOpenModal(record)}>
               <div className={styles.cardHeader}>
-                <span className={styles.dateBadge}>{formatJapanLocaleDate(record.date)}</span>
+                <span className={styles.dateBadge}>{formatDate(record.date)}</span>
               </div>
               <div className={styles.cardBody}>
                 <p className={styles.excerpt}>

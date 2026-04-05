@@ -1,6 +1,5 @@
 'use client';
 
-import { formatJapanLocaleDate } from '@/lib/utils';
 import styles from './RecordDetailModal.module.css';
 
 type RecordDetailModalProps = {
@@ -12,7 +11,13 @@ type RecordDetailModalProps = {
 const RecordDetailModal = ({ isOpen, onClose, record }: RecordDetailModalProps) => {
   if (!isOpen || !record) return null;
 
-  const displayDate = record.date ? formatJapanLocaleDate(record.date) || '日付不明' : '日付不明';
+  const displayDate = record.date
+    ? new Date(record.date).toLocaleDateString('ja-JP', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      })
+    : '日付不明';
 
   return (
     <div className={styles.overlay} onClick={onClose}>
