@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useParams } from 'next/navigation';
+import { toJapanCalendarDateString } from '@/lib/utils';
 import styles from './Modal.module.css';
 
 type Props = {
@@ -14,7 +15,9 @@ export const CreateRecordModal = ({ userName, onClose, onSave }: Props) => {
   const params = useParams();
   const userId = params.id as string;
 
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [date, setDate] = useState(() =>
+    toJapanCalendarDateString(new Date().toISOString())
+  );
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 

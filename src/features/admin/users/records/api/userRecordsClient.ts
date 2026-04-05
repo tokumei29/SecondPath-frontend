@@ -11,8 +11,11 @@ export const createUserRecord = async (userId: string, date: string, content: st
   });
 };
 
-export const updateUserRecord = async (recordId: string, content: string) => {
-  return await apiClient.patch(`/admin/user_records/${recordId}`, { content });
+export const updateUserRecord = async (
+  recordId: string,
+  payload: { content: string; date: string }
+) => {
+  return await apiClient.patch(`/admin/user_records/${recordId}`, payload);
 };
 
 export const deleteUserRecord = async (recordId: string) => {

@@ -10,6 +10,7 @@ import {
 import { CreateRecordModal } from '@/features/admin/users/records/components/CreateRecordModal';
 import { RecordDetailModal } from '@/features/admin/users/records/components/RecordDetailModal';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
+import { formatJapanLocaleDate } from '@/lib/utils';
 import styles from './AdminUserRecordsPage.module.css';
 
 type Props = {
@@ -43,9 +44,9 @@ export const AdminUserRecordsClient = ({ params, initialData }: Props) => {
     await fetchRecords();
   };
 
-  const handleUpdateRecord = async (recordId: string, content: string) => {
+  const handleUpdateRecord = async (recordId: string, content: string, date: string) => {
     try {
-      await updateUserRecord(recordId, content);
+      await updateUserRecord(recordId, { content, date });
       await fetchRecords();
     } catch {
       alert('更新に失敗しました');
@@ -78,7 +79,7 @@ export const AdminUserRecordsClient = ({ params, initialData }: Props) => {
         {data?.records?.map((rec: any) => (
           <div key={rec.id} className={styles.recordCard} onClick={() => setSelectedRecord(rec)}>
             <span className={styles.dateLabel}>
-              {new Date(rec.created_at).toLocaleDateString()}
+              {formatJapanLocaleDate(rec.date ?? rec.created_at)}
             </span>
             <p className={styles.contentPreview}>{rec.content}</p>
           </div>
