@@ -23,13 +23,18 @@ function supabaseAdminConfig(req: Request): { url: string; serviceRoleKey: strin
   return null;
 }
 
-/** Supabase でユーザー削除が済んだあとに、Rails の account_withdrawn_at を立てる。シークレット未設定時はスキップ。 */
+type RailsWithdrawalBody = { updated?: boolean; reason?: string; message?: string };
+
+/** Supabase でユーザー削除が済んだあとに、Rails の account_withdrawn_at を立てる。シークレット未設定時はスキップ（ログのみ）。 */
 async function markAccountWithdrawnOnRails(
   req: Request,
   supabaseId: string
 ): Promise<{ ok: true } | { ok: false; status: number; message: string }> {
   const secret = process.env.ACCOUNT_WITHDRAWAL_INTERNAL_SECRET?.trim();
   if (!secret) {
+    console.warn(
+      '[delete-account] ACCOUNT_WITHDRAWAL_INTERNAL_SECRET 未設定のため、Rails の account_withdrawn_at は更新されません（Vercel / .env に同一値を設定）'
+    );
     return { ok: true };
   }
 
@@ -43,14 +48,32 @@ async function markAccountWithdrawnOnRails(
     body: JSON.stringify({ supabase_id: supabaseId }),
   });
 
+  const text = await res.text().catch(() => '');
+  let data: RailsWithdrawalBody = {};
+  if (text) {
+    try {
+      data = JSON.parse(text) as RailsWithdrawalBody;
+    } catch {
+      /* 非 JSON のエラーページ等 */
+    }
+  }
+
   if (!res.ok) {
-    const text = await res.text().catch(() => '');
     return {
       ok: false,
       status: res.status,
-      message: text || '退会フラグの更新に失敗しました',
+      message: text || data.message || '退会フラグの更新に失敗しました',
     };
   }
+
+  if (data.updated === false) {
+    return {
+      ok: false,
+      status: res.status,
+      message: `Rails: ${data.reason ?? 'unknown'}${data.message ? ` (${data.message})` : ''}`,
+    };
+  }
+
   return { ok: true };
 }
 
