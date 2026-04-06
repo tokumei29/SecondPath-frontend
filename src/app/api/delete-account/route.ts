@@ -23,25 +23,37 @@ function supabaseAdminConfig(req: Request): { url: string; serviceRoleKey: strin
   return null;
 }
 
-type RailsWithdrawalJson = { updated?: boolean; reason?: string; message?: string };
+type RailsWithdrawalJson = {
+  updated?: boolean;
+  reason?: string;
+  message?: string;
+  error?: string;
+};
 
 /**
  * 先に Rails で account_withdrawn_at を立てる（Supabase auth 削除より前）。
- * 同じ Postgres / トリガーで auth 削除後に public.users が消えると、後から UPDATE できずずっと NULL のままになる。
+ * シークレット未設定時は Rails を呼ばず失敗とする（成功扱いで握りつぶさない）。
  */
 async function markAccountWithdrawnOnRails(
   req: Request,
   supabaseId: string
 ): Promise<
+  | { outcome: 'secret_unset' }
   | { outcome: 'rails_ok' }
   | { outcome: 'rails_no_user_row' }
   | { outcome: 'rails_failed'; status: number; message: string }
 > {
+  const secret = process.env.ACCOUNT_WITHDRAWAL_INTERNAL_SECRET?.trim();
+  if (!secret) {
+    return { outcome: 'secret_unset' };
+  }
+
   const base = apiBaseUrlFromHost(requestHostname(req));
   const res = await fetch(`${base}/internal/mark_account_withdrawn`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'X-Internal-Secret': secret,
     },
     body: JSON.stringify({ supabase_id: supabaseId }),
   });
@@ -60,7 +72,7 @@ async function markAccountWithdrawnOnRails(
     return {
       outcome: 'rails_failed',
       status: res.status,
-      message: text || data.message || '退会フラグの更新に失敗しました',
+      message: text || data.message || data.error || '退会フラグの更新に失敗しました',
     };
   }
 
@@ -97,6 +109,21 @@ export async function POST(req: Request) {
     }
 
     const withdrawn = await markAccountWithdrawnOnRails(req, userId);
+
+    if (withdrawn.outcome === 'secret_unset') {
+      console.error(
+        '[delete-account] ACCOUNT_WITHDRAWAL_INTERNAL_SECRET が未設定のため退会を中止しました（Rails を呼んでいません）'
+      );
+      return NextResponse.json(
+        {
+          error:
+            '退会処理のサーバー設定が不完全です。ACCOUNT_WITHDRAWAL_INTERNAL_SECRET を Vercel（および必要ならローカル .env）に設定してください。',
+          code: 'ACCOUNT_WITHDRAWAL_SECRET_UNSET',
+        },
+        { status: 503 }
+      );
+    }
+
     if (withdrawn.outcome === 'rails_failed') {
       console.error('[delete-account] Rails の退会フラグ更新に失敗したため Supabase の削除は行いません:', withdrawn.message);
       return NextResponse.json(
