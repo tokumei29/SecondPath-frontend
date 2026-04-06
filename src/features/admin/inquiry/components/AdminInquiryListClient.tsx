@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { formatJapanLocaleDateTime } from '@/lib/utils';
 import styles from './AdminInquiryList.module.css';
 import type { AdminTextSupportListItem } from '../api/getAdminTextSupports';
 
@@ -15,7 +16,9 @@ export function AdminInquiryListClient({ supports }: { supports: AdminTextSuppor
       </header>
 
       <div className={styles.grid}>
-        {safeSupports.map((s) => (
+        {safeSupports.map((s) => {
+          const withdrawn = Boolean(s.user_account_withdrawn_at);
+          return (
           <Link href={`/adminDashboard/${s.id}`} key={s.id} className={styles.cardLink}>
             <div
               className={`${styles.card} ${s.status === 'waiting' ? styles.unread : styles.read}`}
@@ -27,7 +30,9 @@ export function AdminInquiryListClient({ supports }: { supports: AdminTextSuppor
                 <span className={styles.date}>{new Date(s.created_at).toLocaleString()}</span>
               </div>
 
-              <div className={styles.userSection}>
+              <div
+                className={`${styles.userSection} ${withdrawn ? styles.userSectionWithdrawn : ''}`}
+              >
                 <div className={styles.infoRow}>
                   <span className={styles.label}>UUID:</span>
                   <code className={styles.uuidText}>{s.user_id}</code>
@@ -35,7 +40,24 @@ export function AdminInquiryListClient({ supports }: { supports: AdminTextSuppor
                 <div className={styles.infoRow}>
                   <span className={styles.label}>お名前 / メールアドレス:</span>
                   <div className={styles.userDetails}>
-                    <span className={styles.userName}>{s.name || '匿名希望'}</span>
+                    <div className={styles.nameRow}>
+                      <span className={styles.userName}>{s.name || '匿名希望'}</span>
+                      {withdrawn && (
+                        <span
+                          className={styles.withdrawnBadge}
+                          title={
+                            s.user_account_withdrawn_at
+                              ? `退会日時: ${formatJapanLocaleDateTime(s.user_account_withdrawn_at)}`
+                              : '退会済み'
+                          }
+                        >
+                          <span className={styles.withdrawnBadgeIcon} aria-hidden>
+                            🚪
+                          </span>
+                          退会済み
+                        </span>
+                      )}
+                    </div>
                     <span className={styles.userEmail}>{s.email || 'メールなし'}</span>
                   </div>
                 </div>
@@ -55,7 +77,8 @@ export function AdminInquiryListClient({ supports }: { supports: AdminTextSuppor
               <div className={styles.cardFooter}>トークルームを開く ➔</div>
             </div>
           </Link>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

@@ -76,6 +76,37 @@
   border-radius: 8px;
 }
 
+.userSectionWithdrawn {
+  background: #fafafa;
+  border-color: #e2e8f0;
+}
+
+.nameRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.withdrawnBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #64748b;
+  white-space: nowrap;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+}
+
+.withdrawnBadgeIcon {
+  margin-right: 4px;
+  font-size: 12px;
+}
+
 .userDetails {
   display: flex;
   flex-direction: column;

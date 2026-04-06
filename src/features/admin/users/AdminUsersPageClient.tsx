@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { getAllUsers } from '@/features/admin/users/api/usersClient';
+import { formatJapanLocaleDateTime } from '@/lib/utils';
 import styles from './AdminUsersPage.module.css';
 import type { AdminUserListItem } from './api/getAdminUsersServer';
 
@@ -67,10 +68,29 @@ export function AdminUsersPageClient({ initialUsers }: { initialUsers: AdminUser
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => (
-              <tr key={user.id}>
+            {users.map((user) => {
+              const withdrawn = Boolean(user.account_withdrawn_at);
+              return (
+              <tr key={user.id} className={withdrawn ? styles.rowWithdrawn : undefined}>
                 <td className={styles.userCell}>
-                  <div className={styles.userName}>{user.name || '名前未設定'}</div>
+                  <div className={styles.userNameRow}>
+                    <span className={styles.userName}>{user.name || '名前未設定'}</span>
+                    {withdrawn && (
+                      <span
+                        className={styles.withdrawnBadge}
+                        title={
+                          user.account_withdrawn_at
+                            ? `退会日時: ${formatJapanLocaleDateTime(user.account_withdrawn_at)}`
+                            : '退会済み'
+                        }
+                      >
+                        <span className={styles.withdrawnBadgeIcon} aria-hidden>
+                          🚪
+                        </span>
+                        退会済み
+                      </span>
+                    )}
+                  </div>
                 </td>
                 <td className={styles.uuidCell}>
                   <code>{user.id}</code>
@@ -90,7 +110,8 @@ export function AdminUsersPageClient({ initialUsers }: { initialUsers: AdminUser
                   </Link>
                 </td>
               </tr>
-            ))}
+              );
+            })}
           </tbody>
         </table>
 

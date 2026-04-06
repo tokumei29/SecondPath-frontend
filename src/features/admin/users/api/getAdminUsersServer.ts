@@ -5,6 +5,8 @@ export type AdminUserListItem = {
   id: string;
   name?: string | null;
   created_at: string;
+  /** 退会済みのとき ISO8601、未退会は null / undefined */
+  account_withdrawn_at?: string | null;
 };
 
 export const getAdminUsersServer = cache(async (): Promise<AdminUserListItem[]> => {

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { apiBaseUrlFromHost } from '@/lib/apiBaseUrl';
 import { isLocalhostOrDemoDeploy } from '@/lib/demoFrontendHost';
 
 function requestHostname(req: Request): string {
@@ -20,6 +21,37 @@ function supabaseAdminConfig(req: Request): { url: string; serviceRoleKey: strin
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
   if (url && serviceRoleKey) return { url, serviceRoleKey };
   return null;
+}
+
+/** Supabase でユーザー削除が済んだあとに、Rails の account_withdrawn_at を立てる。シークレット未設定時はスキップ。 */
+async function markAccountWithdrawnOnRails(
+  req: Request,
+  supabaseId: string
+): Promise<{ ok: true } | { ok: false; status: number; message: string }> {
+  const secret = process.env.ACCOUNT_WITHDRAWAL_INTERNAL_SECRET?.trim();
+  if (!secret) {
+    return { ok: true };
+  }
+
+  const base = apiBaseUrlFromHost(requestHostname(req));
+  const res = await fetch(`${base}/internal/mark_account_withdrawn`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Internal-Secret': secret,
+    },
+    body: JSON.stringify({ supabase_id: supabaseId }),
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    return {
+      ok: false,
+      status: res.status,
+      message: text || '退会フラグの更新に失敗しました',
+    };
+  }
+  return { ok: true };
 }
 
 export async function POST(req: Request) {
@@ -52,6 +84,14 @@ export async function POST(req: Request) {
           status: (error as { status?: number }).status || 500,
         },
         { status: 500 }
+      );
+    }
+
+    const withdrawn = await markAccountWithdrawnOnRails(req, userId);
+    if (!withdrawn.ok) {
+      console.error(
+        '[delete-account] Supabase 削除後に Rails の退会フラグ更新に失敗:',
+        withdrawn.message
       );
     }
 

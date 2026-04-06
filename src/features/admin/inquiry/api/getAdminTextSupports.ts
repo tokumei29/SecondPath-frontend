@@ -10,6 +10,8 @@ export type AdminTextSupportListItem = {
   email?: string | null;
   subject?: string | null;
   message?: string | null;
+  /** 紐づく User が退会済みのとき ISO8601 */
+  user_account_withdrawn_at?: string | null;
 };
 
 export const getAdminTextSupports = cache(async (): Promise<AdminTextSupportListItem[]> => {

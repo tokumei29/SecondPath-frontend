@@ -54,3 +54,22 @@ export function formatJapanLocaleDate(dateString: string | undefined | null): st
     day: '2-digit',
   });
 }
+
+/**
+ * 日時表示用（例: 2026/04/06 15:30:00）。常に Asia/Tokyo。
+ */
+export function formatJapanLocaleDateTime(isoString: string | undefined | null): string {
+  if (isoString == null || !String(isoString).trim()) return '';
+  const d = new Date(String(isoString).trim());
+  if (Number.isNaN(d.getTime())) return String(isoString);
+  return d.toLocaleString('ja-JP', {
+    timeZone: JST,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  });
+}
