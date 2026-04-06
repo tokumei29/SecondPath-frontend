@@ -23,17 +23,27 @@ function supabaseAdminConfig(req: Request): { url: string; serviceRoleKey: strin
   return null;
 }
 
-/** Supabase でユーザー削除が済んだあとに、Rails の account_withdrawn_at を立てる。シークレット未設定時はスキップ。 */
+type RailsWithdrawalJson = { updated?: boolean; reason?: string; message?: string };
+
+/**
+ * 先に Rails で account_withdrawn_at を立てる（Supabase auth 削除より前）。
+ * 同じ Postgres / トリガーで auth 削除後に public.users が消えると、後から UPDATE できずずっと NULL のままになる。
+ */
 async function markAccountWithdrawnOnRails(
   req: Request,
   supabaseId: string
-): Promise<{ ok: true } | { ok: false; status: number; message: string }> {
+): Promise<
+  | { outcome: 'skipped_no_secret' }
+  | { outcome: 'rails_ok' }
+  | { outcome: 'rails_no_user_row' }
+  | { outcome: 'rails_failed'; status: number; message: string }
+> {
   const secret = process.env.ACCOUNT_WITHDRAWAL_INTERNAL_SECRET?.trim();
   if (!secret) {
     console.warn(
       '[delete-account] ACCOUNT_WITHDRAWAL_INTERNAL_SECRET 未設定のため Rails に account_withdrawn_at を送っていません'
     );
-    return { ok: true };
+    return { outcome: 'skipped_no_secret' };
   }
 
   const base = apiBaseUrlFromHost(requestHostname(req));
@@ -46,15 +56,40 @@ async function markAccountWithdrawnOnRails(
     body: JSON.stringify({ supabase_id: supabaseId }),
   });
 
+  const text = await res.text().catch(() => '');
+  let data: RailsWithdrawalJson = {};
+  if (text) {
+    try {
+      data = JSON.parse(text) as RailsWithdrawalJson;
+    } catch {
+      /* 非 JSON */
+    }
+  }
+
   if (!res.ok) {
-    const text = await res.text().catch(() => '');
     return {
-      ok: false,
+      outcome: 'rails_failed',
       status: res.status,
-      message: text || '退会フラグの更新に失敗しました',
+      message: text || data.message || '退会フラグの更新に失敗しました',
     };
   }
-  return { ok: true };
+
+  if (data.updated === false && data.reason === 'user_not_found') {
+    console.warn(
+      '[delete-account] Rails に users 行がありません（supabase_id 未同期）。Auth のみ削除します。'
+    );
+    return { outcome: 'rails_no_user_row' };
+  }
+
+  if (data.updated === false) {
+    return {
+      outcome: 'rails_failed',
+      status: res.status,
+      message: `Rails: ${data.reason ?? 'unknown'}${data.message ? ` (${data.message})` : ''}`,
+    };
+  }
+
+  return { outcome: 'rails_ok' };
 }
 
 export async function POST(req: Request) {
@@ -69,6 +104,18 @@ export async function POST(req: Request) {
 
     if (!userId) {
       return NextResponse.json({ error: 'ユーザーIDが提供されていません' }, { status: 400 });
+    }
+
+    const withdrawn = await markAccountWithdrawnOnRails(req, userId);
+    if (withdrawn.outcome === 'rails_failed') {
+      console.error('[delete-account] Rails の退会フラグ更新に失敗したため Supabase の削除は行いません:', withdrawn.message);
+      return NextResponse.json(
+        {
+          error: '退会記録の保存に失敗しました。しばらくしてから再度お試しください。',
+          detail: withdrawn.message,
+        },
+        { status: withdrawn.status >= 400 && withdrawn.status < 600 ? withdrawn.status : 502 }
+      );
     }
 
     const supabaseAdmin = createClient(config.url, config.serviceRoleKey, {
@@ -87,14 +134,6 @@ export async function POST(req: Request) {
           status: (error as { status?: number }).status || 500,
         },
         { status: 500 }
-      );
-    }
-
-    const withdrawn = await markAccountWithdrawnOnRails(req, userId);
-    if (!withdrawn.ok) {
-      console.error(
-        '[delete-account] Supabase 削除後に Rails の退会フラグ更新に失敗:',
-        withdrawn.message
       );
     }
 
