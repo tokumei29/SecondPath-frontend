@@ -30,6 +30,9 @@ async function markAccountWithdrawnOnRails(
 ): Promise<{ ok: true } | { ok: false; status: number; message: string }> {
   const secret = process.env.ACCOUNT_WITHDRAWAL_INTERNAL_SECRET?.trim();
   if (!secret) {
+    console.warn(
+      '[delete-account] ACCOUNT_WITHDRAWAL_INTERNAL_SECRET 未設定のため Rails に account_withdrawn_at を送っていません'
+    );
     return { ok: true };
   }
 
