@@ -31,8 +31,8 @@ type RailsWithdrawalJson = {
 };
 
 /**
- * 先に Rails で account_withdrawn_at を立てる（Supabase auth 削除より前）。
- * シークレット未設定時は Rails を呼ばず失敗とする（成功扱いで握りつぶさない）。
+ * Supabase auth 削除のあとに Rails で account_withdrawn_at を立てる。
+ * シークレット未設定時は削除も行わず 503（成功扱いで握りつぶさない）。
  */
 async function markAccountWithdrawnOnRails(
   req: Request,
@@ -77,9 +77,7 @@ async function markAccountWithdrawnOnRails(
   }
 
   if (data.updated === false && data.reason === 'user_not_found') {
-    console.warn(
-      '[delete-account] Rails に users 行がありません（supabase_id 未同期）。Auth のみ削除します。'
-    );
+    console.warn('[delete-account] Rails に users 行がありません（account_withdrawn_at は未更新）');
     return { outcome: 'rails_no_user_row' };
   }
 
@@ -108,11 +106,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'ユーザーIDが提供されていません' }, { status: 400 });
     }
 
-    const withdrawn = await markAccountWithdrawnOnRails(req, userId);
-
-    if (withdrawn.outcome === 'secret_unset') {
+    if (!process.env.ACCOUNT_WITHDRAWAL_INTERNAL_SECRET?.trim()) {
       console.error(
-        '[delete-account] ACCOUNT_WITHDRAWAL_INTERNAL_SECRET が未設定のため退会を中止しました（Rails を呼んでいません）'
+        '[delete-account] ACCOUNT_WITHDRAWAL_INTERNAL_SECRET が未設定のため退会を中止しました（削除も Rails も行いません）'
       );
       return NextResponse.json(
         {
@@ -121,17 +117,6 @@ export async function POST(req: Request) {
           code: 'ACCOUNT_WITHDRAWAL_SECRET_UNSET',
         },
         { status: 503 }
-      );
-    }
-
-    if (withdrawn.outcome === 'rails_failed') {
-      console.error('[delete-account] Rails の退会フラグ更新に失敗したため Supabase の削除は行いません:', withdrawn.message);
-      return NextResponse.json(
-        {
-          error: '退会記録の保存に失敗しました。しばらくしてから再度お試しください。',
-          detail: withdrawn.message,
-        },
-        { status: withdrawn.status >= 400 && withdrawn.status < 600 ? withdrawn.status : 502 }
       );
     }
 
@@ -151,6 +136,20 @@ export async function POST(req: Request) {
           status: (error as { status?: number }).status || 500,
         },
         { status: 500 }
+      );
+    }
+
+    const withdrawn = await markAccountWithdrawnOnRails(req, userId);
+
+    if (withdrawn.outcome === 'secret_unset') {
+      console.error('[delete-account] Auth は削除済みだがシークレットが空のため Rails を呼べません');
+      return NextResponse.json({ success: true, message: 'ユーザーが削除されました' });
+    }
+
+    if (withdrawn.outcome === 'rails_failed') {
+      console.error(
+        '[delete-account] Supabase 削除後に Rails の account_withdrawn_at 更新に失敗:',
+        withdrawn.message
       );
     }
 
