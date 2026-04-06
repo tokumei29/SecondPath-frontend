@@ -15,12 +15,12 @@ export const updateProfile = async (profile: Partial<Profile>) => {
     return response.data;
   } catch (err) {
     if (axios.isAxiosError(err)) {
-      console.log('[updateProfile] PATCH /profile failed', {
+      console.error('[updateProfile] PATCH /profile failed', {
         status: err.response?.status,
         data: err.response?.data,
       });
     } else {
-      console.log('[updateProfile] PATCH /profile failed', err);
+      console.error('[updateProfile] PATCH /profile failed', err);
     }
     throw err;
   }
