@@ -33,25 +33,15 @@ async function markAccountWithdrawnOnRails(
   req: Request,
   supabaseId: string
 ): Promise<
-  | { outcome: 'skipped_no_secret' }
   | { outcome: 'rails_ok' }
   | { outcome: 'rails_no_user_row' }
   | { outcome: 'rails_failed'; status: number; message: string }
 > {
-  const secret = process.env.ACCOUNT_WITHDRAWAL_INTERNAL_SECRET?.trim();
-  if (!secret) {
-    console.warn(
-      '[delete-account] ACCOUNT_WITHDRAWAL_INTERNAL_SECRET 未設定のため Rails に account_withdrawn_at を送っていません'
-    );
-    return { outcome: 'skipped_no_secret' };
-  }
-
   const base = apiBaseUrlFromHost(requestHostname(req));
   const res = await fetch(`${base}/internal/mark_account_withdrawn`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-Internal-Secret': secret,
     },
     body: JSON.stringify({ supabase_id: supabaseId }),
   });
