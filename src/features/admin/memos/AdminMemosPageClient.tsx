@@ -173,15 +173,20 @@ export function AdminMemosPageClient({ initialMemos }: { initialMemos: MemoRespo
                 <td className={`${styles.td} ${styles.contentSummary}`}>{memo.content}</td>
                 <td className={`${styles.td} ${styles.actions}`}>
                   <button
+                    type="button"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleOpenModal(memo, 'edit');
                     }}
-                    className={styles.editLink}
+                    className={`${styles.actionBtn} ${styles.editBtn}`}
                   >
                     編集
                   </button>
-                  <button onClick={(e) => handleDelete(e, memo.id)} className={styles.deleteLink}>
+                  <button
+                    type="button"
+                    onClick={(e) => handleDelete(e, memo.id)}
+                    className={`${styles.actionBtn} ${styles.deleteBtn}`}
+                  >
                     削除
                   </button>
                 </td>
